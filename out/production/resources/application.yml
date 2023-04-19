@@ -1,0 +1,29 @@
+spring:
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db-instance.czlvjpec3sns.ap-northeast-2.rds.amazonaws.com:3306/wazard?useSSL=false&serverTimezone=Asia/Seoul
+    username: admin
+    password: simjonghan1998
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+#        use_sql_comments: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  jwt:
+    header: Authorization
+    atkKey: wazardAccessTokenKey1234567890qwertyasdfgWHDGKQTJFRPVMFHWPRXMwhdgkqtjfrPvmfhwprxm
+    live:
+      atk: 60000 # 1?   #43200000  # 12??
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    root: info

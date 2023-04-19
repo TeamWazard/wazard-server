@@ -54,7 +54,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-out/
+out/production/*
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -231,5 +231,3 @@ gradle-app.setting
 # Custom
 src/main/resources/application.yml
 .idea
-!account-component/src/main/java/shop/wazard/adapter/out/*
-!account-component/src/main/java/shop/wazard/application/port/out/*
