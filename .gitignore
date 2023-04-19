@@ -231,3 +231,5 @@ gradle-app.setting
 # Custom
 src/main/resources/application.yml
 .idea
+!account-component/src/main/java/shop/wazard/adapter/out/*
+!account-component/src/main/java/shop/wazard/application/port/out/*
