@@ -25,6 +25,7 @@ jar {
 dependencies {
 	implementation project(':common-component')
 	implementation project(':account-component')
+	implementation project(':smtp-component')
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'

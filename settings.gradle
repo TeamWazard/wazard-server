@@ -1,4 +1,5 @@
 rootProject.name = 'wazard'
 include 'account-component'
 include 'common-component'
+include 'smtp-component'
 
