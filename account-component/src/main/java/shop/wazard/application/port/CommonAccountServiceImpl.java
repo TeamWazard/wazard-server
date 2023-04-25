@@ -18,7 +18,7 @@ import shop.wazard.util.jwt.JwtProvider;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommonAccountServiceImpl implements CommonAccountService {
+class CommonAccountServiceImpl implements CommonAccountService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;

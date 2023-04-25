@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/account/common")
-public class CommonAccountController {
+class CommonAccountController {
     private final CommonAccountService commonAccountService;
     private final ControllerConverter controllerConverter;
 

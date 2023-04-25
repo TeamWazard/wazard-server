@@ -14,7 +14,7 @@ import shop.wazard.dto.JoinResDto;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberAccountServiceImpl implements MemberAccountService {
+class MemberAccountServiceImpl implements MemberAccountService {
     private final PasswordEncoder passwordEncoder;
     private final SaveAccountPort saveAccountPort;
     private final LoadAccountPort loadAccountPort;
