@@ -15,7 +15,7 @@ import javax.mail.MessagingException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mail")
-class MailController {
+class EmailController {
 
     private final EmailService emailService;
 

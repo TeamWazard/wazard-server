@@ -2,11 +2,14 @@ package shop.wazard.application.port;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import shop.wazard.application.port.in.EmailService;
+import shop.wazard.exception.FailCreateEmailForm;
+import shop.wazard.exception.FailSendEmail;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -25,19 +28,26 @@ class EmailServiceImpl implements EmailService {
     @Override
     public String sendEmail(String email) throws MessagingException {
         MimeMessage emailForm = createEmailForm(email);
-        emailSender.send(emailForm);
+        try {
+            emailSender.send(emailForm);
+        } catch (MailException e) {
+            throw new FailSendEmail("메일 전송에 실패하였습니다.");
+        }
         return authenticationCode;
     }
 
     private MimeMessage createEmailForm(String email) throws MessagingException {
         String senderEmail = "simhani1@naver.com";
         String title = "Wazard 회원가입 인증번호";
-
         MimeMessage message = emailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, email);
-        message.setSubject(title);
-        message.setFrom(senderEmail);
-        message.setText(setContext(createCode()), "utf-8", "html");
+        try {
+            message.addRecipients(MimeMessage.RecipientType.TO, email);
+            message.setSubject(title);
+            message.setFrom(senderEmail);
+            message.setText(setContext(createCode()), "utf-8", "html");
+        } catch (Exception e) {
+            throw new FailCreateEmailForm("메일 폼 작성에 실패했습니다.");
+        }
         return message;
     }
 
