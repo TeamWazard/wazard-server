@@ -5,19 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.adapter.in.rest.request.JoinReq;
-import shop.wazard.adapter.in.rest.request.LoginReq;
 import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
-import shop.wazard.dto.LoginReqDto;
-import shop.wazard.dto.LoginResDto;
 import shop.wazard.util.response.Message;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
+@RequestMapping("/account/companies")
 class CompanyAccountController {
 
     private final CompanyAccountService companyAccountService;
@@ -32,18 +29,6 @@ class CompanyAccountController {
                 Message.builder()
                         .httpStatus(HttpStatus.OK)
                         .result(controllerConverter.joinResDtoToJoinRes(joinResDto))
-                        .build()
-        );
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<Message> login(@Valid @RequestBody LoginReq loginReq) {
-        LoginReqDto loginReqDto = controllerConverter.loginReqToLoginReqDto(loginReq);
-        LoginResDto loginResDto = companyAccountService.login(loginReqDto);
-        return ResponseEntity.ok(
-                Message.builder()
-                        .httpStatus(HttpStatus.OK)
-                        .result(controllerConverter.loginResDtoToLoginRes(loginResDto))
                         .build()
         );
     }
