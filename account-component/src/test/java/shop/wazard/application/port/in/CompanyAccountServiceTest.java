@@ -7,12 +7,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.out.SaveAccountPort;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
+
+import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CompanyAccountService.class})
 class CompanyAccountServiceTest {
 
     @Autowired
@@ -24,18 +26,24 @@ class CompanyAccountServiceTest {
     @DisplayName("고용주 회원 정보 수정 단위 테스트")
     public void updateCompanyAccountInfoSuccess() throws Exception {
         // given
-        UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto
-                = new UpdateCompanyAccountInfoReqDto("test@naver.com" ,"testName" , "MALE");
+        UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto = UpdateCompanyAccountInfoReqDto.builder()
+                .email("test@naver.com")
+                .userName("testName")
+                .gender("MALE")
+                .birth(LocalDate.of(2000, 1, 1))
+                .build();
+        UpdateCompanyAccountInfoResDto updateCompanyAccountInfoResDto = UpdateCompanyAccountInfoResDto.builder()
+                .message("수정되었습니다.")
+                .build();
 
         //when
-        Mockito.when(saveAccountPort.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto)).thenReturn("수정 완료되었습니다.");
+        Mockito.doNothing().when(saveAccountPort.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto));
 
         //then
-        UpdateCompanyAccountInfoResDto updateCompanyAccountInfoResDto
-                = saveAccountPort.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
+        saveAccountPort.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
 
         Assertions.assertAll(
-                () -> Assertions.assertEquals(updateCompanyAccountInfoResDto.getMessage(), "수정 완료되었습니다.")
+                () -> Assertions.assertEquals(updateCompanyAccountInfoResDto.getMessage(), "수정되었습니다.")
         );
     }
 

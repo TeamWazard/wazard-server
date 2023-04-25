@@ -11,6 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
+import shop.wazard.adapter.in.rest.request.UpdateCompanyAccountInfoReq;
+
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,12 +33,12 @@ class CompanyAccountAcceptanceTest {
     public void companyUpdateMyInfoSuccess() throws Exception {
         // given
         String updateMyInfoUrl = "/account/companies/{accountId}";
-        UpdateCompanyAccountInfoReq updateCompanyAccountInfoReq = new UpdateCompanyAccountInfoReq("test@email.com", "홍길동", "FEMALE");
+        UpdateCompanyAccountInfoReq updateCompanyAccountInfoReq = new UpdateCompanyAccountInfoReq("test@email.com", "홍길동", "FEMALE", LocalDate.of(2000, 1, 1));
 
         // when
         ResultActions result = mockMvc.perform(post(updateMyInfoUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateMyInfoReq)));
+                .content(objectMapper.writeValueAsString(updateCompanyAccountInfoReq)));
 
         // then
         result.andExpectAll(
