@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -20,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = WazardApplication.class)
 @AutoConfigureMockMvc
-class CompanyAccountAcceptanceTest {
+class CompanyAccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,8 +31,9 @@ class CompanyAccountAcceptanceTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("고용주 내  수정 성공 테스트")
-    public void companyUpdateMyInfoSuccess() throws Exception {
+    @DisplayName("고용주 - 회원정보 수정 성공")
+    @WithMockUser
+    public void updateCompanyAccountInfoSuccess() throws Exception {
         // given
         String updateMyInfoUrl = "/account/companies/{accountId}";
         UpdateCompanyAccountInfoReq updateCompanyAccountInfoReq = new UpdateCompanyAccountInfoReq("test@email.com", "홍길동", "FEMALE", LocalDate.of(2000, 1, 1));
@@ -43,6 +46,8 @@ class CompanyAccountAcceptanceTest {
         // then
         result.andExpectAll(
                 MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
                 MockMvcResultMatchers.jsonPath("$.message").exists()
         ).andDo(print());
     }
