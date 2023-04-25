@@ -15,7 +15,7 @@ import java.util.Random;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;  // 타임리프
