@@ -14,11 +14,11 @@ import shop.wazard.application.port.out.SaveAccountPort;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CompanyAccountService.class})
 class CompanyAccountServiceTest {
+
     @Autowired
     private CompanyAccountService companyAccountService;
     @MockBean
     private SaveAccountPort saveAccountPort;
-
 
     @Test
     @DisplayName("고용주 회원 정보 수정 단위 테스트")
@@ -38,4 +38,5 @@ class CompanyAccountServiceTest {
                 () -> Assertions.assertEquals(updateCompanyAccountInfoResDto.getMessage(), "수정 완료되었습니다.")
         );
     }
+
 }
