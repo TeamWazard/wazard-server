@@ -2,6 +2,7 @@ package shop.wazard.application.port;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,15 @@ class EmailServiceImpl implements EmailService {
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;  // 타임리프
 
+    @Value("${spring.mail.username}")
+    private String senderEmail;
     private String authenticationCode;
 
     @Override
     public String sendEmail(String email) throws MessagingException {
         MimeMessage emailForm = createEmailForm(email);
         try {
+            log.info("================== email = {}, 메일 전송 시작 ====================", email);
             emailSender.send(emailForm);
         } catch (MailException e) {
             throw new FailSendEmail("메일 전송에 실패하였습니다.");
@@ -37,7 +41,6 @@ class EmailServiceImpl implements EmailService {
     }
 
     private MimeMessage createEmailForm(String email) throws MessagingException {
-        String senderEmail = "simhani1@naver.com";
         String title = "Wazard 회원가입 인증번호";
         MimeMessage message = emailSender.createMimeMessage();
         try {
@@ -64,10 +67,10 @@ class EmailServiceImpl implements EmailService {
             int idx = random.nextInt(3);  // 0 ~ 2 사이의 난수 발생
             switch (idx) {
                 case 0:
-                    code.append(Character.forDigit(random.nextInt(26) + 97, 10));
+                    code.append(Character.toChars(random.nextInt(26) + 97));
                     break;
                 case 1:
-                    code.append(Character.forDigit(random.nextInt(26) + 65, 10));
+                    code.append(Character.toChars(random.nextInt(26) + 65));
                     break;
                 case 2:
                     code.append(random.nextInt(10));
