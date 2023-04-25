@@ -54,6 +54,7 @@ public class WebSecurityConfig {
         // authenticated() -> 반드시 인증을 거쳐야 하는 요청 경로
         http.authorizeRequests()
                 .antMatchers("/account/**").permitAll()
+                .antMatchers("/mail/auth").permitAll()
                 .antMatchers("/test/**").authenticated()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .anyRequest().authenticated()
