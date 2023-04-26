@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
+import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
 
@@ -23,9 +24,12 @@ class CompanyAccountController {
         return ResponseEntity.ok(joinResDto);
     }
 
-    // INFO : 토큰 인증을 필요로 하는 API
-    @GetMapping("/test")
-    public String test() {
+    /*
+    * 토큰 & accountId로 본인 인증 aop 테스트
+    * */
+    @Certification
+    @GetMapping("/test/{accountId}}")
+    public String test(@PathVariable Long accountId) {
         return "TOKEN TEST SUCCESS";
     }
 

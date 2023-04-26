@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.wazard.util.response.ErrorMessage;
 import shop.wazard.util.response.StatusEnum;
 
+import java.nio.file.AccessDeniedException;
+
 @Slf4j
 @RestControllerAdvice
 public class AccountExceptionHandler {
@@ -66,4 +68,15 @@ public class AccountExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }
