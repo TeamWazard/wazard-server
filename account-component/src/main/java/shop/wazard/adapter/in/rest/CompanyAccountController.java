@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
-import shop.wazard.util.aop.Certification;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
 import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
+import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
 
@@ -38,6 +38,8 @@ class CompanyAccountController {
     @Certification
     @GetMapping("/test/{accountId}}")
     public String test(@PathVariable Long accountId) {
+        return "TEST SUCCESS";
+    }
 
     //TODO : 로그아웃 -> 어떻게 로그아웃 처리를 해야 할지 고민
 
