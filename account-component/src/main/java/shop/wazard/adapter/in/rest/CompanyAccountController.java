@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
 
 import javax.validation.Valid;
 
@@ -21,6 +23,12 @@ class CompanyAccountController {
     public ResponseEntity<JoinResDto> join(@Valid @RequestBody JoinReqDto joinReqDto) {
         JoinResDto joinResDto = companyAccountService.join(joinReqDto);
         return ResponseEntity.ok(joinResDto);
+    }
+
+    @PostMapping("/{accountId}")
+    public ResponseEntity<UpdateCompanyAccountInfoResDto> updateAccountInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
+        UpdateCompanyAccountInfoResDto updateCompanyAccountInfoResDto = companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
+        return ResponseEntity.ok(updateCompanyAccountInfoResDto);
     }
 
     // INFO : 토큰 인증을 필요로 하는 API
