@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
-import shop.wazard.adapter.in.rest.request.UpdateCompanyAccountInfoReq;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
 
 import java.time.LocalDate;
 
@@ -36,12 +36,12 @@ class CompanyAccountControllerTest {
     public void updateCompanyAccountInfoSuccess() throws Exception {
         // given
         String updateMyInfoUrl = "/account/companies/{accountId}";
-        UpdateCompanyAccountInfoReq updateCompanyAccountInfoReq = new UpdateCompanyAccountInfoReq("test@email.com", "홍길동", "FEMALE", LocalDate.of(2000, 1, 1));
+        UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto = new UpdateCompanyAccountInfoReqDto("test@email.com", "홍길동", "FEMALE", LocalDate.of(2000, 1, 1));
 
         // when
         ResultActions result = mockMvc.perform(post(updateMyInfoUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updateCompanyAccountInfoReq)));
+                .content(objectMapper.writeValueAsString(updateCompanyAccountInfoReqDto)));
 
         // then
         result.andExpectAll(
