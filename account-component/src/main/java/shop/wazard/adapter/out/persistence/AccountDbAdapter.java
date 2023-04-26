@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
-import shop.wazard.domain.AccountDomain;
 import shop.wazard.dto.JoinReqDto;
 
 import java.util.Optional;
@@ -26,8 +25,8 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     }
 
     @Override
-    public Optional<AccountDomain> findAccountByEmail(String email) {
-        return accountDomainConverter.accountOptToAccountDomainOpt(accountJpaRepository.findByEmail(email));
+    public Optional<Account> findAccountByEmail(String email) {
+        return accountJpaRepository.findByEmail(email);
     }
 
     @Override
