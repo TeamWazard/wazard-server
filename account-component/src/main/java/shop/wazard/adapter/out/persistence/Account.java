@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class Account {
+public class Account {
 
     @Id
     @GeneratedValue

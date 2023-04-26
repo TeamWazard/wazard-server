@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 interface AccountJpaRepository extends JpaRepository<Account, Long> {
 
@@ -13,6 +15,6 @@ interface AccountJpaRepository extends JpaRepository<Account, Long> {
 
     Account save(Account account);
 
-    Account findByEmail(String email);
+    Optional<Account> findByEmail(String email);
 
 }
