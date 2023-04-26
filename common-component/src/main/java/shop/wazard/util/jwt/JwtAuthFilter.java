@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import shop.wazard.util.response.ErrorMessage;
-import shop.wazard.util.response.StatusEnum;
+import shop.wazard.util.exception.ErrorMessage;
+import shop.wazard.util.exception.StatusEnum;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

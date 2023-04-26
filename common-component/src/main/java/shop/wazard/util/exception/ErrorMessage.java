@@ -1,4 +1,4 @@
-package shop.wazard.util.response;
+package shop.wazard.util.exception;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class ErrorMessage {
 
-    private StatusEnum statusEnum;
+    private int errorCode;
     private Object errorMessage;
 
 }
