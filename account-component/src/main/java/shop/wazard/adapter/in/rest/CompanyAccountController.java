@@ -7,6 +7,8 @@ import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
 import shop.wazard.util.aop.Certification;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
 
 import javax.validation.Valid;
 
@@ -24,14 +26,18 @@ class CompanyAccountController {
         return ResponseEntity.ok(joinResDto);
     }
 
+    @PostMapping("/{accountId}")
+    public ResponseEntity<UpdateCompanyAccountInfoResDto> updateAccountInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
+        UpdateCompanyAccountInfoResDto updateCompanyAccountInfoResDto = companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
+        return ResponseEntity.ok(updateCompanyAccountInfoResDto);
+    }
+
     /*
     * 토큰 & accountId로 본인 인증 aop 테스트
     * */
     @Certification
     @GetMapping("/test/{accountId}}")
     public String test(@PathVariable Long accountId) {
-        return "TOKEN TEST SUCCESS";
-    }
 
     //TODO : 로그아웃 -> 어떻게 로그아웃 처리를 해야 할지 고민
 

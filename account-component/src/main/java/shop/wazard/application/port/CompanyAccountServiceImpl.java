@@ -5,15 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shop.wazard.adapter.out.persistence.Account;
 import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 class CompanyAccountServiceImpl implements CompanyAccountService {
 
     private final PasswordEncoder passwordEncoder;
@@ -31,4 +35,17 @@ class CompanyAccountServiceImpl implements CompanyAccountService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public UpdateCompanyAccountInfoResDto updateCompanyAccountInfo(UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
+        final Account account =
+                loadAccountPort.findAccountByEmail(updateCompanyAccountInfoReqDto.getEmail())
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 회원입니다."));
+
+        account.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
+
+        return UpdateCompanyAccountInfoResDto.builder()
+                .message("수정 완료되었습니다.")
+                .build();
+    }
 }
