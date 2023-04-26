@@ -1,7 +1,7 @@
 package shop.wazard.dto;
 
 import lombok.*;
-import org.springframework.lang.Nullable;
+import shop.wazard.adapter.out.persistence.GenderType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -21,9 +21,13 @@ public class UpdateCompanyAccountInfoReqDto {
     private String userName;
 
     @NotBlank(message = "성별은 필수 입력 값입니다.")
-    private String gender;
+    private GenderType gender;
 
-    @Nullable
+    @NotBlank
     private LocalDate birth;
+
+    @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$")
+    @NotBlank
+    private String phoneNumber;
 
 }
