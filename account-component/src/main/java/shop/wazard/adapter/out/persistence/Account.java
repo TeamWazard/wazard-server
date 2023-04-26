@@ -4,11 +4,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,9 +27,9 @@ public class Account {
     private String email;
     private String password;
     private String userName;
-    private String address;
     private String phoneNumber;
-    private GenderType genderType;
+    private GenderType gender;
+    private LocalDate birth;
     private AccountStatus accountStatus;
     private String roles;
 
@@ -39,10 +41,21 @@ public class Account {
     }
 
     @Builder
-    public Account(String email, String password, String userName, String roles) {
+    public Account(String email, String password, String userName, String phoneNumber, GenderType gender, LocalDate birth, String roles) {
         this.email = email;
         this.password = password;
         this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.birth = birth;
         this.roles = roles;
+    }
+
+    public void updateCompanyAccountInfo(UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
+        this.email = updateCompanyAccountInfoReqDto.getEmail();
+        this.userName = updateCompanyAccountInfoReqDto.getUserName();
+        this.phoneNumber = updateCompanyAccountInfoReqDto.getPhoneNumber();
+        this.gender = updateCompanyAccountInfoReqDto.getGender();
+        this.birth = updateCompanyAccountInfoReqDto.getBirth();
     }
 }
