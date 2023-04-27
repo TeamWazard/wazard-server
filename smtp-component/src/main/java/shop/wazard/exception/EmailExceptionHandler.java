@@ -13,7 +13,7 @@ public class EmailExceptionHandler {
     public ResponseEntity<ErrorMessage> failSendEmail(Exception e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.FAIL_TO_SEND_MAIL)
+                        .errorCode(StatusEnum.FAIL_TO_SEND_MAIL.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
@@ -23,7 +23,7 @@ public class EmailExceptionHandler {
     public ResponseEntity<ErrorMessage> failCreateEmailForm(Exception e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.FAIL_TO_CREATE_MAIL_FROM)
+                        .errorCode(StatusEnum.FAIL_TO_CREATE_MAIL_FROM.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );

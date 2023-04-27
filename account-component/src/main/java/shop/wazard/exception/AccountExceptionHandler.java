@@ -22,7 +22,7 @@ public class AccountExceptionHandler {
     public ResponseEntity<ErrorMessage> customMethod(Exception e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
@@ -33,7 +33,7 @@ public class AccountExceptionHandler {
     public ResponseEntity<ErrorMessage> jwtExceptionHandle(Exception e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
@@ -45,7 +45,7 @@ public class AccountExceptionHandler {
     public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
                         .errorMessage(e.getFieldError().getDefaultMessage())
                         .build()
         );

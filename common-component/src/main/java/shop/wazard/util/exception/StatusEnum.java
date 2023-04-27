@@ -23,5 +23,4 @@ public enum StatusEnum {
         this.statusCode = statusCode;
         this.message = message;
     }
-
 }
