@@ -17,7 +17,6 @@ import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
-import shop.wazard.exception.IsNotExistAccountException;
 import shop.wazard.util.jwt.JwtProvider;
 
 import java.time.LocalDate;
