@@ -13,9 +13,7 @@ import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
 import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
-import shop.wazard.util.exception.WazardException;
-
-import static shop.wazard.util.exception.StatusEnum.NOT_FOUND_COMPANY_ACCOUNT;
+import shop.wazard.util.exception.StatusEnum;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +41,7 @@ class CompanyAccountServiceImpl implements CompanyAccountService {
     public UpdateCompanyAccountInfoResDto updateCompanyAccountInfo(UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
         final Account account =
                 loadAccountPort.findAccountByEmail(updateCompanyAccountInfoReqDto.getEmail())
-                        .orElseThrow(() -> new WazardException(NOT_FOUND_COMPANY_ACCOUNT));
+                .orElseThrow(() -> new NullPointerException(StatusEnum.IS_NOT_EXIST_ACCOUNT.getMessage()));
 
         account.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
 

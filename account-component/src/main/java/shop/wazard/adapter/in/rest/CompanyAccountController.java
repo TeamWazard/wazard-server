@@ -8,6 +8,7 @@ import shop.wazard.dto.JoinReqDto;
 import shop.wazard.dto.JoinResDto;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
 import shop.wazard.dto.UpdateCompanyAccountInfoResDto;
+import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
 
@@ -30,10 +31,13 @@ class CompanyAccountController {
         return ResponseEntity.ok(companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto));
     }
 
-    // INFO : 토큰 인증을 필요로 하는 API
-    @GetMapping("/test")
-    public String test() {
-        return "TOKEN TEST SUCCESS";
+    /*
+    * 토큰 & accountId로 본인 인증 aop 테스트
+    * */
+    @Certification
+    @GetMapping("/test/{accountId}}")
+    public String test(@PathVariable Long accountId) {
+        return "TEST SUCCESS";
     }
 
     //TODO : 로그아웃 -> 어떻게 로그아웃 처리를 해야 할지 고민

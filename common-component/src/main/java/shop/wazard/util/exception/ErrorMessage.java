@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class ErrorMessage {
 
-    private StatusEnum statusEnum;
-    private Object errorMessage;
+    private int errorCode;
+    private String errorMessage;
 
 }

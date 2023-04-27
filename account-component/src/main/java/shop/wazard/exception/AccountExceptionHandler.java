@@ -8,28 +8,14 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import shop.wazard.util.exception.ErrorDto;
 import shop.wazard.util.exception.ErrorMessage;
 import shop.wazard.util.exception.StatusEnum;
-import shop.wazard.util.exception.WazardException;
+
+import java.nio.file.AccessDeniedException;
 
 @Slf4j
 @RestControllerAdvice
 public class AccountExceptionHandler {
-
-    @ExceptionHandler(WazardException.class)
-    public ResponseEntity<ErrorMessage> handleWazardException(WazardException we) {
-        final ErrorDto errorDto = ErrorDto.builder()
-                .statusCode(we.getStatusEnum().getStatusCode())
-                .message(we.getStatusEnum().getMessage())
-                .build();
-        return ResponseEntity.badRequest().body(
-                ErrorMessage.builder()
-                        .statusEnum(we.getStatusEnum())
-                        .errorMessage(errorDto)
-                        .build()
-        );
-    }
 
     // TODO : RuntimeException을 던지는 메서드들은 추후 구체적인 예외로 변경 필요
     @ExceptionHandler(RuntimeException.class)
@@ -42,6 +28,7 @@ public class AccountExceptionHandler {
         );
     }
 
+    // TODO : JWT 에러 핸들러 -> 수정 필요
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorMessage> jwtExceptionHandle(Exception e) {
         return ResponseEntity.badRequest().body(
@@ -52,6 +39,8 @@ public class AccountExceptionHandler {
         );
     }
 
+
+    // TODO : 어떤 에러를 처리하는지?
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(
@@ -62,11 +51,12 @@ public class AccountExceptionHandler {
         );
     }
 
+    // TODO : 어떤 에러를 처리하는지?
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorMessage> handleBindException(BindException e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
@@ -77,9 +67,22 @@ public class AccountExceptionHandler {
     public ResponseEntity<ErrorMessage> handleJwtExpiredException(Exception e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .statusEnum(StatusEnum.BAD_REQUEST)
+                        .errorCode(StatusEnum.EXPIRED_TOKEN.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
     }
+
+
+    // 본인 인증 실패 에러 핸들링
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.ACCESS_DENIED.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }

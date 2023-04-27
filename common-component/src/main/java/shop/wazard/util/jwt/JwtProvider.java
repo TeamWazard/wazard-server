@@ -11,8 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -67,7 +65,6 @@ public class JwtProvider implements InitializingBean {
         } catch (ExpiredJwtException e) {
             throw new RuntimeException("토큰이 만료되었습니다.");
         } catch (JwtException | IllegalArgumentException e) {
-
             log.info("jwtException : {}", e);
         }
 
@@ -86,18 +83,13 @@ public class JwtProvider implements InitializingBean {
                 .compact();
     }
 
-    public Long getAccountId() throws JwtException {
-        String token = getJwt();
+    public Long getAccountId(HttpServletRequest request) throws JwtException {
+        String token = request.getHeader("ACCESS-TOKEN");
         Jws<Claims> claims = Jwts.parserBuilder()
                 .setSigningKey(atkKey)
                 .build()
                 .parseClaimsJws(token);
         return claims.getBody().get("accountId", Long.class);  // jwt 에서 userIdx를 추출합니다.
-    }
-
-    public String getJwt(){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        return request.getHeader("ACCESS-TOKEN");
     }
 
 }
