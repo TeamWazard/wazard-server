@@ -65,7 +65,6 @@ public class JwtProvider implements InitializingBean {
         } catch (ExpiredJwtException e) {
             throw new RuntimeException("토큰이 만료되었습니다.");
         } catch (JwtException | IllegalArgumentException e) {
-
             log.info("jwtException : {}", e);
         }
 

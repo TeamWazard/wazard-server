@@ -8,6 +8,6 @@ import lombok.Getter;
 public class ErrorMessage {
 
     private int errorCode;
-    private Object errorMessage;
+    private String errorMessage;
 
 }

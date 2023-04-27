@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import shop.wazard.util.exception.StatusEnum;
 import shop.wazard.util.jwt.JwtProvider;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ class AspectConfig {
         HttpServletRequest request = servletRequestAttributes.getRequest();
         if (!accountId.equals(jwtProvider.getAccountId(request))) {
             log.info("============== 본인인증 실패 ==============");
-            throw new IllegalArgumentException("본인인증에 실패하였습니다.");
+            throw new IllegalArgumentException(StatusEnum.ACCESS_DENIED.getMessage());
         }
     }
 
