@@ -6,6 +6,7 @@ import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
 import shop.wazard.dto.JoinReqDto;
+import shop.wazard.util.exception.StatusEnum;
 
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     public void doubleCheckEmail(String email) {
         Long accountId = accountJpaRepository.findIdByEmail(email);
         if (accountId != null) {
-            throw new IllegalArgumentException("이미 가입된 정보가 존재합니다");
+            throw new IllegalArgumentException(StatusEnum.IS_EXIST_ACCOUNT.getMessage());
         }
     }
 

@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import shop.wazard.util.response.ErrorMessage;
-import shop.wazard.util.response.StatusEnum;
+import shop.wazard.util.exception.ErrorMessage;
+import shop.wazard.util.exception.StatusEnum;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,13 +33,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("set Authentication to security context for '{}', uri: {}", authentication.getName(), request.getRequestURI());
             }
         } catch (JwtException e) {
-            jwtExceptionHandler(response, "토큰이 만료되었습니다.");
+            jwtExceptionHandler(response);
         }
         filterChain.doFilter(request, response);
     }
 
     // Jwt 예외처리
-    public void jwtExceptionHandler(HttpServletResponse response, String message) {
+    public void jwtExceptionHandler(HttpServletResponse response) {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -47,8 +47,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String result = new ObjectMapper()
                     .writeValueAsString(
                             ErrorMessage.builder()
-                                    .statusEnum(StatusEnum.EXPIRED_TOKEN)
-                                    .errorMessage(message)
+                                    .errorCode(StatusEnum.EXPIRED_TOKEN.getStatusCode())
+                                    .errorMessage(StatusEnum.EXPIRED_TOKEN.getMessage())
                                     .build()
                     );
             response.getWriter().write(result);

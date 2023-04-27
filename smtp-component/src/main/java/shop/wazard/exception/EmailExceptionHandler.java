@@ -3,8 +3,8 @@ package shop.wazard.exception;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import shop.wazard.util.response.ErrorMessage;
-import shop.wazard.util.response.StatusEnum;
+import shop.wazard.util.exception.ErrorMessage;
+import shop.wazard.util.exception.StatusEnum;
 
 @ControllerAdvice
 public class EmailExceptionHandler {
