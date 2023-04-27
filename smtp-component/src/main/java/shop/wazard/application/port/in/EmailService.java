@@ -2,6 +2,6 @@ package shop.wazard.application.port.in;
 
 public interface EmailService {
 
-//    String sendEmail(String email) throws MessagingException;
+    String sendEmail(String email) throws MessagingException;
 
 }
