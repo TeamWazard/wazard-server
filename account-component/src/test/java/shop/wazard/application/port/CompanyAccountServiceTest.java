@@ -17,6 +17,7 @@ import shop.wazard.application.port.in.CompanyAccountService;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.exception.IsNotExistAccountException;
 import shop.wazard.util.jwt.JwtProvider;
 
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ class CompanyAccountServiceTest {
     private LoadAccountPort loadAccountPort;
 
     @Test
-    @DisplayName("고용주 - 회원정보 수정 성공")
+    @DisplayName("성공 - 회원 정보 수정")
     public void updateCompanyAccountInfoSuccess() throws Exception {
         // given
         UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto = UpdateCompanyAccountInfoReqDto.builder()
@@ -72,4 +73,25 @@ class CompanyAccountServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("실패 - 존재하지 않는 회원 정보 조회 - 회원 정보 수정")
+    public void updateCompanyAccountInfoFail() {
+        // given
+        UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto = UpdateCompanyAccountInfoReqDto.builder()
+                .email("test@email.com")
+                .userName("갑")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderType.MALE)
+                .birth(LocalDate.of(2000, 1, 1))
+                .build();
+
+        //when
+        Mockito.when(loadAccountPort.findAccountByEmail(updateCompanyAccountInfoReqDto.getEmail()))
+                .thenThrow(new IsNotExistAccountException());
+
+        //then
+        Assertions.assertThrows(IsNotExistAccountException.class,
+                () -> companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto));
+
+    }
 }
