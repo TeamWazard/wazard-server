@@ -1,4 +1,4 @@
-package shop.wazard.util.response;
+package shop.wazard.util.exception;
 
 import lombok.Builder;
 import lombok.Getter;

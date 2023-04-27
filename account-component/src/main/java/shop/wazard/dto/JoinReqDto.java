@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.wazard.adapter.out.persistence.GenderType;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
@@ -25,8 +27,8 @@ public class JoinReqDto {
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String userName;
 
-    @NotBlank(message = "성별은 필수 입력 값입니다.")
-    private String gender;
+    @NotNull(message = "성별은 필수 입력 값입니다.")
+    private GenderType gender;
 
     private LocalDate birth;
 

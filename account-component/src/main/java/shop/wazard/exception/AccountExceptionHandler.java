@@ -8,9 +8,10 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import shop.wazard.util.exception.ErrorDto;
+import shop.wazard.util.exception.ErrorMessage;
+import shop.wazard.util.exception.StatusEnum;
 import shop.wazard.util.exception.WazardException;
-import shop.wazard.util.response.ErrorMessage;
-import shop.wazard.util.response.StatusEnum;
 
 @Slf4j
 @RestControllerAdvice
@@ -18,10 +19,14 @@ public class AccountExceptionHandler {
 
     @ExceptionHandler(WazardException.class)
     public ResponseEntity<ErrorMessage> handleWazardException(WazardException we) {
+        final ErrorDto errorDto = ErrorDto.builder()
+                .statusCode(we.getStatusEnum().getStatusCode())
+                .message(we.getStatusEnum().getMessage())
+                .build();
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
                         .statusEnum(we.getStatusEnum())
-                        .errorMessage(we.getMessage())
+                        .errorMessage(errorDto)
                         .build()
         );
     }

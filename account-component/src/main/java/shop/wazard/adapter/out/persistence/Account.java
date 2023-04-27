@@ -5,11 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.dto.UpdateCompanyAccountInfoReqDto;
+import shop.wazard.util.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account {
+public class Account extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -28,9 +26,9 @@ public class Account {
     private String password;
     private String userName;
     private String phoneNumber;
+    @Enumerated(EnumType.STRING)
     private GenderType gender;
     private LocalDate birth;
-    private AccountStatus accountStatus;
     private String roles;
 
     public List<String> getRoleList() {

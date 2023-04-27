@@ -25,10 +25,9 @@ class CompanyAccountController {
         return ResponseEntity.ok(joinResDto);
     }
 
-    @PostMapping("/{accountId}")
+    @PatchMapping("/{accountId}")
     public ResponseEntity<UpdateCompanyAccountInfoResDto> updateAccountInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyAccountInfoReqDto updateCompanyAccountInfoReqDto) {
-        UpdateCompanyAccountInfoResDto updateCompanyAccountInfoResDto = companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto);
-        return ResponseEntity.ok(updateCompanyAccountInfoResDto);
+        return ResponseEntity.ok(companyAccountService.updateCompanyAccountInfo(updateCompanyAccountInfoReqDto));
     }
 
     // INFO : 토큰 인증을 필요로 하는 API
