@@ -11,6 +11,7 @@ class AccountDomainConverter {
                 .email(joinReqDto.getEmail())
                 .password(joinReqDto.getPassword())
                 .userName(joinReqDto.getUserName())
+                .phoneNumber(joinReqDto.getPhoneNumber())
                 .gender(joinReqDto.getGender())
                 .birth(joinReqDto.getBirth())
                 .roles(joinReqDto.getRole())

@@ -27,6 +27,10 @@ public class JoinReqDto {
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String userName;
 
+    @Pattern(regexp = "^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$")
+    @NotBlank(message = "전화번호는 필수 입력 값입니다.")
+    private String phoneNumber;
+
     @NotNull(message = "성별은 필수 입력 값입니다.")
     private GenderType gender;
 
