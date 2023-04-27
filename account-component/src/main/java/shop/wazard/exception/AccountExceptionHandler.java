@@ -8,12 +8,23 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import shop.wazard.util.exception.WazardException;
 import shop.wazard.util.response.ErrorMessage;
 import shop.wazard.util.response.StatusEnum;
 
 @Slf4j
 @RestControllerAdvice
 public class AccountExceptionHandler {
+
+    @ExceptionHandler(WazardException.class)
+    public ResponseEntity<ErrorMessage> handleWazardException(WazardException we) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .statusEnum(we.getStatusEnum())
+                        .errorMessage(we.getMessage())
+                        .build()
+        );
+    }
 
     // TODO : RuntimeException을 던지는 메서드들은 추후 구체적인 예외로 변경 필요
     @ExceptionHandler(RuntimeException.class)
