@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.wazard.application.port.domain.Account;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -48,7 +49,7 @@ class AccountJpa {
     }
 
     @Builder
-    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles) {
+    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, AccountStatusJpa accountStatusJpa) {
         this.email = email;
         this.password = password;
         this.userName = userName;
@@ -56,6 +57,13 @@ class AccountJpa {
         this.gender = GenderTypeJpa.valueOf(gender);
         this.birth = birth;
         this.roles = roles;
+        this.accountStatusJpa = accountStatusJpa;
     }
 
+    public void updateMyProfile(Account account) {
+        this.userName = account.getMyProfile().getUserName();
+        this.gender = GenderTypeJpa.valueOf(account.getMyProfile().getGender().toString());
+        this.birth = account.getMyProfile().getBirth();
+        this.phoneNumber = account.getMyProfile().getPhoneNumber();
+    }
 }

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface LoadAccountPort {
 
-    void doubleCheckEmail(String email);
+    Boolean isPossibleEmail(String email);
 
     Optional<Account> findAccountByEmail(String email);
 

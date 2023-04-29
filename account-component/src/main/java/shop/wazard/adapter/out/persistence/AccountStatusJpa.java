@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 enum AccountStatusJpa {
 
-    ACTIVE("ACVTIVE"), INACTIVE("INACTIVE");
+    ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
     private final String accountStatus;
 

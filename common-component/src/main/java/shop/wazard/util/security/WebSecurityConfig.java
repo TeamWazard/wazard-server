@@ -53,7 +53,7 @@ public class WebSecurityConfig {
         // permitAll() -> 검증 없이 허용할 요청 경로
         // authenticated() -> 반드시 인증을 거쳐야 하는 요청 경로
         http.authorizeRequests()
-                .antMatchers("/account/join", "account/login").permitAll()
+                .antMatchers("/account/join", "/account/login").permitAll()
                 .antMatchers("/account/**").authenticated()
                 .antMatchers("/mail/**").permitAll()
                 .antMatchers("/test/**").authenticated()

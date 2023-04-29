@@ -17,6 +17,7 @@ import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
 import shop.wazard.dto.*;
 import shop.wazard.exception.AccountNotFoundException;
+import shop.wazard.exception.NestedEmailException;
 import shop.wazard.util.exception.StatusEnum;
 import shop.wazard.util.jwt.JwtProvider;
 
@@ -36,7 +37,9 @@ class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public JoinResDto join(JoinReqDto joinReqDto) {
-        loadAccountPort.doubleCheckEmail(joinReqDto.getEmail());
+        if (!loadAccountPort.isPossibleEmail(joinReqDto.getEmail())) {
+            throw new NestedEmailException(StatusEnum.NESTED_EMAIL.getMessage());
+        }
         Account account = Account.createAccount(joinReqDto);
         account.getMyProfile().setEncodedPassword(passwordEncoder.encode(joinReqDto.getPassword()));
         saveAccountPort.save(account);
@@ -56,11 +59,13 @@ class AccountServiceImpl implements AccountService {
                 userDetails.getPassword(),
                 userDetails.getAuthorities()
         );
-        Long accountId = loadAccountPort.findAccountIdByEmail(loginReqDto.getEmail());
-        log.info("========== 회원가입을 시도한 회원의 email = {}, accountId = {} ==========", loginReqDto.getEmail(), accountId);
+        Account account = loadAccountPort.findAccountByEmail(loginReqDto.getEmail())
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return LoginResDto.builder()
-                .accountId(accountId)
-                .accessToken(jwtProvider.createAccessToken(authentication, accountId))
+                .accountId(account.getId())
+                .email(account.getMyProfile().getEmail())
+                .role(account.getRoles())
+                .accessToken(jwtProvider.createAccessToken(authentication, account.getId()))
                 .build();
     }
 
@@ -69,6 +74,7 @@ class AccountServiceImpl implements AccountService {
     public UpdateMyProfileResDto updateMyProfile(UpdateMyProfileReqDto updateMyProfileReqDto) {
         Account account = loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        log.info("===== 조회 성공 =====");
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
         updateAccountPort.updateMyProfile(account);
         return UpdateMyProfileResDto.builder()

@@ -36,6 +36,7 @@ public class Account {
                         .phoneNumber(joinReqDto.getPhoneNumber())
                         .build())
                 .roles(joinReqDto.getRole())
+                .accountStatus(AccountStatus.valueOf("ACTIVE"))
                 .build();
     }
 

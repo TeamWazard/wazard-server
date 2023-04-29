@@ -18,15 +18,15 @@ import java.nio.file.AccessDeniedException;
 public class AccountExceptionHandler {
 
     // TODO : RuntimeException을 던지는 메서드들은 추후 구체적인 예외로 변경 필요
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorMessage> customMethod(Exception e) {
-        return ResponseEntity.badRequest().body(
-                ErrorMessage.builder()
-                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
-                        .errorMessage(e.getMessage())
-                        .build()
-        );
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<ErrorMessage> customMethod(Exception e) {
+//        return ResponseEntity.badRequest().body(
+//                ErrorMessage.builder()
+//                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
+//                        .errorMessage(e.getMessage())
+//                        .build()
+//        );
+//    }
 
     // TODO : JWT 에러 핸들러 -> 수정 필요
     @ExceptionHandler(JwtException.class)
@@ -74,7 +74,7 @@ public class AccountExceptionHandler {
     }
 
 
-    // 본인 인증 실패 에러 핸들링
+    // 본인인증 실패(AOP)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException e) {
         return ResponseEntity.badRequest().body(
@@ -85,11 +85,23 @@ public class AccountExceptionHandler {
         );
     }
 
+    // 존재하지 않는 회원
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ErrorMessage> accountNotFoundException(AccountNotFoundException e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
                         .errorCode(StatusEnum.ACCOUNT_NOT_FOUND.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
+    // 회원가입 - 이미 가입된 메일 존재
+    @ExceptionHandler(NestedEmailException.class)
+    public ResponseEntity<ErrorMessage> nestedEmailException(NestedEmailException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.NESTED_EMAIL.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );
