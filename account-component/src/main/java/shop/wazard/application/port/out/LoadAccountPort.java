@@ -1,6 +1,6 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.adapter.out.persistence.Account;
+import shop.wazard.application.port.domain.Account;
 
 import java.util.Optional;
 
@@ -11,5 +11,7 @@ public interface LoadAccountPort {
     Optional<Account> findAccountByEmail(String email);
 
     Long findAccountIdByEmail(String email);
+
+    Optional<Account> findAccountByEmailForUserDetails(String email);
 
 }

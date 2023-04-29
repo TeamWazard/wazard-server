@@ -13,7 +13,7 @@ public enum StatusEnum {
     FAIL_TO_SEND_MAIL(501, "메일 전송에 실패하였습니다."),
     FAIL_TO_CREATE_MAIL_FROM(502, "메일 폼 작성에 실패하였습니다."),
     ACCESS_DENIED(405, "본인 인증에 실패하였습니다."),
-    IS_NOT_EXIST_ACCOUNT(406, "존재하지 않는 계정입니다."),
+    ACCOUNT_NOT_FOUND(406, "존재하지 않는 계정입니다."),
     IS_EXIST_ACCOUNT(407, "이미 가입된 정보가 있습니다.");
 
     private int statusCode;

@@ -1,4 +1,4 @@
-package shop.wazard.adapter.out.persistence;
+package shop.wazard.application.port.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

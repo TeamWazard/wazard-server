@@ -8,13 +8,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-interface AccountJpaRepository extends JpaRepository<Account, Long> {
+interface AccountJpaRepository extends JpaRepository<AccountJpa, Long> {
 
-    @Query(value = "select a.id from Account a where a.email = :email")
+    @Query(value = "select a.id from AccountJpa a where a.email = :email")
     Long findIdByEmail(@Param("email") String email);
 
-    Account save(Account account);
+    AccountJpa save(AccountJpa accountJpa);
 
-    Optional<Account> findByEmail(String email);
+    Optional<AccountJpa> findByEmail(String email);
 
 }

@@ -2,10 +2,11 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
-import shop.wazard.dto.JoinReqDto;
+import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.Optional;
 class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccountPort {
 
     private final AccountJpaRepository accountJpaRepository;
-    private final AccountDomainConverter accountDomainConverter;
+    private final AccountMapper accountMapper;
 
     @Override
     public void doubleCheckEmail(String email) {
@@ -27,7 +28,9 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
 
     @Override
     public Optional<Account> findAccountByEmail(String email) {
-        return accountJpaRepository.findByEmail(email);
+        AccountJpa accountJpa = accountJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        return accountMapper.toAccountDomain(accountJpa);
     }
 
     @Override
@@ -36,9 +39,23 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     }
 
     @Override
-    public void save(JoinReqDto joinReqDto) {
-        Account account = accountDomainConverter.joinReqDtoToAccount(joinReqDto);
-        accountJpaRepository.save(account);
+    public Optional<Account> findAccountByEmailForUserDetails(String email) {
+        AccountJpa accountJpa = accountJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        return accountMapper.toAccountForSecurity(accountJpa);
+    }
+
+    @Override
+    public void save(Account account) {
+        AccountJpa accountJpa = accountMapper.toAccountJpa(account);
+        accountJpaRepository.save(accountJpa);
+    }
+
+    @Override
+    public void updateMyProfile(Account account) {
+        AccountJpa accountJpa = accountJpaRepository.findByEmail(account.getMyProfile().getEmail())
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        accountMapper.toAccountJpa(account);
     }
 
 }
