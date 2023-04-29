@@ -74,7 +74,6 @@ class AccountServiceImpl implements AccountService {
     public UpdateMyProfileResDto updateMyProfile(UpdateMyProfileReqDto updateMyProfileReqDto) {
         Account account = loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        log.info("===== 조회 성공 =====");
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
         updateAccountPort.updateMyProfile(account);
         return UpdateMyProfileResDto.builder()

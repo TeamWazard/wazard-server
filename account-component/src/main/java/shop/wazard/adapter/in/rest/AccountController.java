@@ -30,8 +30,9 @@ class AccountController {
     }
 
 
+    @Certification
     @PostMapping("/{accountId}")
-    public ResponseEntity<UpdateMyProfileResDto> updateAccountInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateMyProfileReqDto updateMyProfileReqDto) {
+    public ResponseEntity<UpdateMyProfileResDto> updateMyProfile(@PathVariable Long accountId, @Valid @RequestBody UpdateMyProfileReqDto updateMyProfileReqDto) {
         UpdateMyProfileResDto updateMyProfileResDto = accountService.updateMyProfile(updateMyProfileReqDto);
         return ResponseEntity.ok(updateMyProfileResDto);
     }

@@ -1,6 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.AccountStatus;
@@ -10,11 +9,9 @@ import shop.wazard.application.port.domain.MyProfile;
 import java.util.Optional;
 
 @Component
-@Slf4j
 class AccountMapper {
 
     public AccountJpa toAccountJpa(Account account) {
-        log.info("==== good ====");
         return AccountJpa.builder()
                 .email(account.getMyProfile().getEmail())
                 .password(account.getMyProfile().getPassword())
@@ -28,7 +25,6 @@ class AccountMapper {
     }
 
     public Optional<Account> toAccountDomain(AccountJpa accountJpa) {
-        log.info("==== mapper ====");
         return Optional.of(Account.builder()
                 .id(accountJpa.getId())
                 .myProfile(MyProfile.builder()
