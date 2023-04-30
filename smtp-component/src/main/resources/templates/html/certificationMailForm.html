@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Wazard Mail Form</title>
+    <link href="../css/certificationMailForm.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<section>
+    <h1>
+        이메일 인증
+    </h1>
+    <p>
+        국내 모든 알바생과 고용주의 시급관리를 도와주는
+        <b style="color: #656afd;">TeamWazard</b> 입니다!
+        <br/>
+        아래의 인증코드를 입력하여 본인인증을 완료해주세요!
+    </p>
+    <div class="img"><img src="../img/emailLogo.png" alt="My Image" /></div>
+    <div class="secretCode">
+        <label th:text="${code}"></label>
+    </div>
+</section>
+</body>
+</html>
