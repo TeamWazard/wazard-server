@@ -26,7 +26,7 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     }
 
     @Override
-    public Optional<Account> findAccountByEmail(String email) {
+    public Account findAccountByEmail(String email) {
         AccountJpa accountJpa = accountJpaRepository.findByEmail(email)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountMapper.toAccountDomain(accountJpa);
@@ -54,11 +54,7 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     public void updateMyProfile(Account account) {
         AccountJpa accountJpa = accountJpaRepository.findByEmail(account.getMyProfile().getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        accountJpa.updateMyProfile(account.getMyProfile().getUserName(),
-                account.getMyProfile().getPhoneNumber(),
-                account.getMyProfile().getGender().toString(),
-                account.getMyProfile().getBirth()
-        );
+        accountMapper.updateMyProfile(accountJpa, account);
     }
 
 }

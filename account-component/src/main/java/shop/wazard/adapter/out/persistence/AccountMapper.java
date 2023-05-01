@@ -26,8 +26,8 @@ class AccountMapper {
                 .build();
     }
 
-    public Optional<Account> toAccountDomain(AccountJpa accountJpa) {
-        return Optional.of(Account.builder()
+    public Account toAccountDomain(AccountJpa accountJpa) {
+        return Account.builder()
                 .id(accountJpa.getId())
                 .myProfile(MyProfile.builder()
                         .email(accountJpa.getEmail())
@@ -38,7 +38,7 @@ class AccountMapper {
                         .build())
                 .accountStatus(AccountStatus.valueOf(accountJpa.getAccountStatusJpa().toString()))
                 .roles(accountJpa.getRoles())
-                .build());
+                .build();
     }
 
     public Optional<Account> toAccountForSecurity(AccountJpa accountJpa) {
@@ -52,4 +52,10 @@ class AccountMapper {
         );
     }
 
+    public void updateMyProfile(AccountJpa accountJpa, Account account) {
+        accountJpa.updateMyProfile(account.getMyProfile().getUserName(),
+                account.getMyProfile().getPhoneNumber(),
+                account.getMyProfile().getGender().toString(),
+                account.getMyProfile().getBirth());
+    }
 }

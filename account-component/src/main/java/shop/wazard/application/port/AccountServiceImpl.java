@@ -16,7 +16,6 @@ import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
 import shop.wazard.dto.*;
-import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.NestedEmailException;
 import shop.wazard.util.exception.StatusEnum;
 import shop.wazard.util.jwt.JwtProvider;
@@ -59,8 +58,7 @@ class AccountServiceImpl implements AccountService {
                 userDetails.getPassword(),
                 userDetails.getAuthorities()
         );
-        Account account = loadAccountPort.findAccountByEmail(loginReqDto.getEmail())
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        Account account = loadAccountPort.findAccountByEmail(loginReqDto.getEmail());
         return LoginResDto.builder()
                 .accountId(account.getId())
                 .email(account.getMyProfile().getEmail())
@@ -72,8 +70,7 @@ class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public UpdateMyProfileResDto updateMyProfile(UpdateMyProfileReqDto updateMyProfileReqDto) {
-        Account account = loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        Account account = loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail());
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
         updateAccountPort.updateMyProfile(account);
         return UpdateMyProfileResDto.builder()
