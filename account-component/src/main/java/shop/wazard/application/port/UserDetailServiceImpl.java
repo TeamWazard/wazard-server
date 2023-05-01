@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import shop.wazard.adapter.out.persistence.Account;
+import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.out.LoadAccountPort;
 
 import java.util.List;
@@ -21,18 +21,19 @@ class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = loadAccountPort.findAccountByEmail(email)
+        Account account = loadAccountPort.findAccountByEmailForUserDetails(email)
                 .orElseThrow(() -> new UsernameNotFoundException("email : " + email + " was not found"));
         return createUserDetails(account);
     }
 
     private UserDetails createUserDetails(Account account) {
-        List<SimpleGrantedAuthority> grantedAuthorities = account.getRoleList().stream()
+        List<SimpleGrantedAuthority> grantedAuthorities = account.getRoleList()
+                .stream()
                 .map(authority -> new SimpleGrantedAuthority(authority))
                 .collect(Collectors.toList());
-
-        return new User(account.getEmail(),
-                account.getPassword(),
+        return new User(account.getMyProfile().getEmail(),
+                account.getMyProfile().getPassword(),
                 grantedAuthorities);
     }
+
 }

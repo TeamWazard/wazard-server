@@ -28,6 +28,7 @@ repositories {
 
 dependencies {
     implementation project(':common-component')
+    implementation project(':entity-component')
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'

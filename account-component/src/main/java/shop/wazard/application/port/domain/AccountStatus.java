@@ -1,4 +1,4 @@
-package shop.wazard.adapter.out.persistence;
+package shop.wazard.application.port.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AccountStatus {
 
-    ACTIVE("ACVTIVE"), INACTIVE("INACTIVE");
+    ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
     private final String accountStatus;
 
 }
-

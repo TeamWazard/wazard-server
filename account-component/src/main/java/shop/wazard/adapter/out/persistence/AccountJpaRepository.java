@@ -1,20 +1,18 @@
 package shop.wazard.adapter.out.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import shop.wazard.entity.account.AccountJpa;
 
 import java.util.Optional;
 
 @Repository
-interface AccountJpaRepository extends JpaRepository<Account, Long> {
+interface AccountJpaRepository extends JpaRepository<AccountJpa, Long> {
 
-    @Query(value = "select a.id from Account a where a.email = :email")
-    Long findIdByEmail(@Param("email") String email);
+    Long findIdByEmail(String email);
 
-    Account save(Account account);
+    AccountJpa save(AccountJpa accountJpa);
 
-    Optional<Account> findByEmail(String email);
+    Optional<AccountJpa> findByEmail(String email);
 
 }
