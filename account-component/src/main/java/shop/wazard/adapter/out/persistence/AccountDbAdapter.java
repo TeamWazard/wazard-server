@@ -6,6 +6,7 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
+import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -53,7 +54,11 @@ class AccountDbAdapter implements LoadAccountPort, SaveAccountPort, UpdateAccoun
     public void updateMyProfile(Account account) {
         AccountJpa accountJpa = accountJpaRepository.findByEmail(account.getMyProfile().getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        accountJpa.updateMyProfile(account);
+        accountJpa.updateMyProfile(account.getMyProfile().getUserName(),
+                account.getMyProfile().getPhoneNumber(),
+                account.getMyProfile().getGender().toString(),
+                account.getMyProfile().getBirth()
+        );
     }
 
 }

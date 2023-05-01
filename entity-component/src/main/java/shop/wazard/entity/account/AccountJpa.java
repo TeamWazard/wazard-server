@@ -1,10 +1,9 @@
-package shop.wazard.adapter.out.persistence;
+package shop.wazard.entity.account;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.wazard.application.port.domain.Account;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Account")
-class AccountJpa {
+public class AccountJpa {
 
     @Id
     @GeneratedValue
@@ -60,10 +59,11 @@ class AccountJpa {
         this.accountStatusJpa = accountStatusJpa;
     }
 
-    public void updateMyProfile(Account account) {
-        this.userName = account.getMyProfile().getUserName();
-        this.gender = GenderTypeJpa.valueOf(account.getMyProfile().getGender().toString());
-        this.birth = account.getMyProfile().getBirth();
-        this.phoneNumber = account.getMyProfile().getPhoneNumber();
+    public void updateMyProfile(String userName, String phoneNumber, String genderType, LocalDate birth) {
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.gender = GenderTypeJpa.valueOf(genderType);
+        this.birth = birth;
     }
+
 }

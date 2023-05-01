@@ -5,6 +5,8 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.AccountStatus;
 import shop.wazard.application.port.domain.GenderType;
 import shop.wazard.application.port.domain.MyProfile;
+import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.account.AccountStatusJpa;
 
 import java.util.Optional;
 

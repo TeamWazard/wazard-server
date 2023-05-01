@@ -1,11 +1,11 @@
-package shop.wazard.adapter.out.persistence;
+package shop.wazard.entity.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-enum GenderTypeJpa {
+public enum GenderTypeJpa {
 
     MALE("MALE"), FEMALE("FEMALE");
 
