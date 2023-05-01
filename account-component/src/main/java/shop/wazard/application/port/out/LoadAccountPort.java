@@ -8,7 +8,7 @@ public interface LoadAccountPort {
 
     Boolean isPossibleEmail(String email);
 
-    Optional<Account> findAccountByEmail(String email);
+    Account findAccountByEmail(String email);
 
     Long findAccountIdByEmail(String email);
 
