@@ -90,8 +90,6 @@ class AccountServiceTest {
         // when
         Mockito.when(userDetailsService.loadUserByUsername(checkPasswordReqDto.getEmail()))
                 .thenReturn(user);
-        Mockito.when(passwordEncoder.encode(checkPasswordReqDto.getPassword()))
-                .thenReturn("ENCRYPTED_PWD");
 
         // then
         Assertions.assertEquals(passwordEncoder.matches(checkPasswordReqDto.getEmail(), user.getPassword()), true);
