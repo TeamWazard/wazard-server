@@ -78,4 +78,9 @@ class AccountServiceImpl implements AccountService {
                 .build();
     }
 
+    @Override
+    public CheckPasswordResDto checkPassword(CheckPasswordReqDto checkPasswordReqDto) {
+        return null;
+    }
+
 }
