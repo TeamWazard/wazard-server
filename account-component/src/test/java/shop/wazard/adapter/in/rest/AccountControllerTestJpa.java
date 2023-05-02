@@ -29,7 +29,7 @@ class AccountControllerTestJpa {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("비밀번호 확인 성공")
+    @DisplayName("공통 - 비밀번호 확인 - 성공")
     @WithMockUser
     public void checkPasswordSuccess() throws Exception {
         // given
