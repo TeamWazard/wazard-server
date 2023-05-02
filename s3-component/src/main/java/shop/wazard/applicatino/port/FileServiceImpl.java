@@ -1,0 +1,70 @@
+package shop.wazard.applicatino.port;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import shop.wazard.applicatino.port.domain.LogoImage;
+import shop.wazard.applicatino.port.in.FileService;
+import shop.wazard.applicatino.port.out.SaveFileRepository;
+import shop.wazard.dto.UploadStoreLogoResDto;
+import shop.wazard.util.exception.StatusEnum;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
+
+@Service
+@Transactional(readOnly = true)
+class FileServiceImpl implements FileService {
+
+    private AmazonS3 amazonS3;
+    private SaveFileRepository saveFileRepository;
+    private String bucket;
+
+    public FileServiceImpl(AmazonS3 amazonS3, SaveFileRepository saveFileRepository, @Value("${cloud.aws.s3.bucket}") String bucket) {
+        this.amazonS3 = amazonS3;
+        this.saveFileRepository = saveFileRepository;
+        this.bucket = bucket;
+    }
+
+
+    @Override
+    @Transactional
+    public UploadStoreLogoResDto uploadLogoImage(MultipartFile multipartFile) throws IOException {
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(multipartFile.getContentType());
+        objectMetadata.setContentLength(multipartFile.getSize());
+
+        String originalFilename = multipartFile.getOriginalFilename();
+        int index = originalFilename.lastIndexOf(".");
+        String ext = originalFilename.substring(index + 1);
+        String storeFileName = UUID.randomUUID() + "." + ext;
+        String key = "store/logo/" + storeFileName;
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            amazonS3.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
+            throw new IOException(StatusEnum.FAIL_TO_UPLOAD_IMAGE.getMessage());
+        }
+        String storeFileUrl = amazonS3.getUrl(bucket, key).toString();
+        LogoImage logoImage = LogoImage.builder()
+                .imageName(originalFilename)
+                .imageUrl(storeFileUrl)
+                .build();
+        LogoImage uploadedLogoImage = saveFileRepository.uploadStoreLogo(logoImage);
+        return UploadStoreLogoResDto.builder()
+                .message("업로드 되었습니다.")
+                .imageId(uploadedLogoImage.getId())
+                .imageName(uploadedLogoImage.getImageName())
+                .imageUrl(uploadedLogoImage.getImageUrl())
+                .build();
+    }
+
+}

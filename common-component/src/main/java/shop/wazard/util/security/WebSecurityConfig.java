@@ -55,6 +55,7 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/account/join", "/account/login").permitAll()
                 .antMatchers("/account/**").authenticated()
+                .antMatchers("/upload/**").authenticated()
                 .antMatchers("/mail/**").permitAll()
                 .antMatchers("/test/**").authenticated()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()

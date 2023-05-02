@@ -3,4 +3,5 @@ include 'account-component'
 include 'common-component'
 include 'smtp-component'
 include 'entity-component'
+include 's3-component'
 
