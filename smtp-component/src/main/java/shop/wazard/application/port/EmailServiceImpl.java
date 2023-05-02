@@ -57,7 +57,7 @@ class EmailServiceImpl implements EmailService {
     private String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process("mailForm", context);
+        return templateEngine.process("certificationMailForm", context);
     }
 
     private String createCode() {
