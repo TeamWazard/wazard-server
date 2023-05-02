@@ -51,7 +51,7 @@ class AccountServiceImpl implements AccountService {
     public LoginResDto login(LoginReqDto loginReqDto) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(loginReqDto.getEmail());
         if (!passwordEncoder.matches(loginReqDto.getPassword(), userDetails.getPassword())) {
-            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
+            throw new BadCredentialsException(StatusEnum.ACCESS_DENIED.getMessage());
         }
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userDetails.getUsername(),
@@ -80,7 +80,13 @@ class AccountServiceImpl implements AccountService {
 
     @Override
     public CheckPasswordResDto checkPassword(CheckPasswordReqDto checkPasswordReqDto) {
-        return null;
+        UserDetails userDetails = userDetailsService.loadUserByUsername(checkPasswordReqDto.getEmail());
+        if (!passwordEncoder.matches(checkPasswordReqDto.getPassword(), userDetails.getPassword())) {
+            throw new BadCredentialsException(StatusEnum.ACCESS_DENIED.getMessage());
+        }
+        return CheckPasswordResDto.builder()
+                .message("인증되었습니다.")
+                .build();
     }
 
 }
