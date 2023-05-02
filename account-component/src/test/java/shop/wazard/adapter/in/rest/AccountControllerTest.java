@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = WazardApplication.class)
 @AutoConfigureMockMvc
-class AccountControllerTestJpa {
+class AccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

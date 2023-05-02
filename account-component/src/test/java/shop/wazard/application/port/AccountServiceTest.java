@@ -22,13 +22,12 @@ import shop.wazard.application.port.in.AccountService;
 import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.SaveAccountPort;
 import shop.wazard.application.port.out.UpdateAccountPort;
-import shop.wazard.dto.UpdateMyProfileReqDto;
 import shop.wazard.dto.CheckPasswordReqDto;
 import shop.wazard.dto.CheckPasswordResDto;
+import shop.wazard.dto.UpdateMyProfileReqDto;
 import shop.wazard.util.jwt.JwtProvider;
 
 import java.time.LocalDate;
-
 import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
@@ -52,7 +51,7 @@ class AccountServiceTest {
     private UpdateAccountPort updateAccountPort;
 
     @Test
-    @DisplayName("고용주 - 회원정보 수정 성공")
+    @DisplayName("공통 - 회원정보 수정 - 성공")
     public void updateCompanyAccountInfoSuccess() throws Exception {
         // given
         UpdateMyProfileReqDto updateMyProfileReqDto = UpdateMyProfileReqDto.builder()
