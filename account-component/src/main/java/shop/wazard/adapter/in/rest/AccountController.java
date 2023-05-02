@@ -49,7 +49,7 @@ class AccountController {
     //TODO : 로그아웃 -> 어떻게 로그아웃 처리를 해야 할지 고민
 
 
-//    @Certification
+    @Certification
     @PostMapping("/check/{accountId}")
     public ResponseEntity<CheckPasswordResDto> checkPassword(@PathVariable("accountId") Long accountId, @RequestBody CheckPasswordReqDto checkPasswordReqDto) {
         return ResponseEntity.ok(accountService.checkPassword(checkPasswordReqDto));
