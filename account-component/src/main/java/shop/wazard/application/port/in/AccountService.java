@@ -10,4 +10,6 @@ public interface AccountService {
 
     UpdateMyProfileResDto updateMyProfile(UpdateMyProfileReqDto updateMyProfileReqDto);
 
+    CheckPasswordResDto checkPassword(CheckPasswordReqDto checkPasswordReqDto);
+
 }
