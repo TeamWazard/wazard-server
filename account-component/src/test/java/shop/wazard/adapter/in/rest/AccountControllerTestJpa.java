@@ -35,6 +35,7 @@ class AccountControllerTestJpa {
         // given
         String checkPasswordUrl = "/account/check/{accountId}";
         CheckPasswordReqDto checkPasswordReqDto = CheckPasswordReqDto.builder()
+                .email("test@naver.com")
                 .password("Test1234!")
                 .build();
 
