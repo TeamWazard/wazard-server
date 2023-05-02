@@ -14,6 +14,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
 import shop.wazard.dto.CheckPasswordReqDto;
+import shop.wazard.dto.JoinReqDto;
+
+import java.time.LocalDate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,6 +31,28 @@ class AccountControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    @DisplayName("공통 - 회원가입 - 성공")
+    public void joinSuccess() throws Exception {
+        // given
+        String joinUrl = "/account/join";
+        JoinReqDto joinReqDto = new JoinReqDto("wazard123@gmail.com", "Wazard1234!", "임금마법사",
+                "MALE", LocalDate.of(2023, 4, 25), "010-1234-1234", "USER");
+
+        //when
+        ResultActions result = mockMvc.perform(post(joinUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(joinReqDto)));
+
+        //then
+        result.andExpectAll(
+                MockMvcResultMatchers.status().isOk(),
+                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+                MockMvcResultMatchers.jsonPath("$.message").value("회원가입에 성공하였습니다.")
+        ).andDo(print());
+    }
 
     @Test
     @DisplayName("공통 - 비밀번호 확인 - 성공")
