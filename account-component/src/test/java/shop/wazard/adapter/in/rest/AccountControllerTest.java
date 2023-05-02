@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
+import shop.wazard.dto.CheckPasswordReqDto;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,8 +36,8 @@ class AccountControllerTest {
         // given
         String checkPasswordUrl = "/account/check/{accountId}";
         CheckPasswordReqDto checkPasswordReqDto = CheckPasswordReqDto.builder()
-                .email("test@naver.com")
-                .password("Test1234!")
+                .email("wazard123@gmail.com")
+                .password("Wazard1234!")
                 .build();
 
         //when
