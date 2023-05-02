@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class Company {
 
+    private Long id;
     private CompanyInfo companyInfo;
 
 }
