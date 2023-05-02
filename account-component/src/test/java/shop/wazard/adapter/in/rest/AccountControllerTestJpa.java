@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -40,7 +40,7 @@ class AccountControllerTestJpa {
                 .build();
 
         //when
-        ResultActions result = mockMvc.perform(get(checkPasswordUrl, "1")
+        ResultActions result = mockMvc.perform(post(checkPasswordUrl, "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(checkPasswordReqDto)));
 
