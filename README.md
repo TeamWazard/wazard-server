@@ -23,6 +23,10 @@
   </a>
 </p>
 
+- [ApplicationProperties 작성법](https://github.com/TeamWazard/wazard-server/wiki/ApplicationProperties)
+
+- [팀 컨벤션]()
+
 ## 💻 Tech Stack
 - Skills
   > Spring Boot, Spring Security, JPA, MySQL
