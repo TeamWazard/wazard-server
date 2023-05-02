@@ -51,7 +51,7 @@ class AccountController {
 
     @Certification
     @PostMapping("/check/{accountId}")
-    public ResponseEntity<CheckPasswordResDto> checkPassword(@PathVariable("accountId") Long accountId, @RequestBody CheckPasswordReqDto checkPasswordReqDto) {
+    public ResponseEntity<CheckPasswordResDto> checkPassword(@PathVariable("accountId") Long accountId, @Valid @RequestBody CheckPasswordReqDto checkPasswordReqDto) {
         return ResponseEntity.ok(accountService.checkPassword(checkPasswordReqDto));
     }
 }
