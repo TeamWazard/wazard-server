@@ -2,7 +2,7 @@ package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
 import shop.wazard.applicatino.port.domain.LogoImage;
-import shop.wazard.entity.store.LogoImageJpa;
+import shop.wazard.entity.company.LogoImageJpa;
 
 @Component
 class FileMapper {

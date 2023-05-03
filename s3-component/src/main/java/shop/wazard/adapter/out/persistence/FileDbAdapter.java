@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.applicatino.port.domain.LogoImage;
 import shop.wazard.applicatino.port.out.SaveFileRepository;
-import shop.wazard.entity.store.LogoImageJpa;
+import shop.wazard.entity.company.LogoImageJpa;
 
 @Repository
 @RequiredArgsConstructor

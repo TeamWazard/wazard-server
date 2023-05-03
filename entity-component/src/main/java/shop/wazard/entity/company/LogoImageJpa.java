@@ -1,4 +1,4 @@
-package shop.wazard.entity.store;
+package shop.wazard.entity.company;
 
 import lombok.AccessLevel;
 import lombok.Builder;
