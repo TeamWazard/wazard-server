@@ -47,7 +47,7 @@ class CompanyDbAdapterTest {
 
         //when
         Mockito.when(companyJpaRepository.save(companyJpa)).thenReturn(companyJpa);
-        Mockito.doNothing().when(companyDbAdapter).saveCompany(company, account);
+        Mockito.doNothing().when(companyDbAdapter).saveCompany(company);
 
         //then
 

@@ -7,6 +7,7 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.in.CompanyService;
 import shop.wazard.application.port.out.LoadCompanyPort;
+import shop.wazard.application.port.out.SaveCompanyAccountRelPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.dto.RegisterCompanyReqDto;
@@ -22,6 +23,7 @@ class CompanyServiceImpl implements CompanyService {
     private final LoadCompanyPort loadCompanyPort;
     private final SaveCompanyPort saveCompanyPort;
     private final UpdateCompanyPort updateCompanyPort;
+    private final SaveCompanyAccountRelPort saveCompanyAccountRelPort;
 
     @Override
     @Transactional
@@ -30,7 +32,9 @@ class CompanyServiceImpl implements CompanyService {
         if (!account.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }
-        saveCompanyPort.saveCompany(Company.createCompany(registerCompanyReqDto), account);
+        Company company = Company.createCompany(registerCompanyReqDto);
+        saveCompanyPort.saveCompany(company);
+        saveCompanyAccountRelPort.saveCompanyAccountRel(company, account);
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
                 .build();
