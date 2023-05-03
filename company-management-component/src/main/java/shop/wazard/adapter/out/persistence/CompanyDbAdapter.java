@@ -23,4 +23,5 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     @Override
     public void saveCompany(Company company) {
     }
+
 }

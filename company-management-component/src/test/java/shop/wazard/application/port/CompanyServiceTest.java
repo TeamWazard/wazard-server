@@ -60,7 +60,6 @@ class CompanyServiceTest {
         // when
         Mockito.when(loadCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail()))
                 .thenReturn(account);
-//        Mockito.doNothing().when(saveCompanyPort).saveCompany(company);
 
         // then
         Assertions.assertDoesNotThrow(() -> companyService.registerCompany(registerCompanyReqDto));
