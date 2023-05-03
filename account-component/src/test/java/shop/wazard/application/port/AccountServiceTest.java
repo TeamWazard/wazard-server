@@ -73,7 +73,7 @@ class AccountServiceTest {
         // when
         Mockito.when(loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())).thenReturn(account);
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
-
+        accountService.updateMyProfile(updateMyProfileReqDto);
         //then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(account.getMyProfile().getEmail(), updateMyProfileReqDto.getEmail()),

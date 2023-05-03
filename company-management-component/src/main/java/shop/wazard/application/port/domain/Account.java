@@ -13,4 +13,12 @@ public class Account {
     private String email;
     private String userName;
 
+    public Boolean isEmployer() {
+        if (this.roles.equals("EMPLOYER")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -8,6 +8,5 @@ import lombok.Getter;
 public class RegisterCompanyResDto {
 
     private String message;
-    private Long companyId;
 
 }
