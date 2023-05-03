@@ -1,22 +1,21 @@
 package shop.wazard.adapter.out.persistence;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.domain.CompanyInfo;
-import shop.wazard.entity.company.CompanyJpa;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CompanyDbAdapter.class})
 class CompanyDbAdapterTest {
-    @Autowired
+    @MockBean
     private CompanyDbAdapter companyDbAdapter;
     @MockBean
     private CompanyMapper companyMapper;
@@ -43,13 +42,15 @@ class CompanyDbAdapterTest {
                                 .build()
                 )
                 .build();
-        CompanyJpa companyJpa = companyMapper.toCompanyEntity(company);
 
         //when
-        Mockito.when(companyJpaRepository.save(companyJpa)).thenReturn(companyJpa);
+        Mockito.when(companyDbAdapter.findAccountByEmail("test@email.com")).thenReturn(account);
         Mockito.doNothing().when(companyDbAdapter).saveCompany(company);
+        Mockito.doNothing().when(companyDbAdapter).saveCompanyAccountRel(company, account);
 
         //then
+        Assertions.assertDoesNotThrow(() -> companyDbAdapter.saveCompany(company));
+        Assertions.assertDoesNotThrow(() -> companyDbAdapter.saveCompanyAccountRel(company, account));
 
     }
 }
