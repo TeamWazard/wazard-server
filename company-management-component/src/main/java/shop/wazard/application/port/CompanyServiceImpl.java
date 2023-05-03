@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.in.CompanyService;
-import shop.wazard.application.port.out.LoadCompanyPort;
-import shop.wazard.application.port.out.SaveCompanyAccountRelPort;
-import shop.wazard.application.port.out.SaveCompanyPort;
-import shop.wazard.application.port.out.UpdateCompanyPort;
+import shop.wazard.application.port.out.*;
 import shop.wazard.dto.RegisterCompanyReqDto;
 import shop.wazard.dto.RegisterCompanyResDto;
 import shop.wazard.exception.RegisterPermissionDenied;
@@ -23,12 +20,13 @@ class CompanyServiceImpl implements CompanyService {
     private final LoadCompanyPort loadCompanyPort;
     private final SaveCompanyPort saveCompanyPort;
     private final UpdateCompanyPort updateCompanyPort;
+    private final LoadAccountPort loadAccountPort;
     private final SaveCompanyAccountRelPort saveCompanyAccountRelPort;
 
     @Override
     @Transactional
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
-        Account account = loadCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail());
+        Account account = loadAccountPort.findAccountByEmail(registerCompanyReqDto.getEmail());
         if (!account.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }

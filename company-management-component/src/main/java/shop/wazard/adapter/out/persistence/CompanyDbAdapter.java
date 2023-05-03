@@ -4,31 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
-import shop.wazard.application.port.out.LoadCompanyPort;
-import shop.wazard.application.port.out.SaveCompanyAccountRelPort;
-import shop.wazard.application.port.out.SaveCompanyPort;
-import shop.wazard.application.port.out.UpdateCompanyPort;
+import shop.wazard.application.port.out.*;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
-import javax.persistence.EntityManager;
-
 @Repository
 @RequiredArgsConstructor
-class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, SaveCompanyAccountRelPort, UpdateCompanyPort {
+class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, SaveCompanyAccountRelPort, UpdateCompanyPort, LoadAccountPort {
 
     private CompanyMapper companyMapper;
     private CompanyJpaRepository companyJpaRepository;
     private CompanyAccountRelJpaRepository companyAccountRelJpaRepository;
-    private EntityManager em;
+    private AccountJpaRepository accountJpaRepository;
 
     @Override
     public Account findAccountByEmail(String email) {
-        final AccountJpa accountJpa = em.createQuery("select aj from AccountJpa aj where aj.email = :email", AccountJpa.class)
-                .setParameter("email", email)
-                .getSingleResult();
-        return companyMapper.toAccountDomain(accountJpa);
+        return companyMapper.toAccountDomain(accountJpaRepository.findByEmail(email));
     }
 
     @Override
