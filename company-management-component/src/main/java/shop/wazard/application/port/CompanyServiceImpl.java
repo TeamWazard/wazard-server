@@ -24,12 +24,13 @@ class CompanyServiceImpl implements CompanyService {
     private final UpdateCompanyPort updateCompanyPort;
 
     @Override
+    @Transactional
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         Account account = loadCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail());
         if (!account.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }
-        saveCompanyPort.saveCompany(Company.createCompany(registerCompanyReqDto));
+        saveCompanyPort.saveCompany(Company.createCompany(registerCompanyReqDto), account);
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
                 .build();

@@ -1,6 +1,7 @@
 package shop.wazard.entity.company;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,12 @@ public class CompanyJpa {
 
     @OneToMany(mappedBy = "companyJpa")
     private List<CompanyAccountRelJpa> companyAccountRelJpaList = new ArrayList<>();
+
+    @Builder
+    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate) {
+        this.companyName = companyName;
+        this.companyAddress = companyAddress;
+        this.companyContact = companyContact;
+        this.salaryDate = salaryDate;
+    }
 }

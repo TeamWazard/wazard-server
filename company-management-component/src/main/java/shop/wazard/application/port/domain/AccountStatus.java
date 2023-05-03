@@ -12,3 +12,4 @@ public enum AccountStatus {
     private final String accountStatus;
 
 }
+

@@ -2,7 +2,6 @@ package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
 import shop.wazard.application.port.domain.Account;
-import shop.wazard.application.port.domain.AccountStatus;
 import shop.wazard.application.port.domain.GenderType;
 import shop.wazard.application.port.domain.MyProfile;
 import shop.wazard.entity.account.AccountJpa;
@@ -36,7 +35,7 @@ class AccountMapper {
                         .gender(GenderType.valueOf(accountJpa.getGender().toString()))
                         .birth(accountJpa.getBirth())
                         .build())
-                .accountStatus(AccountStatus.valueOf(accountJpa.getAccountStatusJpa().toString()))
+                .accountStatus(shop.wazard.application.port.domain.AccountStatus.valueOf(accountJpa.getAccountStatusJpa().toString()))
                 .roles(accountJpa.getRoles())
                 .build();
     }

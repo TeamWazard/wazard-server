@@ -1,6 +1,7 @@
 package shop.wazard.entity.company;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
@@ -24,4 +25,10 @@ public class CompanyAccountRelJpa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId")
     private CompanyJpa companyJpa;
+
+    @Builder
+    public CompanyAccountRelJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        this.accountJpa = accountJpa;
+        this.companyJpa = companyJpa;
+    }
 }
