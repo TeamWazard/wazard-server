@@ -52,7 +52,7 @@ public class AccountJpa {
     }
 
     @Builder
-    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, AccountStatusJpa accountStatusJpa) {
+    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, AccountStatusJpa accountStatusJpa,  List<CompanyAccountRelJpa> companyAccountRelJpaList) {
         this.email = email;
         this.password = password;
         this.userName = userName;
@@ -61,6 +61,7 @@ public class AccountJpa {
         this.birth = birth;
         this.roles = roles;
         this.accountStatusJpa = accountStatusJpa;
+        this.companyAccountRelJpaList = companyAccountRelJpaList;
     }
 
     public void updateMyProfile(String userName, String phoneNumber, String genderType, LocalDate birth) {
