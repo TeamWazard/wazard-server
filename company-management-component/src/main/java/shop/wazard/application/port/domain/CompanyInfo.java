@@ -11,7 +11,6 @@ public class CompanyInfo {
     private String companyAddress;
     private String companyContact;
     private int salaryDate;
-    private Long imageId;
     private String imageUrl;
 
 }
