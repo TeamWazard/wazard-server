@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.in.CompanyService;
+import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
@@ -22,14 +23,15 @@ class CompanyServiceImpl implements CompanyService {
     private final LoadCompanyPort loadCompanyPort;
     private final SaveCompanyPort saveCompanyPort;
     private final UpdateCompanyPort updateCompanyPort;
+    private final LoadAccountPort loadAccountPort;
 
     @Override
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
-        Account account = loadCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail());
+        Account account = loadAccountPort.findAccountByEmail(registerCompanyReqDto.getEmail());
         if (!account.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }
-        saveCompanyPort.saveCompany(Company.createCompany(registerCompanyReqDto));
+        saveCompanyPort.saveCompany(account.getEmail(), Company.createCompany(registerCompanyReqDto));
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
                 .build();

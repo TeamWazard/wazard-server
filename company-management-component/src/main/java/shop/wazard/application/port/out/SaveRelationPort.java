@@ -1,6 +1,5 @@
 package shop.wazard.application.port.out;
 
-public interface LoadCompanyPort {
-
+public interface SaveRelationPort {
 
 }

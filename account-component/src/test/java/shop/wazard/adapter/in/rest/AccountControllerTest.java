@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
-@SpringBootTest(classes = WazardApplication.class)
+@SpringBootTest(classes = {WazardApplication.class})
 @AutoConfigureMockMvc
 class AccountControllerTest {
 
@@ -56,7 +56,7 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("공통 - 비밀번호 확인 - 성공")
-    @WithMockUser
+    @WithMockUser(value = "simhani1@email.com")
     public void checkPasswordSuccess() throws Exception {
         // given
         String checkPasswordUrl = "/account/check/{accountId}";

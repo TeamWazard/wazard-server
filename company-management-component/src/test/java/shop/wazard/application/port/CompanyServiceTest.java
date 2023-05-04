@@ -13,6 +13,7 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.domain.CompanyInfo;
 import shop.wazard.application.port.in.CompanyService;
+import shop.wazard.application.port.out.LoadAccountPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
@@ -23,13 +24,15 @@ import shop.wazard.dto.RegisterCompanyReqDto;
 class CompanyServiceTest {
 
     @Autowired
-    CompanyService companyService;
+    private CompanyService companyService;
     @MockBean
-    LoadCompanyPort loadCompanyPort;
+    private LoadCompanyPort loadCompanyPort;
     @MockBean
-    UpdateCompanyPort updateCompanyPort;
+    private UpdateCompanyPort updateCompanyPort;
     @MockBean
-    SaveCompanyPort saveCompanyPort;
+    private SaveCompanyPort saveCompanyPort;
+    @MockBean
+    private LoadAccountPort loadAccountPort;
 
     @Test
     @DisplayName("고용주 - 업장 등록 - 성공")
@@ -58,7 +61,7 @@ class CompanyServiceTest {
                 .build();
 
         // when
-        Mockito.when(loadCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail()))
+        Mockito.when(loadAccountPort.findAccountByEmail(registerCompanyReqDto.getEmail()))
                 .thenReturn(account);
 
         // then
