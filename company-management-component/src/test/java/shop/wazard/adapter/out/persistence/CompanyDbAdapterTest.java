@@ -36,7 +36,7 @@ class CompanyDbAdapterTest {
     private RelationRepository relationRepository;
 
     @Test
-    @DisplayName("고용주 - 업장 등록 - 성공")
+    @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장 및 조회")
     public void registerCompanySuccess() throws Exception {
         // given
         Account account = Account.builder()
@@ -67,7 +67,7 @@ class CompanyDbAdapterTest {
                 () -> Assertions.assertEquals(result.getCompanyAddress(), company.getCompanyInfo().getCompanyAddress()),
                 () -> Assertions.assertEquals(result.getCompanyContact(), company.getCompanyInfo().getCompanyContact()),
                 () -> Assertions.assertEquals(result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
-                () -> Assertions.assertEquals(result.getLogoImageJpa().getImageUrl(), company.getCompanyInfo().getImageUrl())
+                () -> Assertions.assertEquals(result.getLogoImageUrl(), company.getCompanyInfo().getImageUrl())
         );
     }
 

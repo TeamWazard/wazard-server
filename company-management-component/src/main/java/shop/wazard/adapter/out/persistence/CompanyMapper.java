@@ -15,6 +15,7 @@ class CompanyMapper {
                 .companyAddress(company.getCompanyInfo().getCompanyAddress())
                 .companyContact(company.getCompanyInfo().getCompanyContact())
                 .salaryDate(company.getCompanyInfo().getSalaryDate())
+                .logoImageUrl(company.getCompanyInfo().getImageUrl())
                 .build();
     }
 
