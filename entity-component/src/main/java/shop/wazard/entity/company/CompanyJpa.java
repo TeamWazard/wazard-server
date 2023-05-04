@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.wazard.entity.common.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Company")
-public class CompanyJpa {
+public class CompanyJpa extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "companyId")

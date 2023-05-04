@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.common.BaseEntity;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "CompanyAccountRel")
-public class CompanyAccountRelJpa {
+public class CompanyAccountRelJpa extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "companyAccountId")
