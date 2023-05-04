@@ -1,5 +1,6 @@
 package shop.wazard.entity.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,8 +26,12 @@ public class BaseEntity {
     @Column(nullable = false, length = 10)
     protected State state = State.ACTIVE;
 
+    @Getter
+    @AllArgsConstructor
     public enum State {
-        ACTIVE,
-        INACTIVE;
+        ACTIVE("ACTIVE"),
+        INACTIVE("INACTIVE");
+
+        private final String status;
     }
 }

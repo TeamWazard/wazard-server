@@ -3,7 +3,6 @@ package shop.wazard.application.port.domain;
 import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.JoinReqDto;
-import shop.wazard.entity.common.BaseEntity.State;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +15,7 @@ public class Account {
     private Long id;
     private MyProfile myProfile;
 
-    private State state;
+    private AccountStatus accountStatus;
     private String roles;
 
     public List<String> getRoleList() {
@@ -37,7 +36,6 @@ public class Account {
                         .phoneNumber(joinReqDto.getPhoneNumber())
                         .build())
                 .roles(joinReqDto.getRole())
-                .state(State.ACTIVE)
                 .build();
     }
 
