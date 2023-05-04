@@ -32,9 +32,4 @@ public class CompanyAccountRelJpa {
         this.companyJpa = companyJpa;
     }
 
-    public void saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa) {
-        accountJpa.getCompanyAccountRelJpaList().add(this);
-        companyJpa.getCompanyAccountRelJpaList().add(this);
-    }
-
 }

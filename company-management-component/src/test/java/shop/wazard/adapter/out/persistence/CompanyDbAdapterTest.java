@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,12 +22,12 @@ import shop.wazard.entity.company.CompanyJpa;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = "shop.wazard.entity.*")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, AccountMapper.class, CompanyMapper.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
-    @Autowired
+    @MockBean
     private CompanyMapper companyMapper;
-    @Autowired
+    @MockBean
     private AccountMapper accountMapper;
     @Autowired
     private CompanyJpaRepository companyJpaRepository;

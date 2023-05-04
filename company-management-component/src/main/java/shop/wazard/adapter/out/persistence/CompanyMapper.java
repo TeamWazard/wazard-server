@@ -23,7 +23,6 @@ class CompanyMapper {
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .build();
-        companyAccountRelJpa.saveRelationInfo(accountJpa, companyJpa);
         return companyAccountRelJpa;
     }
 
