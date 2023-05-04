@@ -23,8 +23,8 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    protected State state = State.ACTIVE;
+    @Column(nullable = false, length = 10, columnDefinition = "varchar(255) default 'ACTIVE'")
+    protected State state;
 
     @Getter
     @AllArgsConstructor

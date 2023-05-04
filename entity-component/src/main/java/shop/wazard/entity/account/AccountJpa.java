@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Getter
 @Entity
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Account")
 public class AccountJpa extends BaseEntity {
