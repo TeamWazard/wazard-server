@@ -1,5 +1,6 @@
 package shop.wazard.adapter.out.persistence;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,18 +13,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
+import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.company.CompanyAccountRelJpa;
+import shop.wazard.entity.company.CompanyJpa;
 
-//@Slf4j
-@DataJpaTest
-@EntityScan("shop.wazard.entity.*")
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @ExtendWith(SpringExtension.class)
+@DataJpaTest
+@EnableJpaRepositories(basePackages = {"shop.wazard.*"})
+@EntityScan(basePackages = "shop.wazard.entity.*")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyMapper.class, CompanyJpaRepository.class, LoadAccountJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
-    @Autowired
-    private CompanyDbAdapter companyDbAdapter;
+
     @Autowired
     private CompanyMapper companyMapper;
     @Autowired
@@ -53,6 +55,7 @@ class CompanyDbAdapterTest {
                                 .build()
                 )
                 .build();
+
 //        CompanyJpa companyJpa = CompanyJpa.builder()
 //                .companyName(company.getCompanyInfo().getCompanyName())
 //                .companyAddress(company.getCompanyInfo().getCompanyAddress())
@@ -62,24 +65,19 @@ class CompanyDbAdapterTest {
 
         // when
 //        log.info("========== account 조회 ==========");
-//        AccountJpa accountJpa = loadAccountJpaRepository.findAccountByEmail(account.getEmail());
+        AccountJpa accountJpa = loadAccountJpaRepository.findAccountByEmail(account.getEmail());
 //        log.info("========== companyJpa 저장 ==========");
-//        CompanyJpa companyJpaResult = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
+        CompanyJpa companyJpaResult = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
 //        log.info("========== CompanyAccountRelJpa 저장 ==========");
-//        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
-//                .accountJpa(accountJpa)
-//                .companyJpa(companyJpaResult)
-//                .build();
-//        relationRepository.save(companyAccountRelJpa);
-////        Mockito.when(loadAccountJpaRepository.findAccountByEmail(account.getEmail()))
-////                .thenReturn(accountJpa);
-////        Mockito.when(companyMapper.toCompanyJpa(company))
-////                .thenReturn(companyJpa);
-//        companyJpaRepository.save(companyJpa);
-//        // then
-//        Assertions.assertDoesNotThrow(
-//                () -> companyDbAdapter.saveCompany(company)
-//        );
+        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpaResult)
+                .build();
+
+        // then
+        Assertions.assertDoesNotThrow(
+                () -> relationRepository.save(companyAccountRelJpa)
+        );
     }
 
 
