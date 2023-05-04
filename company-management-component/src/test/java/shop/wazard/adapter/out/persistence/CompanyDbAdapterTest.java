@@ -21,11 +21,13 @@ import shop.wazard.entity.company.CompanyJpa;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = "shop.wazard.entity.*")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyMapper.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {CompanyDbAdapter.class, AccountMapper.class, CompanyMapper.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
     @Autowired
     private CompanyMapper companyMapper;
+    @Autowired
+    private AccountMapper accountMapper;
     @Autowired
     private CompanyJpaRepository companyJpaRepository;
     @Autowired
