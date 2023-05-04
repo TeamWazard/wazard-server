@@ -45,7 +45,7 @@ class CompanyDbAdapterTest {
     private RelationRepository relationRepository;
 
     @Test
-    @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장 및 조회")
+    @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
         // given
         Account account = Account.builder()
@@ -90,7 +90,7 @@ class CompanyDbAdapterTest {
     }
 
     @Test
-    @DisplayName("고용주 - 업장 등록 - CompanyAccountRelJpa 저장 및 조회")
+    @DisplayName("고용주 - 업장 등록 - CompanyAccountRelJpa 저장")
     public void saveCompanyAccountRelJpaSuccess() throws Exception {
         // given
         AccountJpa accountJpa = AccountJpa.builder()
