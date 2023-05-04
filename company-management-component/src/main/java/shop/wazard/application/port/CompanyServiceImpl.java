@@ -31,7 +31,7 @@ class CompanyServiceImpl implements CompanyService {
         if (!account.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }
-        saveCompanyPort.saveCompany(Company.createCompany(registerCompanyReqDto));
+        saveCompanyPort.saveCompany(account.getEmail(), Company.createCompany(registerCompanyReqDto));
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
                 .build();

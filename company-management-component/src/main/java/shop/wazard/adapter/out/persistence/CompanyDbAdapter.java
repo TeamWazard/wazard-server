@@ -9,6 +9,8 @@ import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.company.CompanyAccountRelJpa;
+import shop.wazard.entity.company.CompanyJpa;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,8 +29,11 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     }
 
     @Override
-    public void saveCompany(Company company) {
-
+    public void saveCompany(String email, Company company) {
+        CompanyJpa companyJpa = companyMapper.toCompanyJpa(company);
+        AccountJpa accountJpa = accountJpaRepository.findByEmail(email);
+        CompanyAccountRelJpa companyAccountRelJpa = companyMapper.saveRelationInfo(accountJpa, companyJpa);
+        relationRepository.save(companyAccountRelJpa);
     }
 
 }

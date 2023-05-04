@@ -2,6 +2,8 @@ package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
 import shop.wazard.application.port.domain.Company;
+import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
 @Component
@@ -14,6 +16,15 @@ class CompanyMapper {
                 .companyContact(company.getCompanyInfo().getCompanyContact())
                 .salaryDate(company.getCompanyInfo().getSalaryDate())
                 .build();
+    }
+
+    public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .build();
+        companyAccountRelJpa.saveRelationInfo(accountJpa, companyJpa);
+        return companyAccountRelJpa;
     }
 
 }
