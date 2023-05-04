@@ -5,5 +5,6 @@ import shop.wazard.entity.company.CompanyAccountRelJpa;
 
 interface RelationRepository extends JpaRepository<CompanyAccountRelJpa, Long> {
 
+    CompanyAccountRelJpa save(CompanyAccountRelJpa companyAccountRelJpa);
 
 }
