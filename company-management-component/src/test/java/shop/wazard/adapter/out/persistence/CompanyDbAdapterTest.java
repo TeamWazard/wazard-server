@@ -22,7 +22,7 @@ import shop.wazard.entity.company.CompanyJpa;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = "shop.wazard.entity.*")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
     @MockBean
@@ -32,7 +32,7 @@ class CompanyDbAdapterTest {
     @Autowired
     private CompanyJpaRepository companyJpaRepository;
     @Autowired
-    private AccountJpaRepository accountJpaRepository;
+    private AccountForCompanyManagementJpaRepository accountForCompanyManagementJpaRepository;
     @Autowired
     private RelationRepository relationRepository;
 
@@ -58,7 +58,7 @@ class CompanyDbAdapterTest {
                 .build();
 
         // when
-        AccountJpa accountJpa = accountJpaRepository.findByEmail(account.getEmail());
+        AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
         CompanyJpa companyJpaResult = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
 
         // then

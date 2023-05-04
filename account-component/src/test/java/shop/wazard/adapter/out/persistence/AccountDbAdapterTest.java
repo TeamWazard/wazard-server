@@ -31,7 +31,7 @@ class AccountDbAdapterTest {
     @DisplayName("test")
     public void test() throws Exception {
         // given
-        Optional<AccountJpa> byEmail = accountJpaRepository.findByEmail("simani1@email.com");
+        Optional<AccountJpa> byEmail = accountJpaRepository.findByEmail("ffff@email.com");
         // when
 
         // then
