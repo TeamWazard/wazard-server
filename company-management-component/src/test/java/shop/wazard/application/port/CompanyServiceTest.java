@@ -13,9 +13,9 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.domain.CompanyInfo;
 import shop.wazard.application.port.in.CompanyService;
-import shop.wazard.application.port.out.company.LoadCompanyPort;
-import shop.wazard.application.port.out.company.SaveCompanyPort;
-import shop.wazard.application.port.out.company.UpdateCompanyPort;
+import shop.wazard.application.port.out.LoadCompanyPort;
+import shop.wazard.application.port.out.SaveCompanyPort;
+import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.dto.RegisterCompanyReqDto;
 
 @ExtendWith(SpringExtension.class)

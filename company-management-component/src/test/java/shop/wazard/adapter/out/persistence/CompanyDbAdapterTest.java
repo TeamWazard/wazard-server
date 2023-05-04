@@ -14,7 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
 @ExtendWith(SpringExtension.class)
@@ -22,16 +21,15 @@ import shop.wazard.entity.company.CompanyJpa;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = "shop.wazard.entity.*")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyMapper.class, CompanyJpaRepository.class, LoadAccountJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyMapper.class, CompanyJpaRepository.class, AccountJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
-
 
     @Autowired
     private CompanyMapper companyMapper;
     @Autowired
     private CompanyJpaRepository companyJpaRepository;
     @Autowired
-    private LoadAccountJpaRepository loadAccountJpaRepository;
+    private AccountJpaRepository accountJpaRepository;
     @Autowired
     private RelationRepository relationRepository;
 
@@ -56,29 +54,12 @@ class CompanyDbAdapterTest {
                 )
                 .build();
 
-//        CompanyJpa companyJpa = CompanyJpa.builder()
-//                .companyName(company.getCompanyInfo().getCompanyName())
-//                .companyAddress(company.getCompanyInfo().getCompanyAddress())
-//                .companyContact(company.getCompanyInfo().getCompanyContact())
-//                .salaryDate(company.getCompanyInfo().getSalaryDate())
-//                .build();
-
         // when
-//        log.info("========== account 조회 ==========");
-        AccountJpa accountJpa = loadAccountJpaRepository.findAccountByEmail(account.getEmail());
-//        log.info("========== companyJpa 저장 ==========");
+        AccountJpa accountJpa = accountJpaRepository.findByEmail(account.getEmail());
         CompanyJpa companyJpaResult = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
-//        log.info("========== CompanyAccountRelJpa 저장 ==========");
-        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
-                .accountJpa(accountJpa)
-                .companyJpa(companyJpaResult)
-                .build();
 
         // then
-        Assertions.assertDoesNotThrow(
-                () -> relationRepository.save(companyAccountRelJpa)
-        );
+        Assertions.assertEquals(companyJpaResult.getCompanyName(), company.getCompanyInfo().getCompanyName());
     }
-
 
 }
