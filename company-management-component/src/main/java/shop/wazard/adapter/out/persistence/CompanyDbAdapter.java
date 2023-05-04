@@ -33,6 +33,7 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
         CompanyJpa companyJpa = companyMapper.toCompanyJpa(company);
         AccountJpa accountJpa = accountJpaRepository.findByEmail(email);
         CompanyAccountRelJpa companyAccountRelJpa = companyMapper.saveRelationInfo(accountJpa, companyJpa);
+        companyJpaRepository.save(companyJpa);
         relationRepository.save(companyAccountRelJpa);
     }
 
