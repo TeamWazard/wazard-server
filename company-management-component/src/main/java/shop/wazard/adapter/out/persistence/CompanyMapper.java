@@ -20,11 +20,10 @@ class CompanyMapper {
     }
 
     public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa) {
-        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
+        return CompanyAccountRelJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .build();
-        return companyAccountRelJpa;
     }
 
 }

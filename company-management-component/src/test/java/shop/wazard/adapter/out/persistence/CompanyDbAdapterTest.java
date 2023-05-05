@@ -21,6 +21,7 @@ import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -28,9 +29,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
-@EntityScan(basePackages = "shop.wazard.entity.*")
+@EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyMapper.class, AccountMapper.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapper.class, AccountMapper.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
     @MockBean
@@ -43,6 +44,8 @@ class CompanyDbAdapterTest {
     private AccountForCompanyManagementJpaRepository accountForCompanyManagementJpaRepository;
     @Autowired
     private RelationRepository relationRepository;
+    @Autowired
+    private EntityManager em;
 
     @Test
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
@@ -78,6 +81,7 @@ class CompanyDbAdapterTest {
 
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
         CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
+        em.flush();
 
         // then
         Assertions.assertAll(
@@ -119,7 +123,10 @@ class CompanyDbAdapterTest {
         Mockito.when(companyMapper.saveRelationInfo(any(AccountJpa.class), any(CompanyJpa.class)))
                 .thenReturn(companyAccountRelJpa);
 
+        accountForCompanyManagementJpaRepository.save(accountJpa);
+        companyJpaRepository.save(companyJpa);
         CompanyAccountRelJpa result = relationRepository.save(companyMapper.saveRelationInfo(accountJpa, companyJpa));
+        em.flush();
 
         // then
         Assertions.assertAll(
