@@ -19,7 +19,7 @@ class CompanyController {
     private final CompanyService companyService;
 
     @Certification
-    @PostMapping
+    @PostMapping("/register/{accountId}")
     public ResponseEntity<RegisterCompanyResDto> registerCompany(@PathVariable Long accountId, @Valid @RequestBody RegisterCompanyReqDto registerCompanyReqDto) throws AccessDeniedException, IllegalAccessException {
         RegisterCompanyResDto registerCompanyResDto = companyService.registerCompany(registerCompanyReqDto);
         return ResponseEntity.ok(registerCompanyResDto);
