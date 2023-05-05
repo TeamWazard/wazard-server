@@ -18,6 +18,9 @@ import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.dto.RegisterCompanyReqDto;
+import shop.wazard.dto.UpdateCompanyInfoReqDto;
+
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CompanyServiceImpl.class})
@@ -66,6 +69,39 @@ class CompanyServiceTest {
 
         // then
         Assertions.assertDoesNotThrow(() -> companyService.registerCompany(registerCompanyReqDto));
+    }
+
+    @Test
+    @DisplayName("고용주 - 업장 정보 수정 - 성공")
+    public void updateCompanyInfoSuccess() throws Exception {
+        //given
+        UpdateCompanyInfoReqDto updateCompanyInfoReqDto = UpdateCompanyInfoReqDto.builder()
+                .id(1L)
+                .companyName("수정테스트")
+                .companyAddress("테스트 주소")
+                .companyContact("02-123-1234")
+                .salaryDate(10)
+                .build();
+        CompanyInfo companyInfo = CompanyInfo.builder()
+                .companyName("테스트")
+                .companyAddress("테스트 주소")
+                .companyContact("02-123-1234")
+                .salaryDate(10)
+                .build();
+        Company company = Company.builder().companyInfo(companyInfo).build();
+
+        //when
+        Mockito.when(loadCompanyPort.findCompanyById(anyLong())).thenReturn(company);
+        company.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
+        companyService.updateCompanyInfo(updateCompanyInfoReqDto);
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), updateCompanyInfoReqDto.getCompanyName()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), updateCompanyInfoReqDto.getCompanyAddress()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), updateCompanyInfoReqDto.getCompanyContact()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), updateCompanyInfoReqDto.getSalaryDate())
+        );
     }
 
 }

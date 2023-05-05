@@ -37,4 +37,13 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
         relationRepository.save(companyAccountRelJpa);
     }
 
+    @Override
+    public Company findCompanyById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void updateCompanyInfo(Company company) {
+
+    }
 }
