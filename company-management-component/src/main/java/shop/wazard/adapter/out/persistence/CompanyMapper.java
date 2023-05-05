@@ -15,15 +15,15 @@ class CompanyMapper {
                 .companyAddress(company.getCompanyInfo().getCompanyAddress())
                 .companyContact(company.getCompanyInfo().getCompanyContact())
                 .salaryDate(company.getCompanyInfo().getSalaryDate())
+                .logoImageUrl(company.getCompanyInfo().getLogoImageUrl())
                 .build();
     }
 
     public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa) {
-        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
+        return CompanyAccountRelJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .build();
-        return companyAccountRelJpa;
     }
 
 }

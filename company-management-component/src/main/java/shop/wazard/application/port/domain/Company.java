@@ -18,6 +18,8 @@ public class Company {
                         .companyName(registerCompanyReqDto.getCompanyName())
                         .companyAddress(registerCompanyReqDto.getCompanyAddress())
                         .companyContact(registerCompanyReqDto.getCompanyContact())
+                        .salaryDate(registerCompanyReqDto.getSalaryDate())
+                        .logoImageUrl(registerCompanyReqDto.getLogoImageUrl())
                         .build())
                 .build();
     }

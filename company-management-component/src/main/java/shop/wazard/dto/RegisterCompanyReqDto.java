@@ -9,6 +9,7 @@ import lombok.*;
 public class RegisterCompanyReqDto {
 
     private String email;
+    private String logoImageUrl;
     private String companyName;
     private String companyAddress;
     private String companyContact;

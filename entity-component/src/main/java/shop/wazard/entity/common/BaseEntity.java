@@ -5,10 +5,7 @@ import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,7 +20,7 @@ public class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10, columnDefinition = "varchar(255) default 'ACTIVE'")
+    @Column(nullable = false)
     protected State state;
 
     @Getter
@@ -34,4 +31,19 @@ public class BaseEntity {
 
         private final String status;
     }
+
+    @PrePersist
+    private void prePersistFunction() {
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
+        state = State.ACTIVE;
+    }
+
+    @PreUpdate
+    private void preUpdateFunction() {
+        LocalDateTime now = LocalDateTime.now();
+        updatedAt = now;
+    }
+
 }

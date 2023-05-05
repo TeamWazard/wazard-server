@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,14 +16,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.account.GenderTypeJpa;
+import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
-@EntityScan(basePackages = "shop.wazard.entity.*")
+@EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {CompanyDbAdapter.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapper.class, AccountMapper.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
     @MockBean
@@ -35,34 +44,95 @@ class CompanyDbAdapterTest {
     private AccountForCompanyManagementJpaRepository accountForCompanyManagementJpaRepository;
     @Autowired
     private RelationRepository relationRepository;
+    @Autowired
+    private EntityManager em;
 
     @Test
-    @DisplayName("고용주 - 업장 등록 - 성공")
-    public void registerCompanySuccess() throws Exception {
+    @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
+    public void saveCompanyJpaSuccess() throws Exception {
         // given
         Account account = Account.builder()
                 .id(1L)
                 .roles("EMPLOYER")
                 .email("test@email.com")
-                .userName("testName")
+                .userName("name")
                 .build();
         Company company = Company.builder()
                 .companyInfo(
                         shop.wazard.application.port.domain.CompanyInfo.builder()
-                                .companyName("testCompanyName")
-                                .companyAddress("testCompanyAddress")
-                                .companyContact("031-432-4321")
+                                .companyName("companyName")
+                                .companyAddress("companyAddress")
+                                .companyContact("02-111-1111")
                                 .salaryDate(1)
+                                .logoImageUrl("www.test.com")
                                 .build()
                 )
                 .build();
+        CompanyJpa companyJpa = CompanyJpa.builder()
+                .companyName("companyName")
+                .companyAddress("companyAddress")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test.com")
+                .build();
 
         // when
+        Mockito.when(companyMapper.toCompanyJpa(any(Company.class))).thenReturn(companyJpa);
+
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
-        CompanyJpa companyJpaResult = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
+        CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
+        em.flush();
 
         // then
-        Assertions.assertEquals(companyJpaResult.getCompanyName(), company.getCompanyInfo().getCompanyName());
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
+                () -> Assertions.assertEquals(result.getCompanyAddress(), company.getCompanyInfo().getCompanyAddress()),
+                () -> Assertions.assertEquals(result.getCompanyContact(), company.getCompanyInfo().getCompanyContact()),
+                () -> Assertions.assertEquals(result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
+                () -> Assertions.assertEquals(result.getLogoImageUrl(), company.getCompanyInfo().getLogoImageUrl())
+        );
+    }
+
+    @Test
+    @DisplayName("고용주 - 업장 등록 - CompanyAccountRelJpa 저장")
+    public void saveCompanyAccountRelJpaSuccess() throws Exception {
+        // given
+        AccountJpa accountJpa = AccountJpa.builder()
+                .email("test@email.com")
+                .password("testPwd")
+                .userName("testName")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2022, 1, 1))
+                .state(BaseEntity.State.ACTIVE)
+                .companyAccountRelJpaList(null)
+                .build();
+        CompanyJpa companyJpa = CompanyJpa.builder()
+                .companyName("companyName")
+                .companyAddress("companyAddress")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test.com")
+                .build();
+        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .build();
+
+        // when
+        Mockito.when(companyMapper.saveRelationInfo(any(AccountJpa.class), any(CompanyJpa.class)))
+                .thenReturn(companyAccountRelJpa);
+
+        accountForCompanyManagementJpaRepository.save(accountJpa);
+        companyJpaRepository.save(companyJpa);
+        CompanyAccountRelJpa result = relationRepository.save(companyMapper.saveRelationInfo(accountJpa, companyJpa));
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.getAccountJpa(), accountJpa),
+                () -> Assertions.assertEquals(result.getCompanyJpa(), companyJpa)
+        );
     }
 
 }

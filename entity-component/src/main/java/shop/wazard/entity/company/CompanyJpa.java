@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 import shop.wazard.entity.common.BaseEntity;
 
 import javax.persistence.*;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Company")
 public class CompanyJpa extends BaseEntity {
@@ -34,19 +32,19 @@ public class CompanyJpa extends BaseEntity {
     // 월급날 (ex: 11일)
     private int salaryDate;
 
-    @OneToOne
-    private LogoImageJpa logoImageJpa;
+    @Column(nullable = false)
+    private String logoImageUrl;
 
     @OneToMany(mappedBy = "companyJpa")
     private List<CompanyAccountRelJpa> companyAccountRelJpaList = new ArrayList<>();
 
     @Builder
-    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, LogoImageJpa logoImageJpa, List<CompanyAccountRelJpa> companyAccountRelJpaList) {
+    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl, List<CompanyAccountRelJpa> companyAccountRelJpaList) {
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.companyContact = companyContact;
         this.salaryDate = salaryDate;
-        this.logoImageJpa = logoImageJpa;
+        this.logoImageUrl = logoImageUrl;
         this.companyAccountRelJpaList = companyAccountRelJpaList;
     }
 }
