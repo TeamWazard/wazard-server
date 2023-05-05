@@ -26,4 +26,13 @@ class CompanyMapper {
                 .build();
     }
 
+    public void updateCompanyInfo(CompanyJpa companyJpa, Company company) {
+        companyJpa.updateCompanyInfo(
+                company.getCompanyInfo().getCompanyName(),
+                company.getCompanyInfo().getCompanyAddress(),
+                company.getCompanyInfo().getCompanyContact(),
+                company.getCompanyInfo().getSalaryDate(),
+                company.getCompanyInfo().getLogoImageUrl()
+        );
+    }
 }

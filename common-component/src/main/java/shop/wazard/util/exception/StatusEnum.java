@@ -15,7 +15,8 @@ public enum StatusEnum {
     ACCESS_DENIED(405, "본인 인증에 실패하였습니다."),
     ACCOUNT_NOT_FOUND(406, "존재하지 않는 계정입니다."),
     NESTED_EMAIL(407, "이미 가입된 정보가 있습니다."),
-    REGISTER_COMPANY_DENIED(408, "고용주만 업장을 추가할 수 있습니다."),;
+    REGISTER_COMPANY_DENIED(408, "고용주만 업장을 추가할 수 있습니다."),
+    COMPANY_NOT_FOUND(409, "존재하지 않는 업장입니다.");
 
     private int statusCode;
     private String message;
