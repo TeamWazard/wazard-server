@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UpdateCompanyResDto {
+public class UpdateCompanyInfoResDto {
 
     private String message;
 

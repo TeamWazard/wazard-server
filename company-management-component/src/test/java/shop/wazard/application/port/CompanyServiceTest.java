@@ -18,7 +18,9 @@ import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.UpdateCompanyReqDto;
+import shop.wazard.dto.UpdateCompanyInfoReqDto;
+
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {CompanyServiceImpl.class})
@@ -70,11 +72,11 @@ class CompanyServiceTest {
     }
 
     @Test
-    @DisplayName("고용주 - 업장 수정 - 성공")
+    @DisplayName("고용주 - 업장 정보 수정 - 성공")
     public void updateCompanyInfoSuccess() throws Exception {
         //given
-        UpdateCompanyReqDto updateCompanyReqDto = UpdateCompanyReqDto.builder()
-                .id(Long.valueOf(1))
+        UpdateCompanyInfoReqDto updateCompanyInfoReqDto = UpdateCompanyInfoReqDto.builder()
+                .id(1L)
                 .companyName("수정테스트")
                 .companyAddress("테스트 주소")
                 .companyContact("02-123-1234")
@@ -89,15 +91,16 @@ class CompanyServiceTest {
         Company company = Company.builder().companyInfo(companyInfo).build();
 
         //when
-        Mockito.when(loadCompanyPort.findCompanyById(updateCompanyReqDto.getId())).thenReturn(company);
-        company.getCompanyInfo().updateCompanyInfo(updateCompanyReqDto);
-        companyService.updateCompanyInfo(updateCompanyReqDto);
+        Mockito.when(loadCompanyPort.findCompanyById(anyLong())).thenReturn(company);
+        company.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
+        companyService.updateCompanyInfo(updateCompanyInfoReqDto);
+
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), updateCompanyReqDto.getCompanyName()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), updateCompanyReqDto.getCompanyAddress()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), updateCompanyReqDto.getCompanyContact()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), updateCompanyReqDto.getSalaryDate())
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), updateCompanyInfoReqDto.getCompanyName()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), updateCompanyInfoReqDto.getCompanyAddress()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), updateCompanyInfoReqDto.getCompanyContact()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), updateCompanyInfoReqDto.getSalaryDate())
         );
     }
 

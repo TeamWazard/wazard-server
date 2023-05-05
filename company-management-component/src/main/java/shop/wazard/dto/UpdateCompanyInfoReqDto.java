@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UpdateCompanyReqDto {
+public class UpdateCompanyInfoReqDto {
 
     private Long id;
     private String logoImageUrl;
