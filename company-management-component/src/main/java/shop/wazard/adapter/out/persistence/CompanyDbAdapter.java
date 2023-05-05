@@ -49,4 +49,13 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
         companyMapper.updateCompanyInfo(companyJpa, company);
     }
 
+    @Override
+    public Company findCompanyById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void updateCompanyInfo(Company company) {
+
+    }
 }
