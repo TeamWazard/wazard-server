@@ -42,20 +42,18 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
         relationRepository.save(companyAccountRelJpa);
     }
 
+    @Override
+    public Company findCompanyById(Long id) {
+        CompanyJpa companyJpa = companyJpaRepository.findById(id)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        return companyMapper.toCompanyDomain(companyJpa);
+    }
+
+    @Override
     @Transactional
     public void updateCompanyInfo(Company company) {
         CompanyJpa companyJpa = companyJpaRepository.findById(company.getId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         companyMapper.updateCompanyInfo(companyJpa, company);
-    }
-
-    @Override
-    public Company findCompanyById(Long id) {
-        return null;
-    }
-
-    @Override
-    public void updateCompanyInfo(Company company) {
-
     }
 }

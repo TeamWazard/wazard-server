@@ -20,6 +20,8 @@ import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.util.exception.StatusEnum;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -153,7 +155,8 @@ class CompanyDbAdapterTest {
 
         //when
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
-        CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId()).orElseThrow();
+        CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         companyMapper.updateCompanyInfo(realCompanyJpa, changedCompany);
         em.flush();
 
