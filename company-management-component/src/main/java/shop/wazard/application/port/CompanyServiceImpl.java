@@ -12,6 +12,8 @@ import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.dto.RegisterCompanyReqDto;
 import shop.wazard.dto.RegisterCompanyResDto;
+import shop.wazard.dto.UpdateCompanyReqDto;
+import shop.wazard.dto.UpdateCompanyResDto;
 import shop.wazard.exception.RegisterPermissionDenied;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -34,6 +36,16 @@ class CompanyServiceImpl implements CompanyService {
         saveCompanyPort.saveCompany(account.getEmail(), Company.createCompany(registerCompanyReqDto));
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
+                .build();
+    }
+
+    @Override
+    public UpdateCompanyResDto updateCompanyInfo(UpdateCompanyReqDto updateCompanyReqDto) {
+        Company company = loadCompanyPort.findCompanyById(updateCompanyReqDto.getId());
+        company.getCompanyInfo().updateCompanyInfo(updateCompanyReqDto);
+        updateCompanyPort.updateCompanyInfo(company);
+        return UpdateCompanyResDto.builder()
+                .message("업장 수정이 완료되었습니다.")
                 .build();
     }
 
