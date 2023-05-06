@@ -41,7 +41,7 @@ class CompanyServiceImpl implements CompanyService {
 
     @Override
     public UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
-        Company company = loadCompanyPort.findCompanyById(updateCompanyInfoReqDto.getId());
+        Company company = loadCompanyPort.findCompanyById(updateCompanyInfoReqDto.getCompanyId());
         company.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
         updateCompanyPort.updateCompanyInfo(company);
         return UpdateCompanyInfoResDto.builder()

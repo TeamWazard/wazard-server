@@ -8,7 +8,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UpdateCompanyInfoReqDto {
 
-    private Long id;
+
+    private Long companyId;
     private String logoImageUrl;
     private String companyName;
     private String companyAddress;
