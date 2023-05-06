@@ -1,9 +1,9 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.CompanyForManagement;
 
 public interface UpdateCompanyPort {
 
-    void updateCompanyInfo(Company company);
+    void updateCompanyInfo(CompanyForManagement companyForManagement);
 
 }

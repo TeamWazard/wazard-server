@@ -1,8 +1,8 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.application.port.domain.Account;
+import shop.wazard.application.port.domain.AccountForManagement;
 
 public interface LoadAccountForCompanyManagementPort {
-    Account findAccountByEmail(String email);
+    AccountForManagement findAccountByEmail(String email);
 
 }

@@ -28,8 +28,8 @@ class CompanyController {
     }
 
     @Certification
-    @PatchMapping("/info/{companyId}/{accountId}")
-    public ResponseEntity<UpdateCompanyInfoResDto> updateCompanyInfo(@PathVariable Long accountId, @PathVariable Long companyId, @Valid @RequestBody UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
+    @PatchMapping("/info/{accountId}")
+    public ResponseEntity<UpdateCompanyInfoResDto> updateCompanyInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         UpdateCompanyInfoResDto updateCompanyInfoResDto = companyService.updateCompanyInfo(updateCompanyInfoReqDto);
         return ResponseEntity.ok(updateCompanyInfoResDto);
     }

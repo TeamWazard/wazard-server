@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = {WazardApplication.class})
 @AutoConfigureMockMvc
-class AccountControllerTest {
+class AccountForManagementControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

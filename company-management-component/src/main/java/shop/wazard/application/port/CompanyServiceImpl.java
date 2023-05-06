@@ -3,8 +3,8 @@ package shop.wazard.application.port;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wazard.application.port.domain.Account;
-import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.AccountForManagement;
+import shop.wazard.application.port.domain.CompanyForManagement;
 import shop.wazard.application.port.in.CompanyService;
 import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
@@ -29,11 +29,11 @@ class CompanyServiceImpl implements CompanyService {
 
     @Override
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
-        Account account = loadAccountForCompanyManagementPort.findAccountByEmail(registerCompanyReqDto.getEmail());
-        if (!account.isEmployer()) {
+        AccountForManagement accountForManagement = loadAccountForCompanyManagementPort.findAccountByEmail(registerCompanyReqDto.getEmail());
+        if (!accountForManagement.isEmployer()) {
             throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
         }
-        saveCompanyPort.saveCompany(account.getEmail(), Company.createCompany(registerCompanyReqDto));
+        saveCompanyPort.saveCompany(accountForManagement.getEmail(), CompanyForManagement.createCompany(registerCompanyReqDto));
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
                 .build();
@@ -41,9 +41,9 @@ class CompanyServiceImpl implements CompanyService {
 
     @Override
     public UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
-        Company company = loadCompanyPort.findCompanyById(updateCompanyInfoReqDto.getCompanyId());
-        company.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
-        updateCompanyPort.updateCompanyInfo(company);
+        CompanyForManagement companyForManagement = loadCompanyPort.findCompanyById(updateCompanyInfoReqDto.getCompanyId());
+        companyForManagement.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
+        updateCompanyPort.updateCompanyInfo(companyForManagement);
         return UpdateCompanyInfoResDto.builder()
                 .message("업장 수정이 완료되었습니다.")
                 .build();

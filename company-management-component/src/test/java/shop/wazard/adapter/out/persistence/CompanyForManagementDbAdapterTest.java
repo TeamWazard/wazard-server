@@ -12,8 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.wazard.application.port.domain.Account;
-import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.AccountForManagement;
+import shop.wazard.application.port.domain.CompanyForManagement;
 import shop.wazard.application.port.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
@@ -30,7 +30,7 @@ import java.time.LocalDate;
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapperForManagement.class, AccountMapperForManagement.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
-class CompanyDbAdapterTest {
+class CompanyForManagementDbAdapterTest {
 
     @Autowired
     private CompanyMapperForManagement companyMapperForManagement;
@@ -49,13 +49,13 @@ class CompanyDbAdapterTest {
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
         // given
-        Account account = Account.builder()
+        AccountForManagement accountForManagement = AccountForManagement.builder()
                 .id(1L)
                 .roles("EMPLOYER")
                 .email("test@email.com")
                 .userName("name")
                 .build();
-        Company company = Company.builder()
+        CompanyForManagement companyForManagement = CompanyForManagement.builder()
                 .companyInfo(
                         shop.wazard.application.port.domain.CompanyInfo.builder()
                                 .companyName("companyName")
@@ -75,17 +75,17 @@ class CompanyDbAdapterTest {
                 .build();
 
         // when
-        AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
-        CompanyJpa result = companyJpaRepository.save(companyMapperForManagement.toCompanyJpa(company));
+        AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(accountForManagement.getEmail());
+        CompanyJpa result = companyJpaRepository.save(companyMapperForManagement.toCompanyJpa(companyForManagement));
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
-                () -> Assertions.assertEquals(result.getCompanyAddress(), company.getCompanyInfo().getCompanyAddress()),
-                () -> Assertions.assertEquals(result.getCompanyContact(), company.getCompanyInfo().getCompanyContact()),
-                () -> Assertions.assertEquals(result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
-                () -> Assertions.assertEquals(result.getLogoImageUrl(), company.getCompanyInfo().getLogoImageUrl())
+                () -> Assertions.assertEquals(result.getCompanyName(), companyForManagement.getCompanyInfo().getCompanyName()),
+                () -> Assertions.assertEquals(result.getCompanyAddress(), companyForManagement.getCompanyInfo().getCompanyAddress()),
+                () -> Assertions.assertEquals(result.getCompanyContact(), companyForManagement.getCompanyInfo().getCompanyContact()),
+                () -> Assertions.assertEquals(result.getSalaryDate(), companyForManagement.getCompanyInfo().getSalaryDate()),
+                () -> Assertions.assertEquals(result.getLogoImageUrl(), companyForManagement.getCompanyInfo().getLogoImageUrl())
         );
     }
 
@@ -139,7 +139,7 @@ class CompanyDbAdapterTest {
                 .logoImageUrl("testLU")
                 .salaryDate(1)
                 .build();
-        Company changedCompany = Company.builder()
+        CompanyForManagement changedCompanyForManagement = CompanyForManagement.builder()
                 .companyInfo(
                         CompanyInfo.builder()
                                 .companyName("testName")
@@ -154,16 +154,16 @@ class CompanyDbAdapterTest {
         //when
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
         CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId()).get();
-        companyMapperForManagement.updateCompanyInfo(realCompanyJpa, changedCompany);
+        companyMapperForManagement.updateCompanyInfo(realCompanyJpa, changedCompanyForManagement);
         em.flush();
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyName(), realCompanyJpa.getCompanyName()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyAddress(), realCompanyJpa.getCompanyAddress()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyContact(), realCompanyJpa.getCompanyContact()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getLogoImageUrl(), realCompanyJpa.getLogoImageUrl()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getSalaryDate(), realCompanyJpa.getSalaryDate())
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyName(), realCompanyJpa.getCompanyName()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyAddress(), realCompanyJpa.getCompanyAddress()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyContact(), realCompanyJpa.getCompanyContact()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getLogoImageUrl(), realCompanyJpa.getLogoImageUrl()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getSalaryDate(), realCompanyJpa.getSalaryDate())
         );
     }
 

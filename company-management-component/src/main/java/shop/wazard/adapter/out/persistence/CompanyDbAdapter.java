@@ -3,8 +3,8 @@ package shop.wazard.adapter.out.persistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wazard.application.port.domain.Account;
-import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.AccountForManagement;
+import shop.wazard.application.port.domain.CompanyForManagement;
 import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
@@ -27,15 +27,15 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     private final RelationRepository relationRepository;
 
     @Override
-    public Account findAccountByEmail(String email) {
+    public AccountForManagement findAccountByEmail(String email) {
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(email);
         return accountMapperForManagement.toAccount(accountJpa);
     }
 
     @Override
     @Transactional
-    public void saveCompany(String email, Company company) {
-        CompanyJpa companyJpa = companyMapperForManagement.toCompanyJpa(company);
+    public void saveCompany(String email, CompanyForManagement companyForManagement) {
+        CompanyJpa companyJpa = companyMapperForManagement.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(email);
         CompanyAccountRelJpa companyAccountRelJpa = companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa);
         companyJpaRepository.save(companyJpa);
@@ -43,7 +43,7 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     }
 
     @Override
-    public Company findCompanyById(Long id) {
+    public CompanyForManagement findCompanyById(Long id) {
         CompanyJpa companyJpa = companyJpaRepository.findById(id)
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         return companyMapperForManagement.toCompanyDomain(companyJpa);
@@ -51,10 +51,10 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
 
     @Override
     @Transactional
-    public void updateCompanyInfo(Company company) {
-        CompanyJpa companyJpa = companyJpaRepository.findById(company.getId())
+    public void updateCompanyInfo(CompanyForManagement companyForManagement) {
+        CompanyJpa companyJpa = companyJpaRepository.findById(companyForManagement.getId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyMapperForManagement.updateCompanyInfo(companyJpa, company);
+        companyMapperForManagement.updateCompanyInfo(companyJpa, companyForManagement);
     }
 
 }
