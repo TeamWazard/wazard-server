@@ -2,6 +2,7 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
 import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
@@ -11,8 +12,11 @@ import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.util.exception.StatusEnum;
 
 @Repository
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompanyPort, LoadAccountForCompanyManagementPort {
 
@@ -29,6 +33,7 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     }
 
     @Override
+    @Transactional
     public void saveCompany(String email, Company company) {
         CompanyJpa companyJpa = companyMapper.toCompanyJpa(company);
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(email);
@@ -39,11 +44,16 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
 
     @Override
     public Company findCompanyById(Long id) {
-        return null;
+        CompanyJpa companyJpa = companyJpaRepository.findById(id)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        return companyMapper.toCompanyDomain(companyJpa);
     }
 
     @Override
+    @Transactional
     public void updateCompanyInfo(Company company) {
-
+        CompanyJpa companyJpa = companyJpaRepository.findById(company.getId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        companyMapper.updateCompanyInfo(companyJpa, company);
     }
 }

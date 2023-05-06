@@ -47,4 +47,12 @@ public class CompanyJpa extends BaseEntity {
         this.logoImageUrl = logoImageUrl;
         this.companyAccountRelJpaList = companyAccountRelJpaList;
     }
+
+    public void updateCompanyInfo(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
+        this.companyName = companyName;
+        this.companyAddress = companyAddress;
+        this.companyContact = companyContact;
+        this.salaryDate = salaryDate;
+        this.logoImageUrl = logoImageUrl;
+    }
 }

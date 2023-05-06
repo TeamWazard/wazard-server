@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,16 +14,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.util.exception.StatusEnum;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapper.class, AccountMapper.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
-    @MockBean
+    @Autowired
     private CompanyMapper companyMapper;
     @MockBean
     private AccountMapper accountMapper;
@@ -77,8 +77,6 @@ class CompanyDbAdapterTest {
                 .build();
 
         // when
-        Mockito.when(companyMapper.toCompanyJpa(any(Company.class))).thenReturn(companyJpa);
-
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
         CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
         em.flush();
@@ -120,9 +118,6 @@ class CompanyDbAdapterTest {
                 .build();
 
         // when
-        Mockito.when(companyMapper.saveRelationInfo(any(AccountJpa.class), any(CompanyJpa.class)))
-                .thenReturn(companyAccountRelJpa);
-
         accountForCompanyManagementJpaRepository.save(accountJpa);
         companyJpaRepository.save(companyJpa);
         CompanyAccountRelJpa result = relationRepository.save(companyMapper.saveRelationInfo(accountJpa, companyJpa));
@@ -132,6 +127,46 @@ class CompanyDbAdapterTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(result.getAccountJpa(), accountJpa),
                 () -> Assertions.assertEquals(result.getCompanyJpa(), companyJpa)
+        );
+    }
+    
+    @Test
+    @DisplayName("고용주 - 업장 수정 - 성공")
+    public void updateCompanyInfoSuccess() throws Exception {
+        // given
+        CompanyJpa companyJpa = CompanyJpa.builder()
+                .companyName("testN")
+                .companyAddress("testA")
+                .companyContact("031-123-1234")
+                .logoImageUrl("testLU")
+                .salaryDate(1)
+                .build();
+        Company changedCompany = Company.builder()
+                .companyInfo(
+                        CompanyInfo.builder()
+                                .companyName("testName")
+                                .companyAddress("testAddress")
+                                .companyContact("031-123-1234")
+                                .logoImageUrl("testLogoUrl")
+                                .salaryDate(1)
+                                .build()
+                )
+                .build();
+
+        //when
+        CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
+        CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        companyMapper.updateCompanyInfo(realCompanyJpa, changedCompany);
+        em.flush();
+
+        //then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyName(), realCompanyJpa.getCompanyName()),
+                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyAddress(), realCompanyJpa.getCompanyAddress()),
+                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyContact(), realCompanyJpa.getCompanyContact()),
+                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getLogoImageUrl(), realCompanyJpa.getLogoImageUrl()),
+                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getSalaryDate(), realCompanyJpa.getSalaryDate())
         );
     }
 
