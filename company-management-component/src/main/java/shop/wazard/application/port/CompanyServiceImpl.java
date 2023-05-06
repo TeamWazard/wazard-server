@@ -19,7 +19,6 @@ import shop.wazard.util.exception.StatusEnum;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 class CompanyServiceImpl implements CompanyService {
 
     private final LoadCompanyPort loadCompanyPort;
@@ -27,6 +26,7 @@ class CompanyServiceImpl implements CompanyService {
     private final UpdateCompanyPort updateCompanyPort;
     private final LoadAccountForCompanyManagementPort loadAccountForCompanyManagementPort;
 
+    @Transactional
     @Override
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         AccountForManagement accountForManagement = loadAccountForCompanyManagementPort.findAccountByEmail(registerCompanyReqDto.getEmail());
@@ -39,6 +39,7 @@ class CompanyServiceImpl implements CompanyService {
                 .build();
     }
 
+    @Transactional
     @Override
     public UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         CompanyForManagement companyForManagement = loadCompanyPort.findCompanyById(updateCompanyInfoReqDto.getCompanyId());
