@@ -31,13 +31,13 @@ import java.time.LocalDate;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapper.class, AccountMapper.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapperForManagement.class, AccountMapperForManagement.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
 class CompanyDbAdapterTest {
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyMapperForManagement companyMapperForManagement;
     @MockBean
-    private AccountMapper accountMapper;
+    private AccountMapperForManagement accountMapperForManagement;
     @Autowired
     private CompanyJpaRepository companyJpaRepository;
     @Autowired
@@ -78,7 +78,7 @@ class CompanyDbAdapterTest {
 
         // when
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(account.getEmail());
-        CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
+        CompanyJpa result = companyJpaRepository.save(companyMapperForManagement.toCompanyJpa(company));
         em.flush();
 
         // then
@@ -120,7 +120,7 @@ class CompanyDbAdapterTest {
         // when
         accountForCompanyManagementJpaRepository.save(accountJpa);
         companyJpaRepository.save(companyJpa);
-        CompanyAccountRelJpa result = relationRepository.save(companyMapper.saveRelationInfo(accountJpa, companyJpa));
+        CompanyAccountRelJpa result = relationRepository.save(companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa));
         em.flush();
 
         // then
@@ -157,7 +157,7 @@ class CompanyDbAdapterTest {
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
         CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyMapper.updateCompanyInfo(realCompanyJpa, changedCompany);
+        companyMapperForManagement.updateCompanyInfo(realCompanyJpa, changedCompany);
         em.flush();
 
         //then

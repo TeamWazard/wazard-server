@@ -1,6 +1,7 @@
 package shop.wazard.dto;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -27,7 +28,8 @@ public class RegisterCompanyReqDto {
     @NotBlank(message = "연락처는 필수 입력 값입니다.")
     private String companyContact;
 
-    @NotBlank(message = "급여일은 필수 입력 값입니다.")
+//    @NotBlank(message = "급여일은 필수 입력 값입니다.")
+    @Range(min = 0, max = 31)
     private int salaryDate;
 
 }

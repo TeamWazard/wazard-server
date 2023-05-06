@@ -5,7 +5,7 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.entity.account.AccountJpa;
 
 @Component
-class AccountMapper {
+class AccountMapperForManagement {
 
     public Account toAccount(AccountJpa accountJpa) {
         return Account.builder()

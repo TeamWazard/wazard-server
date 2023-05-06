@@ -76,7 +76,7 @@ class CompanyServiceTest {
     public void updateCompanyInfoSuccess() throws Exception {
         //given
         UpdateCompanyInfoReqDto updateCompanyInfoReqDto = UpdateCompanyInfoReqDto.builder()
-                .id(1L)
+                .companyId(1L)
                 .companyName("수정테스트")
                 .companyAddress("테스트 주소")
                 .companyContact("02-123-1234")

@@ -8,7 +8,7 @@ import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
 @Component
-class CompanyMapper {
+class CompanyMapperForManagement {
 
     public CompanyJpa toCompanyJpa(Company company) {
         return CompanyJpa.builder()
