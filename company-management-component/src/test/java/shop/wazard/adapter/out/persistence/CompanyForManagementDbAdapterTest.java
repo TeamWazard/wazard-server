@@ -20,6 +20,7 @@ import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.entity.company.RelationTypeJpa;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -120,7 +121,7 @@ class CompanyForManagementDbAdapterTest {
         // when
         accountForCompanyManagementJpaRepository.save(accountJpa);
         companyJpaRepository.save(companyJpa);
-        CompanyAccountRelJpa result = relationRepository.save(companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa));
+        CompanyAccountRelJpa result = relationRepository.save(companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER));
         em.flush();
 
         // then
