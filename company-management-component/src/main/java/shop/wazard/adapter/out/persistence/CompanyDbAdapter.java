@@ -62,7 +62,7 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     public void deleteCompany(Long companyId) {
         CompanyJpa companyJpa = companyJpaRepository.findById(companyId)
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyJpa.delete();
+        companyMapperForManagement.deleteCompany(companyJpa);
     }
 
 }

@@ -52,4 +52,8 @@ class CompanyMapperForManagement {
                 .build();
     }
 
+    public void deleteCompany(CompanyJpa companyJpa) {
+        companyJpa.delete();
+    }
+
 }
