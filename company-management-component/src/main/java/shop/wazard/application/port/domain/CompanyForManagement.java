@@ -7,13 +7,13 @@ import shop.wazard.dto.RegisterCompanyReqDto;
 
 @Getter
 @Builder
-public class Company {
+public class CompanyForManagement {
 
     private Long id;
     private CompanyInfo companyInfo;
 
-    public static Company createCompany(RegisterCompanyReqDto registerCompanyReqDto) {
-        return Company.builder()
+    public static CompanyForManagement createCompany(RegisterCompanyReqDto registerCompanyReqDto) {
+        return CompanyForManagement.builder()
                 .companyInfo(CompanyInfo.builder()
                         .companyName(registerCompanyReqDto.getCompanyName())
                         .companyAddress(registerCompanyReqDto.getCompanyAddress())
