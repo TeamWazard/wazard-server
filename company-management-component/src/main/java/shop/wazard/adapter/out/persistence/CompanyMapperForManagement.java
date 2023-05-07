@@ -5,6 +5,7 @@ import shop.wazard.application.port.domain.CompanyForManagement;
 import shop.wazard.application.port.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
+import shop.wazard.entity.company.CompanyAccountRelation;
 import shop.wazard.entity.company.CompanyJpa;
 
 @Component
@@ -20,10 +21,11 @@ class CompanyMapperForManagement {
                 .build();
     }
 
-    public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa) {
+    public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, CompanyAccountRelation companyAccountRelation) {
         return CompanyAccountRelJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
+                .companyAccountRelation(companyAccountRelation)
                 .build();
     }
 

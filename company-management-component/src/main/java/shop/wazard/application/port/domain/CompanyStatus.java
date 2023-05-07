@@ -6,7 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CompanyStatus {
+
     ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
     private final String status;
+
 }

@@ -11,6 +11,7 @@ import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyAccountRelJpa;
+import shop.wazard.entity.company.CompanyAccountRelation;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
@@ -37,7 +38,7 @@ class CompanyDbAdapter implements LoadCompanyPort, SaveCompanyPort, UpdateCompan
     public void saveCompany(String email, CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyMapperForManagement.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(email);
-        CompanyAccountRelJpa companyAccountRelJpa = companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa);
+        CompanyAccountRelJpa companyAccountRelJpa = companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa, CompanyAccountRelation.COMPANY);
         companyJpaRepository.save(companyJpa);
         relationRepository.save(companyAccountRelJpa);
     }
