@@ -1,9 +1,9 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.application.port.domain.Company;
+import shop.wazard.application.port.domain.CompanyForManagement;
 
 public interface SaveCompanyPort {
 
-    void saveCompany(String email, Company company);
+    void saveCompany(String email, CompanyForManagement companyForManagement);
 
 }
