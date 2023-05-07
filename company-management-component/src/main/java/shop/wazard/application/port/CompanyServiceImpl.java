@@ -49,7 +49,9 @@ class CompanyServiceImpl implements CompanyService {
 
     @Override
     public DeleteCompanyResDto deleteCompany(Long companyId) {
-        updateCompanyPort.deleteCompany(companyId);
+        CompanyForManagement companyForManagement = loadCompanyPort.findCompanyById(companyId);
+        companyForManagement.deleteCompany();
+        updateCompanyPort.deleteCompany(companyForManagement);
         return DeleteCompanyResDto.builder()
                 .message("삭제되었습니다.")
                 .build();

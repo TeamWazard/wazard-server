@@ -25,4 +25,7 @@ public class CompanyForManagement {
                 .build();
     }
 
+    public void deleteCompany() {
+        this.companyStatus = CompanyStatus.INACTIVE;
+    }
 }
