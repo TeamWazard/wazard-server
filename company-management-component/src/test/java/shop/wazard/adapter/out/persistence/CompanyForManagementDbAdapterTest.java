@@ -45,6 +45,29 @@ class CompanyForManagementDbAdapterTest {
     @Autowired
     private EntityManager em;
 
+    private AccountJpa setDefaultAccountJpa() {
+        return AccountJpa.builder()
+                .email("test@email.com")
+                .password("testPwd")
+                .userName("testName")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .state(BaseEntity.State.ACTIVE)
+                .companyAccountRelJpaList(null)
+                .build();
+    }
+
+    private CompanyJpa setDefaultCompanyJpa() {
+        return CompanyJpa.builder()
+                .companyName("companyName")
+                .companyAddress("companyAddress")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test.com")
+                .build();
+    }
+
     @Test
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
@@ -66,13 +89,7 @@ class CompanyForManagementDbAdapterTest {
                                 .build()
                 )
                 .build();
-        CompanyJpa companyJpa = CompanyJpa.builder()
-                .companyName("companyName")
-                .companyAddress("companyAddress")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .logoImageUrl("www.test.com")
-                .build();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
         AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(accountForManagement.getEmail());
@@ -93,23 +110,8 @@ class CompanyForManagementDbAdapterTest {
     @DisplayName("고용주 - 업장 등록 - CompanyAccountRelJpa 저장")
     public void saveCompanyAccountRelJpaSuccess() throws Exception {
         // given
-        AccountJpa accountJpa = AccountJpa.builder()
-                .email("test@email.com")
-                .password("testPwd")
-                .userName("testName")
-                .phoneNumber("010-1111-1111")
-                .gender(GenderTypeJpa.MALE.getGender())
-                .birth(LocalDate.of(2022, 1, 1))
-                .state(BaseEntity.State.ACTIVE)
-                .companyAccountRelJpaList(null)
-                .build();
-        CompanyJpa companyJpa = CompanyJpa.builder()
-                .companyName("companyName")
-                .companyAddress("companyAddress")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .logoImageUrl("www.test.com")
-                .build();
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
         CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
@@ -132,13 +134,7 @@ class CompanyForManagementDbAdapterTest {
     @DisplayName("고용주 - 업장 정보 수정 - CompanyAccountRel 수정")
     public void updateCompanyInfoSuccess() throws Exception {
         // given
-        CompanyJpa companyJpa = CompanyJpa.builder()
-                .companyName("testN")
-                .companyAddress("testA")
-                .companyContact("031-123-1234")
-                .logoImageUrl("testLU")
-                .salaryDate(1)
-                .build();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
         CompanyForManagement changedCompanyForManagement = CompanyForManagement.builder()
                 .companyInfo(
                         CompanyInfo.builder()
@@ -151,13 +147,13 @@ class CompanyForManagementDbAdapterTest {
                 )
                 .build();
 
-        //when
+        // when
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
         CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId()).get();
         companyMapperForManagement.updateCompanyInfo(realCompanyJpa, changedCompanyForManagement);
         em.flush();
 
-        //then
+        // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyName(), realCompanyJpa.getCompanyName()),
                 () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyAddress(), realCompanyJpa.getCompanyAddress()),
@@ -165,6 +161,22 @@ class CompanyForManagementDbAdapterTest {
                 () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getLogoImageUrl(), realCompanyJpa.getLogoImageUrl()),
                 () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getSalaryDate(), realCompanyJpa.getSalaryDate())
         );
+    }
+
+    @Test
+    @DisplayName("고용주 - 업장 삭제 - CompanyAccountRel 상태 값 변경")
+    public void deleteCompanySuccess() throws Exception {
+        // given
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        companyJpaRepository.save(companyJpa);
+        CompanyJpa result = companyJpaRepository.findById(companyJpa.getId()).get();
+        companyJpa.delete();
+        em.flush();
+
+        // then
+        Assertions.assertEquals(companyJpa.getState().getStatus(), "INACTIVE");
     }
 
 }
