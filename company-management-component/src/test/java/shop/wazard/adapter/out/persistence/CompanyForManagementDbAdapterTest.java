@@ -164,7 +164,7 @@ class CompanyForManagementDbAdapterTest {
     }
 
     @Test
-    @DisplayName("고용주 - 업장 삭제 - CompanyAccountRel 상태 값 변경")
+    @DisplayName("고용주 - 업장 삭제 - CompanyJpa 상태 값 변경")
     public void deleteCompanySuccess() throws Exception {
         // given
         CompanyJpa companyJpa = setDefaultCompanyJpa();
