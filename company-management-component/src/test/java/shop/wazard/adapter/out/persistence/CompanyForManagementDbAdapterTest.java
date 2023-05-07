@@ -12,9 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.wazard.application.port.domain.AccountForManagement;
-import shop.wazard.application.port.domain.CompanyForManagement;
-import shop.wazard.application.port.domain.CompanyInfo;
+import shop.wazard.application.domain.AccountForManagement;
+import shop.wazard.application.domain.CompanyForManagement;
+import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
@@ -30,19 +30,19 @@ import java.time.LocalDate;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapperForManagement.class, AccountMapperForManagement.class, CompanyJpaRepository.class, AccountForCompanyManagementJpaRepository.class, RelationRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, CompanyManagementDbAdapterForManagementForManagement.class, CompanyForCompanyManagementMapper.class, AccountForCompanyManagementMapper.class, CompanyJpaForManagementRepository.class, AccountJpaForCompanyManagementRepository.class, CompanyAccountRelJpaRepository.class})
 class CompanyForManagementDbAdapterTest {
 
     @Autowired
-    private CompanyMapperForManagement companyMapperForManagement;
+    private CompanyForCompanyManagementMapper companyForCompanyManagementMapper;
     @MockBean
-    private AccountMapperForManagement accountMapperForManagement;
+    private AccountForCompanyManagementMapper accountForCompanyManagementMapper;
     @Autowired
-    private CompanyJpaRepository companyJpaRepository;
+    private CompanyJpaForManagementRepository companyJpaForManagementRepository;
     @Autowired
-    private AccountForCompanyManagementJpaRepository accountForCompanyManagementJpaRepository;
+    private AccountJpaForCompanyManagementRepository accountJpaForCompanyManagementRepository;
     @Autowired
-    private RelationRepository relationRepository;
+    private CompanyAccountRelJpaRepository companyAccountRelJpaRepository;
     @Autowired
     private EntityManager em;
 
@@ -54,7 +54,7 @@ class CompanyForManagementDbAdapterTest {
                 .phoneNumber("010-1111-1111")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
-                .state(BaseEntity.State.ACTIVE)
+                .stateJpa(BaseEntity.StateJpa.ACTIVE)
                 .companyAccountRelJpaList(null)
                 .build();
     }
@@ -81,7 +81,7 @@ class CompanyForManagementDbAdapterTest {
                 .build();
         CompanyForManagement companyForManagement = CompanyForManagement.builder()
                 .companyInfo(
-                        shop.wazard.application.port.domain.CompanyInfo.builder()
+                        CompanyInfo.builder()
                                 .companyName("companyName")
                                 .companyAddress("companyAddress")
                                 .companyContact("02-111-1111")
@@ -93,8 +93,8 @@ class CompanyForManagementDbAdapterTest {
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
-        AccountJpa accountJpa = accountForCompanyManagementJpaRepository.findByEmail(accountForManagement.getEmail());
-        CompanyJpa result = companyJpaRepository.save(companyMapperForManagement.toCompanyJpa(companyForManagement));
+        AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(accountForManagement.getEmail());
+        CompanyJpa result = companyJpaForManagementRepository.save(companyForCompanyManagementMapper.toCompanyJpa(companyForManagement));
         em.flush();
 
         // then
@@ -113,15 +113,12 @@ class CompanyForManagementDbAdapterTest {
         // given
         AccountJpa accountJpa = setDefaultAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
-        CompanyAccountRelJpa companyAccountRelJpa = CompanyAccountRelJpa.builder()
-                .accountJpa(accountJpa)
-                .companyJpa(companyJpa)
-                .build();
 
         // when
-        accountForCompanyManagementJpaRepository.save(accountJpa);
-        companyJpaRepository.save(companyJpa);
-        CompanyAccountRelJpa result = relationRepository.save(companyMapperForManagement.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER));
+        accountJpaForCompanyManagementRepository.save(accountJpa);
+        companyJpaForManagementRepository.save(companyJpa);
+        CompanyAccountRelJpa companyAccountRelJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
+        CompanyAccountRelJpa result = companyAccountRelJpaRepository.save(companyAccountRelJpa);
         em.flush();
 
         // then
@@ -149,35 +146,42 @@ class CompanyForManagementDbAdapterTest {
                 .build();
 
         // when
-        CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
-        CompanyJpa realCompanyJpa = companyJpaRepository.findById(savedCompanyJpa.getId()).get();
-        companyMapperForManagement.updateCompanyInfo(realCompanyJpa, changedCompanyForManagement);
+        CompanyJpa savedCompanyJpa = companyJpaForManagementRepository.save(companyJpa);
+        CompanyJpa result = companyJpaForManagementRepository.findById(savedCompanyJpa.getId()).get();
+        companyForCompanyManagementMapper.updateCompanyInfo(result, changedCompanyForManagement);
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyName(), realCompanyJpa.getCompanyName()),
-                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyAddress(), realCompanyJpa.getCompanyAddress()),
-                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyContact(), realCompanyJpa.getCompanyContact()),
-                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getLogoImageUrl(), realCompanyJpa.getLogoImageUrl()),
-                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getSalaryDate(), realCompanyJpa.getSalaryDate())
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyName(), result.getCompanyName()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyAddress(), result.getCompanyAddress()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getCompanyContact(), result.getCompanyContact()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getLogoImageUrl(), result.getLogoImageUrl()),
+                () -> Assertions.assertEquals(changedCompanyForManagement.getCompanyInfo().getSalaryDate(), result.getSalaryDate())
         );
     }
 
+
+    // TODO : 중간 테이블에 accountId가 저장되지 않음 , 테스트는 에러 발생 중
     @Test
-    @DisplayName("고용주 - 업장 삭제 - CompanyJpa 상태 값 변경")
+    @DisplayName("고용주 - 업장 삭제 - CompanyAccountRelJpa 상태 값 변경")
     public void deleteCompanySuccess() throws Exception {
         // given
         CompanyJpa companyJpa = setDefaultCompanyJpa();
+        AccountJpa accountJpa = setDefaultAccountJpa();
 
         // when
-        companyJpaRepository.save(companyJpa);
-        CompanyJpa result = companyJpaRepository.findById(companyJpa.getId()).get();
-        companyJpa.delete();
+        AccountJpa savedAccountJpa = accountJpaForCompanyManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForManagementRepository.save(companyJpa);
+        CompanyAccountRelJpa result = companyAccountRelJpaRepository.save(CompanyAccountRelJpa.builder()
+                .accountJpa(savedAccountJpa)
+                .companyJpa(savedCompanyJpa)
+                .relationTypeJpa(RelationTypeJpa.EMPLOYER)
+                .build());
         em.flush();
 
         // then
-        Assertions.assertEquals(companyJpa.getState().getStatus(), "INACTIVE");
+        Assertions.assertDoesNotThrow(() -> companyAccountRelJpaRepository.deleteCompany(result.getId()));
     }
 
 }

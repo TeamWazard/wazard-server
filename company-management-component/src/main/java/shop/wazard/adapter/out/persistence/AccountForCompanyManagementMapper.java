@@ -2,12 +2,12 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import shop.wazard.application.port.domain.AccountForManagement;
+import shop.wazard.application.domain.AccountForManagement;
 import shop.wazard.entity.account.AccountJpa;
 
 @Component
 @Slf4j
-class AccountMapperForManagement {
+class AccountForCompanyManagementMapper {
 
     public AccountForManagement toAccount(AccountJpa accountJpa) {
         log.info("{}", accountJpa.getRoles());

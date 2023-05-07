@@ -56,8 +56,4 @@ public class CompanyJpa extends BaseEntity {
         this.logoImageUrl = logoImageUrl;
     }
 
-    public void delete() {
-        this.state = State.INACTIVE;
-    }
-
 }

@@ -1,4 +1,4 @@
-package shop.wazard.application.port.domain;
+package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,6 @@ public class CompanyForManagement {
 
     private Long id;
     private CompanyInfo companyInfo;
-    private CompanyStatus companyStatus;
 
     public static CompanyForManagement createCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         return CompanyForManagement.builder()

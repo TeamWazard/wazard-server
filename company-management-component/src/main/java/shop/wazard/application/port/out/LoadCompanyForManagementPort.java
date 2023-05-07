@@ -2,8 +2,8 @@ package shop.wazard.application.port.out;
 
 import shop.wazard.application.domain.CompanyForManagement;
 
-public interface UpdateCompanyPort {
+public interface LoadCompanyForManagementPort {
 
-    void updateCompanyInfo(CompanyForManagement companyForManagement);
+    CompanyForManagement findCompanyById(Long id);
 
 }
