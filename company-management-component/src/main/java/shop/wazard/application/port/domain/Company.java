@@ -11,6 +11,7 @@ public class Company {
 
     private Long id;
     private CompanyInfo companyInfo;
+    private CompanyStatus companyStatus;
 
     public static Company createCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         return Company.builder()

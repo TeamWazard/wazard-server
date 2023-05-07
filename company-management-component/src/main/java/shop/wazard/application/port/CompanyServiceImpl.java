@@ -10,10 +10,7 @@ import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
-import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.RegisterCompanyResDto;
-import shop.wazard.dto.UpdateCompanyInfoReqDto;
-import shop.wazard.dto.UpdateCompanyInfoResDto;
+import shop.wazard.dto.*;
 import shop.wazard.exception.RegisterPermissionDenied;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -49,4 +46,11 @@ class CompanyServiceImpl implements CompanyService {
                 .build();
     }
 
+    @Override
+    public DeleteCompanyResDto deleteCompany(Long companyId) {
+        updateCompanyPort.deleteCompany(companyId);
+        return DeleteCompanyResDto.builder()
+                .message("삭제되었습니다.")
+                .build();
+    }
 }
