@@ -1,4 +1,4 @@
-package shop.wazard.application.port;
+package shop.wazard.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

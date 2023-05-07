@@ -1,4 +1,4 @@
-package shop.wazard.application.port;
+package shop.wazard.application;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
