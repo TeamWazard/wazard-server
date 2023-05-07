@@ -1,14 +1,14 @@
-package shop.wazard.entity.company;
+package shop.wazard.application.port.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CompanyAccountRelation {
+public enum RelationType {
 
-    COMPANY("COMPANY"), MEMBER("MEMBER");
+    EMPLOYER("EMPLOYER"), EMPLOYEE("EMPLOYEE");
 
     public final String relation;
-    
+
 }

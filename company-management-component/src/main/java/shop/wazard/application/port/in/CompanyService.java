@@ -11,5 +11,6 @@ public interface CompanyService {
 
     UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto);
 
-    DeleteCompanyResDto deleteCompany(Long companyId);
+    DeleteCompanyResDto deleteCompany(DeleteCompanyReqDto deleteCompanyReqDto);
+
 }

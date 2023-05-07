@@ -9,6 +9,6 @@ public enum CompanyStatus {
 
     ACTIVE("ACTIVE"), INACTIVE("INACTIVE");
 
-    private final String status;
+    private final String state;
 
 }

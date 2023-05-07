@@ -17,6 +17,7 @@ import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
 import shop.wazard.application.port.out.LoadCompanyPort;
 import shop.wazard.application.port.out.SaveCompanyPort;
 import shop.wazard.application.port.out.UpdateCompanyPort;
+import shop.wazard.dto.DeleteCompanyReqDto;
 import shop.wazard.dto.DeleteCompanyResDto;
 import shop.wazard.dto.RegisterCompanyReqDto;
 import shop.wazard.dto.UpdateCompanyInfoReqDto;
@@ -109,13 +110,16 @@ class CompanyForManagementServiceTest {
     @DisplayName("고용주 - 업장 삭제 - 성공")
     public void deleteCompanySuccess() throws Exception {
         // given
-        Long companyId = 1L;
+        DeleteCompanyReqDto deleteCompanyReqDto = DeleteCompanyReqDto.builder()
+                .email("test@email.com")
+                .companyId(1L)
+                .build();
         DeleteCompanyResDto deleteCompanyResDto = DeleteCompanyResDto.builder()
                 .message("삭제되었습니다.")
                 .build();
         
         //when
-        DeleteCompanyResDto result = companyService.deleteCompany(companyId);
+        DeleteCompanyResDto result = companyService.deleteCompany(deleteCompanyReqDto);
 
         //then
         Assertions.assertEquals(result.getMessage(), deleteCompanyResDto.getMessage());

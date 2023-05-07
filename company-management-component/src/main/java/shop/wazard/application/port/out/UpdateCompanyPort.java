@@ -6,6 +6,6 @@ public interface UpdateCompanyPort {
 
     void updateCompanyInfo(CompanyForManagement companyForManagement);
 
-    void deleteCompany(CompanyForManagement companyForManagement);
+    void deleteCompany(Long companyId);
 
 }
