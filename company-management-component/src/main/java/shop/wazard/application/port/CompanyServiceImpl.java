@@ -6,14 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.domain.AccountForManagement;
 import shop.wazard.application.port.domain.CompanyForManagement;
 import shop.wazard.application.port.in.CompanyService;
-import shop.wazard.application.port.out.LoadAccountForCompanyManagementPort;
-import shop.wazard.application.port.out.LoadCompanyPort;
-import shop.wazard.application.port.out.SaveCompanyPort;
-import shop.wazard.application.port.out.UpdateCompanyPort;
-import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.RegisterCompanyResDto;
-import shop.wazard.dto.UpdateCompanyInfoReqDto;
-import shop.wazard.dto.UpdateCompanyInfoResDto;
+import shop.wazard.application.port.out.*;
+import shop.wazard.dto.*;
 import shop.wazard.exception.RegisterPermissionDenied;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -25,6 +19,7 @@ class CompanyServiceImpl implements CompanyService {
     private final SaveCompanyPort saveCompanyPort;
     private final UpdateCompanyPort updateCompanyPort;
     private final LoadAccountForCompanyManagementPort loadAccountForCompanyManagementPort;
+    private final UpdateCompanyAccountRelForCompanyManagementPort updateCompanyAccountRelForCompanyManagementPort;
 
     @Transactional
     @Override
@@ -50,4 +45,17 @@ class CompanyServiceImpl implements CompanyService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public DeleteCompanyResDto deleteCompany(DeleteCompanyReqDto deleteCompanyReqDto) {
+        AccountForManagement accountForManagement = loadAccountForCompanyManagementPort.findAccountByEmail(deleteCompanyReqDto.getEmail());
+        if (!accountForManagement.isEmployer()) {
+            throw new RegisterPermissionDenied(StatusEnum.REGISTER_COMPANY_DENIED.getMessage());
+        }
+        updateCompanyPort.deleteCompany(deleteCompanyReqDto.getCompanyId());
+        updateCompanyAccountRelForCompanyManagementPort.deleteCompanyAccountRel(deleteCompanyReqDto.getCompanyId());
+        return DeleteCompanyResDto.builder()
+                .message("삭제되었습니다.")
+                .build();
+    }
 }

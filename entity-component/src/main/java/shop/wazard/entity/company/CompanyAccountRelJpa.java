@@ -28,10 +28,15 @@ public class CompanyAccountRelJpa extends BaseEntity {
     @JoinColumn(name = "companyId")
     private CompanyJpa companyJpa;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RelationTypeJpa relationTypeJpa;
+
     @Builder
-    public CompanyAccountRelJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+    public CompanyAccountRelJpa(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
+        this.relationTypeJpa = relationTypeJpa;
     }
 
 }
