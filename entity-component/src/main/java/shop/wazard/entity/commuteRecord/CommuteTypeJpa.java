@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommuteTypeJpa {
 
-    START("START"), END("END");
+    ON("ON"), OFF("OFF");
 
     public final String commuteType;
 }
