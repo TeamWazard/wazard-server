@@ -38,6 +38,7 @@ public class CompanyJpa extends BaseEntity {
     @OneToMany(mappedBy = "companyJpa")
     private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
+
     @Builder
     public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
         this.companyName = companyName;

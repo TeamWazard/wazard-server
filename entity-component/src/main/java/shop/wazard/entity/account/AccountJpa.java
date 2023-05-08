@@ -42,6 +42,7 @@ public class AccountJpa extends BaseEntity {
     @OneToMany(mappedBy = "accountJpa")
     private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
+
     public List<String> getRoleList() {
         if (roles.length() > 0) {
             return Arrays.asList(roles.split(","));
