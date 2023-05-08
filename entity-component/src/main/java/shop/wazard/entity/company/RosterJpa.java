@@ -12,12 +12,12 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CompanyAccountRel")
-public class CompanyAccountRelJpa extends BaseEntity {
+@Table(name = "Roster")
+public class RosterJpa extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "companyAccountId")
+    @Column(name = "rosterId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,7 +33,7 @@ public class CompanyAccountRelJpa extends BaseEntity {
     private RelationTypeJpa relationTypeJpa;
 
     @Builder
-    public CompanyAccountRelJpa(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
+    public RosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.relationTypeJpa = relationTypeJpa;

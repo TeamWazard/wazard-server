@@ -37,19 +37,18 @@ public class CompanyJpa extends BaseEntity {
     private String logoImageUrl;
 
     @OneToMany(mappedBy = "companyJpa")
-    private List<CompanyAccountRelJpa> companyAccountRelJpaList = new ArrayList<>();
+    private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
     @OneToMany(mappedBy = "companyJpa")
     private List<CommuteRecordJpa> commuteRecordJpaList = new ArrayList<>();
 
     @Builder
-    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl, List<CompanyAccountRelJpa> companyAccountRelJpaList) {
+    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.companyContact = companyContact;
         this.salaryDate = salaryDate;
         this.logoImageUrl = logoImageUrl;
-        this.companyAccountRelJpaList = companyAccountRelJpaList;
     }
 
     public void updateCompanyInfo(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
@@ -59,4 +58,9 @@ public class CompanyJpa extends BaseEntity {
         this.salaryDate = salaryDate;
         this.logoImageUrl = logoImageUrl;
     }
+
+    public void delete() {
+        this.stateJpa = StateJpa.INACTIVE;
+    }
+
 }

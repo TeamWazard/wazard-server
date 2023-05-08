@@ -21,11 +21,11 @@ public class BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    protected State state;
+    protected StateJpa stateJpa;
 
     @Getter
     @AllArgsConstructor
-    public enum State {
+    public enum StateJpa {
         ACTIVE("ACTIVE"),
         INACTIVE("INACTIVE");
 
@@ -37,7 +37,7 @@ public class BaseEntity {
         LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
-        state = State.ACTIVE;
+        stateJpa = StateJpa.ACTIVE;
     }
 
     @PreUpdate

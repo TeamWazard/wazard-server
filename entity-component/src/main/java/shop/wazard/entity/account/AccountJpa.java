@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.commuteRecord.CommuteRecordJpa;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -41,7 +41,7 @@ public class AccountJpa extends BaseEntity {
     private String roles;
 
     @OneToMany(mappedBy = "accountJpa")
-    private List<CompanyAccountRelJpa> companyAccountRelJpaList = new ArrayList<>();
+    private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
     @OneToMany(mappedBy = "accountJpa")
     private List<CommuteRecordJpa> commuteRecordJpaList = new ArrayList<>();
@@ -54,7 +54,7 @@ public class AccountJpa extends BaseEntity {
     }
 
     @Builder
-    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, State state,  List<CompanyAccountRelJpa> companyAccountRelJpaList) {
+    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, StateJpa stateJpa,  List<RosterJpa> rosterJpaList) {
         this.email = email;
         this.password = password;
         this.userName = userName;
@@ -62,8 +62,8 @@ public class AccountJpa extends BaseEntity {
         this.gender = GenderTypeJpa.valueOf(gender);
         this.birth = birth;
         this.roles = roles;
-        this.state = state;
-        this.companyAccountRelJpaList = companyAccountRelJpaList;
+        this.stateJpa = stateJpa;
+        this.rosterJpaList = rosterJpaList;
     }
 
     public void updateMyProfile(String userName, String phoneNumber, String genderType, LocalDate birth) {
