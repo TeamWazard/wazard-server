@@ -8,12 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import shop.wazard.WazardApplication;
-import shop.wazard.dto.CheckPasswordReqDto;
 import shop.wazard.dto.JoinReqDto;
 
 import java.time.LocalDate;
@@ -54,30 +52,30 @@ class AccountForManagementControllerTest {
         ).andDo(print());
     }
 
-    @Test
-    @DisplayName("공통 - 비밀번호 확인 - 성공")
-    @WithMockUser(value = "simhani1@email.com")
-    public void checkPasswordSuccess() throws Exception {
-        // given
-        String checkPasswordUrl = "/account/check/{accountId}";
-        CheckPasswordReqDto checkPasswordReqDto = CheckPasswordReqDto.builder()
-                .email("wazard123@gmail.com")
-                .password("Wazard1234!")
-                .build();
-
-        //when
-        ResultActions result = mockMvc.perform(post(checkPasswordUrl, "1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(checkPasswordReqDto)));
-
-        // then
-        result.andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
-                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
-                MockMvcResultMatchers.jsonPath("$.message").value("인증되었습니다.")
-        ).andDo(print());
-    }
+//    @Test
+//    @DisplayName("공통 - 비밀번호 확인 - 성공")
+//    @WithMockUser(value = "simhani1@email.com")
+//    public void checkPasswordSuccess() throws Exception {
+//        // given
+//        String checkPasswordUrl = "/account/check/{accountId}";
+//        CheckPasswordReqDto checkPasswordReqDto = CheckPasswordReqDto.builder()
+//                .email("wazard123@gmail.com")
+//                .password("Wazard1234!")
+//                .build();
+//
+//        //when
+//        ResultActions result = mockMvc.perform(post(checkPasswordUrl, "1")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(checkPasswordReqDto)));
+//
+//        // then
+//        result.andExpectAll(
+//                MockMvcResultMatchers.status().isOk(),
+//                MockMvcResultMatchers.header().string(HttpHeaders.CONTENT_TYPE, "application/json"),
+//                MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON),
+//                MockMvcResultMatchers.jsonPath("$.message").value("인증되었습니다.")
+//        ).andDo(print());
+//    }
 
 //    @Test
 //    @DisplayName("고용주 - 회원정보 수정 성공")

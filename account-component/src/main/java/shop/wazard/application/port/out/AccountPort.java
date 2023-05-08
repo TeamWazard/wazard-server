@@ -4,7 +4,7 @@ import shop.wazard.application.port.domain.Account;
 
 import java.util.Optional;
 
-public interface LoadAccountPort {
+public interface AccountPort {
 
     Boolean isPossibleEmail(String email);
 
@@ -13,5 +13,9 @@ public interface LoadAccountPort {
     Long findAccountIdByEmail(String email);
 
     Optional<Account> findAccountByEmailForUserDetails(String email);
+
+    void save(Account account);
+
+    void updateMyProfile(Account account);
 
 }

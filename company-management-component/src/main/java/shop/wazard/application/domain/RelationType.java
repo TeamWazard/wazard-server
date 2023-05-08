@@ -1,4 +1,4 @@
-package shop.wazard.application.port.domain;
+package shop.wazard.application.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ public enum RelationType {
 
     EMPLOYER("EMPLOYER"), EMPLOYEE("EMPLOYEE");
 
-    public final String relation;
+    public final String type;
 
 }

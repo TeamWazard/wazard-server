@@ -1,4 +1,4 @@
-package shop.wazard.application.port.domain;
+package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,6 @@ public class AccountForManagement {
 
     private Long id;
     private String roles;
-    private AccountStatus accountStatus;
     private String email;
     private String userName;
 

@@ -1,15 +1,15 @@
 package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
-import shop.wazard.application.port.domain.CompanyForManagement;
-import shop.wazard.application.port.domain.CompanyInfo;
+import shop.wazard.application.domain.CompanyForManagement;
+import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
+import shop.wazard.entity.company.RosterJpa;
 
 @Component
-class CompanyMapperForManagement {
+class CompanyForCompanyManagementMapper {
 
     public CompanyJpa toCompanyJpa(CompanyForManagement companyForManagement) {
         return CompanyJpa.builder()
@@ -21,8 +21,8 @@ class CompanyMapperForManagement {
                 .build();
     }
 
-    public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
-        return CompanyAccountRelJpa.builder()
+    public RosterJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
+        return RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .relationTypeJpa(relationTypeJpa)
@@ -52,6 +52,10 @@ class CompanyMapperForManagement {
                                 .build()
                 )
                 .build();
+    }
+
+    public void deleteCompany(CompanyJpa companyJpa) {
+        companyJpa.delete();
     }
 
 }
