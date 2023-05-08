@@ -16,7 +16,6 @@ import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 @Repository
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountForCompanyManagementPort, RosterForCompanyManagementPort {
 
@@ -26,14 +25,15 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     private final AccountJpaForCompanyManagementRepository accountJpaForCompanyManagementRepository;
     private final RosterJpaForCompanyManagementRepository rosterJpaForCompanyManagementRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public AccountForManagement findAccountByEmail(String email) {
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(email);
         return accountForCompanyManagementMapper.toAccount(accountJpa);
     }
 
-    @Override
     @Transactional
+    @Override
     public void saveCompany(String email, CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyForCompanyManagementMapper.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(email);
@@ -42,6 +42,7 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
         rosterJpaForCompanyManagementRepository.save(rosterJpa);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CompanyForManagement findCompanyById(Long id) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(id)
@@ -49,27 +50,21 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
         return companyForCompanyManagementMapper.toCompanyDomain(companyJpa);
     }
 
-    @Override
     @Transactional
+    @Override
     public void updateCompanyInfo(CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyForManagement.getId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         companyForCompanyManagementMapper.updateCompanyInfo(companyJpa, companyForManagement);
     }
 
-    @Override
-    public void deleteCompany(Long companyId) {
-        CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyForCompanyManagementMapper.deleteCompany(companyJpa);
-    }
-
-    @Override
     @Transactional
+    @Override
     public void deleteRoster(Long companyId) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(companyId);
+        companyJpaForManagementRepository.deleteCompany(companyId);
     }
 
 }

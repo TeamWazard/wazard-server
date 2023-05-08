@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.CompanyManagementService;
-import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.RegisterCompanyResDto;
-import shop.wazard.dto.UpdateCompanyInfoReqDto;
-import shop.wazard.dto.UpdateCompanyInfoResDto;
+import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
@@ -31,6 +28,13 @@ class CompanyController {
     public ResponseEntity<UpdateCompanyInfoResDto> updateCompanyInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         UpdateCompanyInfoResDto updateCompanyInfoResDto = companyManagementService.updateCompanyInfo(updateCompanyInfoReqDto);
         return ResponseEntity.ok(updateCompanyInfoResDto);
+    }
+
+    @Certification
+    @PatchMapping("/delete/{accountId}")
+    public ResponseEntity<DeleteCompanyResDto> deleteCompany(@PathVariable Long accountId, @Valid @RequestBody DeleteCompanyReqDto deleteCompanyReqDto) {
+        DeleteCompanyResDto deleteCompanyResDto = companyManagementService.deleteCompany(deleteCompanyReqDto);
+        return ResponseEntity.ok(deleteCompanyResDto);
     }
 
 }

@@ -56,7 +56,6 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
         if (!accountForManagement.isEmployer()) {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
-        companyForManagementPort.deleteCompany(deleteCompanyReqDto.getCompanyId());
         rosterForCompanyManagementPort.deleteRoster(deleteCompanyReqDto.getCompanyId());
         return DeleteCompanyResDto.builder()
                 .message("삭제되었습니다.")
