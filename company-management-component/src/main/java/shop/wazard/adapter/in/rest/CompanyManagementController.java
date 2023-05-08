@@ -12,7 +12,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/company")
-class CompanyController {
+class CompanyManagementController {
 
     private final CompanyManagementService companyManagementService;
 
