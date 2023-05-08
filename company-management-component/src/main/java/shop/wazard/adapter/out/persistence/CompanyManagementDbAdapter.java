@@ -5,24 +5,26 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForManagement;
 import shop.wazard.application.domain.CompanyForManagement;
-import shop.wazard.application.port.out.*;
+import shop.wazard.application.port.out.AccountForCompanyManagementPort;
+import shop.wazard.application.port.out.CompanyForManagementPort;
+import shop.wazard.application.port.out.RosterForCompanyManagementPort;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
+import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 @Repository
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-class CompanyManagementDbAdapterForManagementForManagement implements LoadCompanyForManagementPort, SaveCompanyForManagementPort, UpdateCompanyPort, LoadAccountForCompanyManagementPort, UpdateCompanyAccountRelForCompanyManagementPort {
+class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountForCompanyManagementPort, RosterForCompanyManagementPort {
 
     private final CompanyForCompanyManagementMapper companyForCompanyManagementMapper;
     private final AccountForCompanyManagementMapper accountForCompanyManagementMapper;
     private final CompanyJpaForManagementRepository companyJpaForManagementRepository;
     private final AccountJpaForCompanyManagementRepository accountJpaForCompanyManagementRepository;
-    private final CompanyAccountRelJpaRepository companyAccountRelJpaRepository;
+    private final RosterJpaForCompanyManagementRepository rosterJpaForCompanyManagementRepository;
 
     @Override
     public AccountForManagement findAccountByEmail(String email) {
@@ -35,9 +37,9 @@ class CompanyManagementDbAdapterForManagementForManagement implements LoadCompan
     public void saveCompany(String email, CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyForCompanyManagementMapper.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(email);
-        CompanyAccountRelJpa companyAccountRelJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
+        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
         companyJpaForManagementRepository.save(companyJpa);
-        companyAccountRelJpaRepository.save(companyAccountRelJpa);
+        rosterJpaForCompanyManagementRepository.save(rosterJpa);
     }
 
     @Override
@@ -56,11 +58,18 @@ class CompanyManagementDbAdapterForManagementForManagement implements LoadCompan
     }
 
     @Override
-    @Transactional
-    public void deleteCompanyAccountRel(Long companyId) {
+    public void deleteCompany(Long companyId) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyAccountRelJpaRepository.deleteCompany(companyId);
+        companyForCompanyManagementMapper.deleteCompany(companyJpa);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoster(Long companyId) {
+        CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(companyId);
     }
 
 }

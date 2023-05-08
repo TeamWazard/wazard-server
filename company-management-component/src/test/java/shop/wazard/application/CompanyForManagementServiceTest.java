@@ -13,7 +13,9 @@ import shop.wazard.application.domain.AccountForManagement;
 import shop.wazard.application.domain.CompanyForManagement;
 import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.application.port.in.CompanyManagementService;
-import shop.wazard.application.port.out.*;
+import shop.wazard.application.port.out.AccountForCompanyManagementPort;
+import shop.wazard.application.port.out.CompanyForManagementPort;
+import shop.wazard.application.port.out.RosterForCompanyManagementPort;
 import shop.wazard.dto.DeleteCompanyReqDto;
 import shop.wazard.dto.RegisterCompanyReqDto;
 import shop.wazard.dto.UpdateCompanyInfoReqDto;
@@ -28,15 +30,11 @@ class CompanyForManagementServiceTest {
     @Autowired
     private CompanyManagementService companyManagementService;
     @MockBean
-    private LoadCompanyForManagementPort loadCompanyForManagementPort;
+    private CompanyForManagementPort companyForManagementPort;
     @MockBean
-    private UpdateCompanyPort updateCompanyPort;
+    private AccountForCompanyManagementPort accountForCompanyManagementPort;
     @MockBean
-    private SaveCompanyForManagementPort saveCompanyForManagementPort;
-    @MockBean
-    private LoadAccountForCompanyManagementPort loadAccountForCompanyManagementPort;
-    @MockBean
-    private UpdateCompanyAccountRelForCompanyManagementPort updateCompanyAccountRelForCompanyManagementPort;
+    private RosterForCompanyManagementPort rosterForCompanyManagementPort;
 
     @Test
     @DisplayName("고용주 - 업장 등록 - 성공")
@@ -53,7 +51,7 @@ class CompanyForManagementServiceTest {
         CompanyForManagement companyForManagement = setDefaultCompanyForManagement();
 
         // when
-        Mockito.when(loadAccountForCompanyManagementPort.findAccountByEmail(anyString()))
+        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForManagement);
 
         // then
@@ -76,9 +74,9 @@ class CompanyForManagementServiceTest {
         CompanyForManagement companyForManagement = setDefaultCompanyForManagement();
 
         //when
-        Mockito.when(loadAccountForCompanyManagementPort.findAccountByEmail(anyString()))
+        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForManagement);
-        Mockito.when(loadCompanyForManagementPort.findCompanyById(anyLong()))
+        Mockito.when(companyForManagementPort.findCompanyById(anyLong()))
                 .thenReturn(companyForManagement);
         companyManagementService.updateCompanyInfo(updateCompanyInfoReqDto);
 
@@ -102,7 +100,7 @@ class CompanyForManagementServiceTest {
         AccountForManagement accountForManagement = setDefaultAccountForManagement();
 
         //when
-        Mockito.when(loadAccountForCompanyManagementPort.findAccountByEmail(anyString()))
+        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForManagement);
 
         //then

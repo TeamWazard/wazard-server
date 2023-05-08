@@ -4,9 +4,9 @@ import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.CompanyForManagement;
 import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
+import shop.wazard.entity.company.RosterJpa;
 
 @Component
 class CompanyForCompanyManagementMapper {
@@ -21,8 +21,8 @@ class CompanyForCompanyManagementMapper {
                 .build();
     }
 
-    public CompanyAccountRelJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
-        return CompanyAccountRelJpa.builder()
+    public RosterJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
+        return RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .relationTypeJpa(relationTypeJpa)
@@ -52,6 +52,10 @@ class CompanyForCompanyManagementMapper {
                                 .build()
                 )
                 .build();
+    }
+
+    public void deleteCompany(CompanyJpa companyJpa) {
+        companyJpa.delete();
     }
 
 }

@@ -13,6 +13,7 @@ class AccountForCompanyManagementMapper {
         log.info("{}", accountJpa.getRoles());
         return AccountForManagement.builder()
                 .id(accountJpa.getId())
+                .email(accountJpa.getEmail())
                 .userName(accountJpa.getUserName())
                 .roles(accountJpa.getRoles())
                 .build();

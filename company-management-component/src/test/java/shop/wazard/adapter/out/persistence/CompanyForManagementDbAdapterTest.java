@@ -1,6 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,19 +19,20 @@ import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
-import shop.wazard.entity.company.CompanyAccountRelJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
+import shop.wazard.entity.company.RosterJpa;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, CompanyManagementDbAdapterForManagementForManagement.class, CompanyForCompanyManagementMapper.class, AccountForCompanyManagementMapper.class, CompanyJpaForManagementRepository.class, AccountJpaForCompanyManagementRepository.class, CompanyAccountRelJpaRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, CompanyManagementDbAdapter.class, CompanyForCompanyManagementMapper.class, AccountForCompanyManagementMapper.class, CompanyJpaForManagementRepository.class, AccountJpaForCompanyManagementRepository.class, RosterJpaForCompanyManagementRepository.class})
 class CompanyForManagementDbAdapterTest {
 
     @Autowired
@@ -42,12 +44,17 @@ class CompanyForManagementDbAdapterTest {
     @Autowired
     private AccountJpaForCompanyManagementRepository accountJpaForCompanyManagementRepository;
     @Autowired
-    private CompanyAccountRelJpaRepository companyAccountRelJpaRepository;
+    private RosterJpaForCompanyManagementRepository rosterJpaForCompanyManagementRepository;
     @Autowired
     private EntityManager em;
 
-    private AccountJpa setDefaultAccountJpa() {
-        return AccountJpa.builder()
+
+    private CompanyJpa companyJpa;
+    private AccountJpa accountJpa;
+
+    @BeforeEach
+    private void setDefaultAccountJpa() {
+        this.accountJpa = AccountJpa.builder()
                 .email("test@email.com")
                 .password("testPwd")
                 .userName("testName")
@@ -55,12 +62,8 @@ class CompanyForManagementDbAdapterTest {
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
                 .stateJpa(BaseEntity.StateJpa.ACTIVE)
-                .companyAccountRelJpaList(null)
                 .build();
-    }
-
-    private CompanyJpa setDefaultCompanyJpa() {
-        return CompanyJpa.builder()
+        this.companyJpa = CompanyJpa.builder()
                 .companyName("companyName")
                 .companyAddress("companyAddress")
                 .companyContact("02-111-1111")
@@ -90,7 +93,6 @@ class CompanyForManagementDbAdapterTest {
                                 .build()
                 )
                 .build();
-        CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(accountForManagement.getEmail());
@@ -111,14 +113,12 @@ class CompanyForManagementDbAdapterTest {
     @DisplayName("고용주 - 업장 등록 - CompanyAccountRelJpa 저장")
     public void saveCompanyAccountRelJpaSuccess() throws Exception {
         // given
-        AccountJpa accountJpa = setDefaultAccountJpa();
-        CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
         accountJpaForCompanyManagementRepository.save(accountJpa);
         companyJpaForManagementRepository.save(companyJpa);
-        CompanyAccountRelJpa companyAccountRelJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
-        CompanyAccountRelJpa result = companyAccountRelJpaRepository.save(companyAccountRelJpa);
+        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
+        RosterJpa result = rosterJpaForCompanyManagementRepository.save(rosterJpa);
         em.flush();
 
         // then
@@ -132,7 +132,6 @@ class CompanyForManagementDbAdapterTest {
     @DisplayName("고용주 - 업장 정보 수정 - CompanyAccountRel 수정")
     public void updateCompanyInfoSuccess() throws Exception {
         // given
-        CompanyJpa companyJpa = setDefaultCompanyJpa();
         CompanyForManagement changedCompanyForManagement = CompanyForManagement.builder()
                 .companyInfo(
                         CompanyInfo.builder()
@@ -161,27 +160,39 @@ class CompanyForManagementDbAdapterTest {
         );
     }
 
-
-    // TODO : 중간 테이블에 accountId가 저장되지 않음 , 테스트는 에러 발생 중
     @Test
     @DisplayName("고용주 - 업장 삭제 - CompanyAccountRelJpa 상태 값 변경")
-    public void deleteCompanySuccess() throws Exception {
+    public void deleteCompanyAccountRelJpaSuccess() throws Exception {
         // given
-        CompanyJpa companyJpa = setDefaultCompanyJpa();
-        AccountJpa accountJpa = setDefaultAccountJpa();
 
         // when
         AccountJpa savedAccountJpa = accountJpaForCompanyManagementRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForManagementRepository.save(companyJpa);
-        CompanyAccountRelJpa result = companyAccountRelJpaRepository.save(CompanyAccountRelJpa.builder()
+        RosterJpa rosterJpa = rosterJpaForCompanyManagementRepository.save(RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa)
                 .relationTypeJpa(RelationTypeJpa.EMPLOYER)
                 .build());
+        rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(savedCompanyJpa.getId());
+        List<RosterJpa> resultList = rosterJpaForCompanyManagementRepository.findAll();
         em.flush();
 
         // then
-        Assertions.assertDoesNotThrow(() -> companyAccountRelJpaRepository.deleteCompany(result.getId()));
+        Assertions.assertEquals("INACTIVE", resultList.get(0).getStateJpa().getStatus());
+    }
+
+    @Test
+    @DisplayName("고용주 - 업장 삭제 - CompanyJpa 상태 값 변경")
+    public void deleteCompanyJpaSuccess() throws Exception {
+        // given
+
+        // when
+        CompanyJpa savedCompanyJpa = companyJpaForManagementRepository.save(companyJpa);
+        savedCompanyJpa.delete();
+        em.flush();
+
+        // then
+        Assertions.assertEquals("INACTIVE", savedCompanyJpa.getStateJpa().getStatus());
     }
 
 }

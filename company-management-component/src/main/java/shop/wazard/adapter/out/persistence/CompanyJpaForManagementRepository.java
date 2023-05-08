@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import shop.wazard.entity.company.CompanyJpa;
 
 interface CompanyJpaForManagementRepository extends JpaRepository<CompanyJpa, Long> {
+
+
 }
