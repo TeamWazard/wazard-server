@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.in.AccountService;
-import shop.wazard.application.port.out.LoadAccountPort;
-import shop.wazard.application.port.out.SaveAccountPort;
-import shop.wazard.application.port.out.UpdateAccountPort;
+import shop.wazard.application.port.out.AccountPort;
 import shop.wazard.dto.*;
 import shop.wazard.exception.NestedEmailException;
 import shop.wazard.util.exception.StatusEnum;
@@ -29,19 +27,17 @@ class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtProvider jwtProvider;
-    private final SaveAccountPort saveAccountPort;
-    private final LoadAccountPort loadAccountPort;
-    private final UpdateAccountPort updateAccountPort;
+    private final AccountPort accountPort;
 
     @Override
     @Transactional
     public JoinResDto join(JoinReqDto joinReqDto) {
-        if (!loadAccountPort.isPossibleEmail(joinReqDto.getEmail())) {
+        if (!accountPort.isPossibleEmail(joinReqDto.getEmail())) {
             throw new NestedEmailException(StatusEnum.NESTED_EMAIL.getMessage());
         }
         Account account = Account.createAccount(joinReqDto);
         account.getMyProfile().setEncodedPassword(passwordEncoder.encode(joinReqDto.getPassword()));
-        saveAccountPort.save(account);
+        accountPort.save(account);
         return JoinResDto.builder()
                 .message("회원가입에 성공하였습니다.")
                 .build();
@@ -58,7 +54,7 @@ class AccountServiceImpl implements AccountService {
                 userDetails.getPassword(),
                 userDetails.getAuthorities()
         );
-        Account account = loadAccountPort.findAccountByEmail(loginReqDto.getEmail());
+        Account account = accountPort.findAccountByEmail(loginReqDto.getEmail());
         return LoginResDto.builder()
                 .accountId(account.getId())
                 .email(account.getMyProfile().getEmail())
@@ -70,9 +66,9 @@ class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public UpdateMyProfileResDto updateMyProfile(UpdateMyProfileReqDto updateMyProfileReqDto) {
-        Account account = loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail());
+        Account account = accountPort.findAccountByEmail(updateMyProfileReqDto.getEmail());
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
-        updateAccountPort.updateMyProfile(account);
+        accountPort.updateMyProfile(account);
         return UpdateMyProfileResDto.builder()
                 .message("수정 완료되었습니다.")
                 .build();

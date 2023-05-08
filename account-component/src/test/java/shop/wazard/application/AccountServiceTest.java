@@ -19,9 +19,7 @@ import shop.wazard.application.port.domain.Account;
 import shop.wazard.application.port.domain.GenderType;
 import shop.wazard.application.port.domain.MyProfile;
 import shop.wazard.application.port.in.AccountService;
-import shop.wazard.application.port.out.LoadAccountPort;
-import shop.wazard.application.port.out.SaveAccountPort;
-import shop.wazard.application.port.out.UpdateAccountPort;
+import shop.wazard.application.port.out.AccountPort;
 import shop.wazard.dto.CheckPasswordReqDto;
 import shop.wazard.dto.CheckPasswordResDto;
 import shop.wazard.dto.UpdateMyProfileReqDto;
@@ -44,11 +42,7 @@ class AccountServiceTest {
     @MockBean
     private JwtProvider jwtProvider;
     @MockBean
-    private SaveAccountPort saveAccountPort;
-    @MockBean
-    private LoadAccountPort loadAccountPort;
-    @MockBean
-    private UpdateAccountPort updateAccountPort;
+    private AccountPort accountPort;
 
     @Test
     @DisplayName("공통 - 회원정보 수정 - 성공")
@@ -71,7 +65,7 @@ class AccountServiceTest {
         Account account = Account.builder().myProfile(myProfile).build();
 
         // when
-        Mockito.when(loadAccountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())).thenReturn(account);
+        Mockito.when(accountPort.findAccountByEmail(updateMyProfileReqDto.getEmail())).thenReturn(account);
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
         accountService.updateMyProfile(updateMyProfileReqDto);
         //then
