@@ -45,7 +45,7 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
         companyForManagement.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
         companyForManagementPort.updateCompanyInfo(companyForManagement);
         return UpdateCompanyInfoResDto.builder()
-                .message("업장 수정이 완료되었습니다.")
+                .message("업장 정보 수정이 완료되었습니다.")
                 .build();
     }
 
@@ -58,7 +58,7 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
         }
         rosterForCompanyManagementPort.deleteRoster(deleteCompanyReqDto.getCompanyId());
         return DeleteCompanyResDto.builder()
-                .message("삭제되었습니다.")
+                .message("업장이 삭제되었습니다.")
                 .build();
     }
 
