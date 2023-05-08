@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.RosterJpa;
-import shop.wazard.entity.commuteRecord.CommuteRecordJpa;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -43,8 +42,6 @@ public class AccountJpa extends BaseEntity {
     @OneToMany(mappedBy = "accountJpa")
     private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "accountJpa")
-    private List<CommuteRecordJpa> commuteRecordJpaList = new ArrayList<>();
 
     public List<String> getRoleList() {
         if (roles.length() > 0) {
