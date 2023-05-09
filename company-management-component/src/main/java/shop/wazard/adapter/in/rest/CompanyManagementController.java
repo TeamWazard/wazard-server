@@ -8,6 +8,7 @@ import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +36,13 @@ class CompanyManagementController {
     public ResponseEntity<DeleteCompanyResDto> deleteCompany(@PathVariable Long accountId, @Valid @RequestBody DeleteCompanyReqDto deleteCompanyReqDto) {
         DeleteCompanyResDto deleteCompanyResDto = companyManagementService.deleteCompany(deleteCompanyReqDto);
         return ResponseEntity.ok(deleteCompanyResDto);
+    }
+
+    @Certification
+    @GetMapping("/own/{accountId}")
+    public ResponseEntity<List<GetOwnedCompanyResDto>> getOwnedCompanyList(@PathVariable Long accountId) {
+        List<GetOwnedCompanyResDto> getOwnedCompanyList = companyManagementService.getOwnedCompanyList(accountId);
+        return ResponseEntity.ok(getOwnedCompanyList);
     }
 
 }

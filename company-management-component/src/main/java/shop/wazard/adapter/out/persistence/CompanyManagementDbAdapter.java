@@ -14,6 +14,8 @@ import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountForCompanyManagementPort, RosterForCompanyManagementPort {
@@ -59,6 +61,11 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(companyId);
         companyJpaForManagementRepository.deleteCompany(companyId);
+    }
+
+    @Override
+    public List<CompanyForManagement> getOwnedCompanyList(Long accountId) {
+        return null;
     }
 
 }
