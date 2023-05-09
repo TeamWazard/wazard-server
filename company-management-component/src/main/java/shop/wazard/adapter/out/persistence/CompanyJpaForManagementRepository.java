@@ -14,10 +14,7 @@ interface CompanyJpaForManagementRepository extends JpaRepository<CompanyJpa, Lo
     @Query("update CompanyJpa c set c.stateJpa = 'INACTIVE' where c.id = :companyId")
     void deleteCompany(@Param("companyId") Long companyId);
 
-    @Query("select c " +
-            "from CompanyJpa c " +
-            "inner join c.rosterJpaList r " +
-            "where r.accountJpa.id = :accountId and r.stateJpa = 'ACTIVE'")
+    @Query("select c from CompanyJpa c inner join c.rosterJpaList r where r.accountJpa.id = :accountId and r.stateJpa = 'ACTIVE'")
     List<CompanyJpa> findOwnedCompanyList(@Param("accountId") Long accountId);
 
 }
