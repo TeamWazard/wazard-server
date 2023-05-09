@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/company")
-class CompanyController {
+class CompanyManagementController {
 
     private final CompanyManagementService companyManagementService;
 
@@ -29,6 +29,13 @@ class CompanyController {
     public ResponseEntity<UpdateCompanyInfoResDto> updateCompanyInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         UpdateCompanyInfoResDto updateCompanyInfoResDto = companyManagementService.updateCompanyInfo(updateCompanyInfoReqDto);
         return ResponseEntity.ok(updateCompanyInfoResDto);
+    }
+
+    @Certification
+    @PatchMapping("/delete/{accountId}")
+    public ResponseEntity<DeleteCompanyResDto> deleteCompany(@PathVariable Long accountId, @Valid @RequestBody DeleteCompanyReqDto deleteCompanyReqDto) {
+        DeleteCompanyResDto deleteCompanyResDto = companyManagementService.deleteCompany(deleteCompanyReqDto);
+        return ResponseEntity.ok(deleteCompanyResDto);
     }
 
     @Certification

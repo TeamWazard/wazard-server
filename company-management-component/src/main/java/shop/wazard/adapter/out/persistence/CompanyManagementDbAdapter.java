@@ -2,7 +2,6 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForManagement;
 import shop.wazard.application.domain.CompanyForManagement;
 import shop.wazard.application.port.out.AccountForCompanyManagementPort;
@@ -18,7 +17,6 @@ import shop.wazard.util.exception.StatusEnum;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountForCompanyManagementPort, RosterForCompanyManagementPort {
 
@@ -35,7 +33,6 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     }
 
     @Override
-    @Transactional
     public void saveCompany(String email, CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyForCompanyManagementMapper.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(email);
@@ -52,7 +49,6 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     }
 
     @Override
-    @Transactional
     public void updateCompanyInfo(CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyForManagement.getId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
@@ -60,18 +56,11 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     }
 
     @Override
-    public void deleteCompany(Long companyId) {
-        CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        companyForCompanyManagementMapper.deleteCompany(companyJpa);
-    }
-
-    @Override
-    @Transactional
     public void deleteRoster(Long companyId) {
         CompanyJpa companyJpa = companyJpaForManagementRepository.findById(companyId)
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(companyId);
+        companyJpaForManagementRepository.deleteCompany(companyId);
     }
 
     @Override
