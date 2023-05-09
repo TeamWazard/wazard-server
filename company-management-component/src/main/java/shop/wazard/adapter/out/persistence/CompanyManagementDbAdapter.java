@@ -65,7 +65,8 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
 
     @Override
     public List<CompanyForManagement> getOwnedCompanyList(Long accountId) {
-        return null;
+        List<CompanyJpa> ownedCompanyJpaList = companyJpaForManagementRepository.findOwnedCompanyList(accountId);
+        return companyForCompanyManagementMapper.toOwnedCompanyList(ownedCompanyJpaList);
     }
 
 }
