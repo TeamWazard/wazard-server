@@ -10,6 +10,4 @@ public interface CompanyForManagementPort {
 
     void updateCompanyInfo(CompanyForManagement companyForManagement);
 
-    void deleteCompany(Long companyId);
-
 }

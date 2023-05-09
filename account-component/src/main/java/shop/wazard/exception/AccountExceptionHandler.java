@@ -18,17 +18,6 @@ import java.nio.file.AccessDeniedException;
 @RestControllerAdvice
 public class AccountExceptionHandler {
 
-    // TODO : RuntimeException을 던지는 메서드들은 추후 구체적인 예외로 변경 필요
-//    @ExceptionHandler(RuntimeException.class)
-//    public ResponseEntity<ErrorMessage> customMethod(Exception e) {
-//        return ResponseEntity.badRequest().body(
-//                ErrorMessage.builder()
-//                        .errorCode(StatusEnum.BAD_REQUEST.getStatusCode())
-//                        .errorMessage(e.getMessage())
-//                        .build()
-//        );
-//    }
-
     // TODO : JWT 에러 핸들러 -> 수정 필요
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorMessage> jwtExceptionHandle(Exception e) {
