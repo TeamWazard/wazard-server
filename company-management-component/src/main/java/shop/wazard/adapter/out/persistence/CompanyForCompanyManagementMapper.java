@@ -8,8 +8,8 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
 import shop.wazard.entity.company.RosterJpa;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 class CompanyForCompanyManagementMapper {
@@ -58,20 +58,18 @@ class CompanyForCompanyManagementMapper {
     }
 
     public List<CompanyForManagement> toOwnedCompanyList(List<CompanyJpa> ownedCompanyJpaList) {
-        List<CompanyForManagement> ownedCompanyList = new ArrayList<>();
-        for (CompanyJpa companyJpa : ownedCompanyJpaList) {
-            ownedCompanyList.add(CompanyForManagement.builder()
-                    .id(companyJpa.getId())
-                    .companyInfo(CompanyInfo.builder()
-                            .companyName(companyJpa.getCompanyName())
-                            .companyAddress(companyJpa.getCompanyAddress())
-                            .companyContact(companyJpa.getCompanyContact())
-                            .logoImageUrl(companyJpa.getLogoImageUrl())
-                            .salaryDate(companyJpa.getSalaryDate())
-                            .build())
-                    .build());
-        }
-        return ownedCompanyList;
+        return ownedCompanyJpaList.stream()
+                .map(companyJpa -> CompanyForManagement.builder()
+                        .id(companyJpa.getId())
+                        .companyInfo(CompanyInfo.builder()
+                                .companyName(companyJpa.getCompanyName())
+                                .companyAddress(companyJpa.getCompanyAddress())
+                                .companyContact(companyJpa.getCompanyContact())
+                                .logoImageUrl(companyJpa.getLogoImageUrl())
+                                .salaryDate(companyJpa.getSalaryDate())
+                                .build())
+                        .build()
+                ).collect(Collectors.toList());
     }
 
 }
