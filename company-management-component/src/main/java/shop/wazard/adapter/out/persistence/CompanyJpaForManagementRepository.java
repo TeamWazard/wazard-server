@@ -6,10 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import shop.wazard.entity.company.CompanyJpa;
 
+import java.util.List;
+
 interface CompanyJpaForManagementRepository extends JpaRepository<CompanyJpa, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update CompanyJpa c set c.stateJpa = 'INACTIVE' where c.id = :companyId")
     void deleteCompany(@Param("companyId") Long companyId);
+
+    @Query("select c " +
+            "from CompanyJpa c " +
+            "inner join c.rosterJpaList r " +
+            "where r.accountJpa.id = :accountId and r.stateJpa = 'ACTIVE'")
+    List<CompanyJpa> findOwnedCompanyList(@Param("accountId") Long accountId);
 
 }
