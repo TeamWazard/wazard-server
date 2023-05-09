@@ -13,6 +13,7 @@ import shop.wazard.dto.*;
 import shop.wazard.exception.NotAuthorizedException;
 import shop.wazard.util.exception.StatusEnum;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 class CompanyManagementServiceImpl implements CompanyManagementService {
@@ -21,7 +22,6 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
     private final AccountForCompanyManagementPort accountForCompanyManagementPort;
     private final RosterForCompanyManagementPort rosterForCompanyManagementPort;
 
-    @Transactional
     @Override
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         AccountForManagement accountForManagement = accountForCompanyManagementPort.findAccountByEmail(registerCompanyReqDto.getEmail());
@@ -34,7 +34,6 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
                 .build();
     }
 
-    @Transactional
     @Override
     public UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         AccountForManagement accountForManagement = accountForCompanyManagementPort.findAccountByEmail(updateCompanyInfoReqDto.getEmail());
@@ -49,7 +48,6 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
                 .build();
     }
 
-    @Transactional
     @Override
     public DeleteCompanyResDto deleteCompany(DeleteCompanyReqDto deleteCompanyReqDto) {
         AccountForManagement accountForManagement = accountForCompanyManagementPort.findAccountByEmail(deleteCompanyReqDto.getEmail());
