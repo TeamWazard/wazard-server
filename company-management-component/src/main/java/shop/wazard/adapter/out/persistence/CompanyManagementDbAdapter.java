@@ -7,6 +7,7 @@ import shop.wazard.application.domain.CompanyForManagement;
 import shop.wazard.application.port.out.AccountForCompanyManagementPort;
 import shop.wazard.application.port.out.CompanyForManagementPort;
 import shop.wazard.application.port.out.RosterForCompanyManagementPort;
+import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
@@ -64,7 +65,7 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     }
 
     @Override
-    public List<CompanyForManagement> getOwnedCompanyList(Long accountId) {
+    public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId) {
         List<CompanyJpa> ownedCompanyJpaList = companyJpaForManagementRepository.findOwnedCompanyList(accountId);
         return companyForCompanyManagementMapper.toOwnedCompanyList(ownedCompanyJpaList);
     }

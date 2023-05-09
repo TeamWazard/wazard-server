@@ -3,6 +3,7 @@ package shop.wazard.adapter.out.persistence;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.CompanyForManagement;
 import shop.wazard.application.domain.CompanyInfo;
+import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RelationTypeJpa;
@@ -57,17 +58,15 @@ class CompanyForCompanyManagementMapper {
                 .build();
     }
 
-    public List<CompanyForManagement> toOwnedCompanyList(List<CompanyJpa> ownedCompanyJpaList) {
+    public List<GetOwnedCompanyResDto> toOwnedCompanyList(List<CompanyJpa> ownedCompanyJpaList) {
         return ownedCompanyJpaList.stream()
-                .map(companyJpa -> CompanyForManagement.builder()
-                        .id(companyJpa.getId())
-                        .companyInfo(CompanyInfo.builder()
-                                .companyName(companyJpa.getCompanyName())
-                                .companyAddress(companyJpa.getCompanyAddress())
-                                .companyContact(companyJpa.getCompanyContact())
-                                .logoImageUrl(companyJpa.getLogoImageUrl())
-                                .salaryDate(companyJpa.getSalaryDate())
-                                .build())
+                .map(companyJpa -> GetOwnedCompanyResDto.builder()
+                        .companyId(companyJpa.getId())
+                        .companyName(companyJpa.getCompanyName())
+                        .companyAddress(companyJpa.getCompanyAddress())
+                        .companyContact(companyJpa.getCompanyContact())
+                        .logoImageUrl(companyJpa.getLogoImageUrl())
+                        .salaryDate(companyJpa.getSalaryDate())
                         .build()
                 ).collect(Collectors.toList());
     }
