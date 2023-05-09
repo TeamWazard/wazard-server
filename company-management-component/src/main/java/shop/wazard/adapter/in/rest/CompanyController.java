@@ -33,9 +33,9 @@ class CompanyController {
 
     @Certification
     @GetMapping("/own/{accountId}")
-    public ResponseEntity<List<GetOwnedCompanyListResDto>> getOwnedCompanyList(@PathVariable Long accountId) {
-        List<GetOwnedCompanyListResDto> getOwnedCompanyListResDto = companyManagementService.getOwnedCompanyList(accountId);
-        return ResponseEntity.ok(getOwnedCompanyListResDto);
+    public ResponseEntity<List<GetOwnedCompanyResDto>> getOwnedCompanyList(@PathVariable Long accountId) {
+        List<GetOwnedCompanyResDto> getOwnedCompanyList = companyManagementService.getOwnedCompanyList(accountId);
+        return ResponseEntity.ok(getOwnedCompanyList);
     }
 
 }

@@ -66,7 +66,7 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
     }
 
     @Override
-    public List<GetOwnedCompanyListResDto> getOwnedCompanyList(Long accountId) {
+    public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId) {
         return null;
     }
 }
