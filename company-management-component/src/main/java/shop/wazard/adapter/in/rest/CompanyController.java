@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.CompanyManagementService;
-import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.RegisterCompanyResDto;
-import shop.wazard.dto.UpdateCompanyInfoReqDto;
-import shop.wazard.dto.UpdateCompanyInfoResDto;
+import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +29,13 @@ class CompanyController {
     public ResponseEntity<UpdateCompanyInfoResDto> updateCompanyInfo(@PathVariable Long accountId, @Valid @RequestBody UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         UpdateCompanyInfoResDto updateCompanyInfoResDto = companyManagementService.updateCompanyInfo(updateCompanyInfoReqDto);
         return ResponseEntity.ok(updateCompanyInfoResDto);
+    }
+
+    @Certification
+    @GetMapping("/own/{accountId}")
+    public ResponseEntity<List<GetOwnedCompanyListResDto>> getOwnedCompanyList(@PathVariable Long accountId) {
+        List<GetOwnedCompanyListResDto> getOwnedCompanyListResDto = companyManagementService.getOwnedCompanyList(accountId);
+        return ResponseEntity.ok(getOwnedCompanyListResDto);
     }
 
 }

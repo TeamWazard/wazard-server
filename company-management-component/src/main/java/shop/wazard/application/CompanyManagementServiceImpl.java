@@ -13,6 +13,8 @@ import shop.wazard.dto.*;
 import shop.wazard.exception.NotAuthorizedException;
 import shop.wazard.util.exception.StatusEnum;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 class CompanyManagementServiceImpl implements CompanyManagementService {
@@ -63,4 +65,8 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
                 .build();
     }
 
+    @Override
+    public List<GetOwnedCompanyListResDto> getOwnedCompanyList(Long accountId) {
+        return null;
+    }
 }
