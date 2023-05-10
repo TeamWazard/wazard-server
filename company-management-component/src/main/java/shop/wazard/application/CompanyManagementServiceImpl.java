@@ -62,6 +62,7 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId, GetOwnedCompanyReqDto getOwnedCompanyReqDto) {
         AccountForManagement accountForManagement = accountForCompanyManagementPort.findAccountByEmail(getOwnedCompanyReqDto.getEmail());
