@@ -1,4 +1,4 @@
-package shop.wazard.adapter.in.rest;
+package shop.wazard.acceptance.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest(classes = {WazardApplication.class})
 @AutoConfigureMockMvc
-class AccountForManagementControllerTest {
+class AccountAcceptanceTest {
 
     @Autowired
     private MockMvc mockMvc;

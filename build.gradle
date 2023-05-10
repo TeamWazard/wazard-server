@@ -14,6 +14,12 @@ configurations {
 	}
 }
 
+task customTes(type: Test) {
+	exclude './src/test/java/shop/wazard/acceptance/**'
+}
+
+test.dependsOn customTest
+
 repositories {
 	mavenCentral()
 }
