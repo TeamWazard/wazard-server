@@ -27,6 +27,7 @@ dependencies {
 	implementation project(':account-component')
 	implementation project(':smtp-component')
 	implementation project(':company-management-component')
+	implementation project(':entity-component')
 	implementation project(':s3-component')
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -41,7 +42,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	runtimeOnly 'com.h2database:h2'
 
 	// JWT
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'

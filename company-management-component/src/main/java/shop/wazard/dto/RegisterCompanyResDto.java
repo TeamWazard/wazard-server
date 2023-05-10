@@ -1,13 +1,13 @@
 package shop.wazard.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RegisterCompanyResDto {
 
     private String message;
-    private Long companyId;
 
 }

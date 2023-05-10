@@ -1,8 +1,10 @@
 package shop.wazard.entity.company;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.wazard.entity.common.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Company")
-public class CompanyJpa {
+public class CompanyJpa extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "companyId")
@@ -30,9 +32,32 @@ public class CompanyJpa {
     // 월급날 (ex: 11일)
     private int salaryDate;
 
-    @OneToOne
-    private LogoImageJpa logoImageJpa;
+    @Column(nullable = false)
+    private String logoImageUrl;
 
     @OneToMany(mappedBy = "companyJpa")
-    private List<CompanyAccountRelJpa> companyAccountRelJpaList = new ArrayList<>();
+    private List<RosterJpa> rosterJpaList = new ArrayList<>();
+
+
+    @Builder
+    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
+        this.companyName = companyName;
+        this.companyAddress = companyAddress;
+        this.companyContact = companyContact;
+        this.salaryDate = salaryDate;
+        this.logoImageUrl = logoImageUrl;
+    }
+
+    public void updateCompanyInfo(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
+        this.companyName = companyName;
+        this.companyAddress = companyAddress;
+        this.companyContact = companyContact;
+        this.salaryDate = salaryDate;
+        this.logoImageUrl = logoImageUrl;
+    }
+
+    public void delete() {
+        this.stateJpa = StateJpa.INACTIVE;
+    }
+
 }
