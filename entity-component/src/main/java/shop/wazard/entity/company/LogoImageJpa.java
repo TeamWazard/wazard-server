@@ -16,14 +16,14 @@ public class LogoImageJpa extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "imageId")
+    @Column(name = "logoImageId")
     private Long id;
 
-    private String imageUrl;
+    private String logoImageUrl;
 
     @Builder
-    public LogoImageJpa(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public LogoImageJpa(String logoImageUrl) {
+        this.logoImageUrl = logoImageUrl;
     }
 
 }

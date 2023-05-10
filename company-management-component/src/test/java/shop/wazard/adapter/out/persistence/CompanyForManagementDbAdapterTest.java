@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -30,7 +29,7 @@ import java.util.List;
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(classes = {EntityManager.class, CompanyManagementDbAdapter.class, CompanyForCompanyManagementMapper.class, AccountForCompanyManagementMapper.class, CompanyJpaForManagementRepository.class, AccountJpaForCompanyManagementRepository.class, RosterJpaForCompanyManagementRepository.class})
 class CompanyForManagementDbAdapterTest {
 
