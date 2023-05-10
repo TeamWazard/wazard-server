@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import shop.wazard.application.port.in.FileService;
-import shop.wazard.dto.UploadStoreLogoResDto;
+import shop.wazard.dto.UploadLogoImageResDto;
 
 import java.io.IOException;
 
@@ -19,9 +19,9 @@ class FileController {
     private final FileService fileService;
 
     @PostMapping("/store")
-    public ResponseEntity<UploadStoreLogoResDto> uploadStoreLogo(MultipartFile multipartFile) throws IOException {
-        UploadStoreLogoResDto uploadStoreLogoResDto = fileService.uploadLogoImage(multipartFile);
-        return ResponseEntity.ok(uploadStoreLogoResDto);
+    public ResponseEntity<UploadLogoImageResDto> uploadLogoImage(MultipartFile multipartFile) throws IOException {
+        UploadLogoImageResDto uploadLogoImageResDto = fileService.uploadLogoImage(multipartFile);
+        return ResponseEntity.ok(uploadLogoImageResDto);
     }
 
 }

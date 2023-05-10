@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UploadStoreLogoResDto {
+public class UploadLogoImageResDto {
 
     private String message;
     private Long imageId;

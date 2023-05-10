@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import shop.wazard.application.port.domain.LogoImage;
 import shop.wazard.application.port.in.FileService;
 import shop.wazard.application.port.out.SaveFileRepository;
-import shop.wazard.dto.UploadStoreLogoResDto;
+import shop.wazard.dto.UploadLogoImageResDto;
 import shop.wazard.util.exception.StatusEnum;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ class FileServiceImpl implements FileService {
 
 
     @Override
-    public UploadStoreLogoResDto uploadLogoImage(MultipartFile multipartFile) throws IOException {
+    public UploadLogoImageResDto uploadLogoImage(MultipartFile multipartFile) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
@@ -57,7 +57,7 @@ class FileServiceImpl implements FileService {
                 .logoImageUrl(storeFileUrl)
                 .build();
         LogoImage uploadedLogoImage = saveFileRepository.uploadStoreLogo(logoImage);
-        return UploadStoreLogoResDto.builder()
+        return UploadLogoImageResDto.builder()
                 .message("업로드 되었습니다.")
                 .imageId(uploadedLogoImage.getId())
                 .imageUrl(uploadedLogoImage.getLogoImageUrl())
