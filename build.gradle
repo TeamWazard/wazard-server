@@ -14,12 +14,6 @@ configurations {
 	}
 }
 
-task customTes(type: Test) {
-	exclude './src/test/java/shop/wazard/acceptance/**'
-}
-
-test.dependsOn customTest
-
 repositories {
 	mavenCentral()
 }
@@ -27,6 +21,12 @@ repositories {
 jar {
 	enabled = false;
 }
+
+task customTest(type: Test) {
+	exclude 'shop/wazard/acceptance/**'
+}
+
+test.dependsOn customTest
 
 dependencies {
 	implementation project(':common-component')
