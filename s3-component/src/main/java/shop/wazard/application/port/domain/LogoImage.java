@@ -8,7 +8,7 @@ import lombok.Getter;
 public class LogoImage {
 
     private Long id;
-    private String imageName;
-    private String imageUrl;
+    private String logoImageName;
+    private String logoImageUrl;
 
 }

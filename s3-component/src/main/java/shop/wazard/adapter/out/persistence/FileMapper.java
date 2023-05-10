@@ -9,14 +9,14 @@ class FileMapper {
 
     public LogoImageJpa toLogoImageJpa(LogoImage logoImage) {
         return LogoImageJpa.builder()
-                .imageUrl(logoImage.getImageUrl())
+                .imageUrl(logoImage.getLogoImageUrl())
                 .build();
     }
 
     public LogoImage toLogoImage(LogoImageJpa logoImageJpa) {
         return LogoImage.builder()
                 .id(logoImageJpa.getId())
-                .imageUrl(logoImageJpa.getImageUrl())
+                .logoImageUrl(logoImageJpa.getImageUrl())
                 .build();
     }
 

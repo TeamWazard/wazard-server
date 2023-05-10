@@ -54,14 +54,13 @@ class FileServiceImpl implements FileService {
         }
         String storeFileUrl = amazonS3.getUrl(bucket, key).toString();
         LogoImage logoImage = LogoImage.builder()
-                .imageName(originalFilename)
-                .imageUrl(storeFileUrl)
+                .logoImageUrl(storeFileUrl)
                 .build();
         LogoImage uploadedLogoImage = saveFileRepository.uploadStoreLogo(logoImage);
         return UploadStoreLogoResDto.builder()
                 .message("업로드 되었습니다.")
                 .imageId(uploadedLogoImage.getId())
-                .imageUrl(uploadedLogoImage.getImageUrl())
+                .imageUrl(uploadedLogoImage.getLogoImageUrl())
                 .build();
     }
 
