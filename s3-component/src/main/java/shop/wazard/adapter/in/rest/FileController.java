@@ -21,9 +21,7 @@ class FileController {
     @PostMapping("/store")
     public ResponseEntity<UploadStoreLogoResDto> uploadStoreLogo(MultipartFile multipartFile) throws IOException {
         UploadStoreLogoResDto uploadStoreLogoResDto = fileService.uploadLogoImage(multipartFile);
-        return ResponseEntity.ok(
-                uploadStoreLogoResDto
-        );
+        return ResponseEntity.ok(uploadStoreLogoResDto);
     }
 
 }
