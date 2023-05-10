@@ -1,6 +1,6 @@
-package shop.wazard.applicatino.port.out;
+package shop.wazard.application.port.out;
 
-import shop.wazard.applicatino.port.domain.LogoImage;
+import shop.wazard.application.port.domain.LogoImage;
 
 public interface SaveFileRepository {
 

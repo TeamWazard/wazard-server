@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import shop.wazard.applicatino.port.in.FileService;
+import shop.wazard.application.port.in.FileService;
 import shop.wazard.dto.UploadStoreLogoResDto;
 
 import java.io.IOException;

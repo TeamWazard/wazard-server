@@ -1,4 +1,4 @@
-package shop.wazard.applicatino.port;
+package shop.wazard.application;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import shop.wazard.applicatino.port.domain.LogoImage;
-import shop.wazard.applicatino.port.in.FileService;
-import shop.wazard.applicatino.port.out.SaveFileRepository;
+import shop.wazard.application.port.domain.LogoImage;
+import shop.wazard.application.port.in.FileService;
+import shop.wazard.application.port.out.SaveFileRepository;
 import shop.wazard.dto.UploadStoreLogoResDto;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 class FileServiceImpl implements FileService {
 
     private AmazonS3 amazonS3;
@@ -34,7 +34,6 @@ class FileServiceImpl implements FileService {
 
 
     @Override
-    @Transactional
     public UploadStoreLogoResDto uploadLogoImage(MultipartFile multipartFile) throws IOException {
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -62,7 +61,6 @@ class FileServiceImpl implements FileService {
         return UploadStoreLogoResDto.builder()
                 .message("업로드 되었습니다.")
                 .imageId(uploadedLogoImage.getId())
-                .imageName(uploadedLogoImage.getImageName())
                 .imageUrl(uploadedLogoImage.getImageUrl())
                 .build();
     }

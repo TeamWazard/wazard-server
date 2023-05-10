@@ -9,7 +9,6 @@ public class UploadStoreLogoResDto {
 
     private String message;
     private Long imageId;
-    private String imageName;
     private String imageUrl;
 
 }

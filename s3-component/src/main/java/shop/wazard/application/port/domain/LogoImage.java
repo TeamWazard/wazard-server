@@ -1,4 +1,4 @@
-package shop.wazard.applicatino.port.domain;
+package shop.wazard.application.port.domain;
 
 import lombok.Builder;
 import lombok.Getter;

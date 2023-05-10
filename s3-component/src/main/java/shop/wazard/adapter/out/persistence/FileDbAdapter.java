@@ -2,8 +2,8 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import shop.wazard.applicatino.port.domain.LogoImage;
-import shop.wazard.applicatino.port.out.SaveFileRepository;
+import shop.wazard.application.port.domain.LogoImage;
+import shop.wazard.application.port.out.SaveFileRepository;
 import shop.wazard.entity.company.LogoImageJpa;
 
 @Repository

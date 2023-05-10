@@ -1,4 +1,4 @@
-package shop.wazard.applicatino.port.in;
+package shop.wazard.application.port.in;
 
 import org.springframework.web.multipart.MultipartFile;
 import shop.wazard.dto.UploadStoreLogoResDto;
