@@ -12,6 +12,6 @@ public interface CompanyManagementService {
 
     DeleteCompanyResDto deleteCompany(DeleteCompanyReqDto deleteCompanyReqDto);
 
-    List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId);
+    List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId, GetOwnedCompanyReqDto getOwnedCompanyReqDto);
 
 }

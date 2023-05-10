@@ -62,8 +62,14 @@ class CompanyManagementServiceImpl implements CompanyManagementService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId) {
-        return null;
+    public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId, GetOwnedCompanyReqDto getOwnedCompanyReqDto) {
+        AccountForManagement accountForManagement = accountForCompanyManagementPort.findAccountByEmail(getOwnedCompanyReqDto.getEmail());
+        if (!accountForManagement.isEmployer()) {
+            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
+        }
+        return rosterForCompanyManagementPort.getOwnedCompanyList(accountId);
     }
+
 }
