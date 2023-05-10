@@ -16,9 +16,10 @@ import shop.wazard.application.port.in.CompanyManagementService;
 import shop.wazard.application.port.out.AccountForCompanyManagementPort;
 import shop.wazard.application.port.out.CompanyForManagementPort;
 import shop.wazard.application.port.out.RosterForCompanyManagementPort;
-import shop.wazard.dto.DeleteCompanyReqDto;
-import shop.wazard.dto.RegisterCompanyReqDto;
-import shop.wazard.dto.UpdateCompanyInfoReqDto;
+import shop.wazard.dto.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -107,6 +108,31 @@ class CompanyForManagementServiceTest {
         Assertions.assertDoesNotThrow(() -> companyManagementService.deleteCompany(deleteCompanyReqDto));
     }
 
+    @Test
+    @DisplayName("고용주 - 운영 업장 리스트 조회 - 성공")
+    public void getOwnedCompanyList() throws Exception {
+        // given
+        GetOwnedCompanyReqDto getOwnedCompanyReqDto = GetOwnedCompanyReqDto.builder()
+                .email("test@gmail.com")
+                .build();
+        AccountForManagement accountForManagement = setDefaultAccountForManagement();
+        List<GetOwnedCompanyResDto> getOwnedCompanyResDtoList = setDefaultOwnedCompanyList();
+
+        // when
+        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForManagement);
+        Mockito.when(rosterForCompanyManagementPort.getOwnedCompanyList(anyLong()))
+                .thenReturn(getOwnedCompanyResDtoList);
+        List<GetOwnedCompanyResDto> result = companyManagementService.getOwnedCompanyList(1L,getOwnedCompanyReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(result.get(0).getCompanyName(),getOwnedCompanyResDtoList.get(0).getCompanyName()),
+                () -> Assertions.assertEquals(result.get(1).getCompanyName(),getOwnedCompanyResDtoList.get(1).getCompanyName()),
+                () -> Assertions.assertEquals(result.get(2).getCompanyName(),getOwnedCompanyResDtoList.get(2).getCompanyName())
+        );
+    }
+
     private AccountForManagement setDefaultAccountForManagement() {
         return AccountForManagement.builder()
                 .id(1L)
@@ -123,6 +149,35 @@ class CompanyForManagementServiceTest {
                         .salaryDate(10)
                         .build())
                 .build();
+    }
+
+    private List<GetOwnedCompanyResDto> setDefaultOwnedCompanyList() {
+        List<GetOwnedCompanyResDto> getOwnedCompanyResDtoList = new ArrayList<>();
+        GetOwnedCompanyResDto getOwnedCompanyResDto1 = GetOwnedCompanyResDto.builder()
+                .companyName("companyName1")
+                .companyAddress("companyAddress1")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test1.com")
+                .build();
+        GetOwnedCompanyResDto getOwnedCompanyResDto2 = GetOwnedCompanyResDto.builder()
+                .companyName("companyName2")
+                .companyAddress("companyAddress2")
+                .companyContact("02-222-2222")
+                .salaryDate(2)
+                .logoImageUrl("www.test2.com")
+                .build();
+        GetOwnedCompanyResDto getOwnedCompanyResDto3 = GetOwnedCompanyResDto.builder()
+                .companyName("companyName3")
+                .companyAddress("companyAddress3")
+                .companyContact("02-333-3333")
+                .salaryDate(3)
+                .logoImageUrl("www.test3.com")
+                .build();
+        getOwnedCompanyResDtoList.add(getOwnedCompanyResDto1);
+        getOwnedCompanyResDtoList.add(getOwnedCompanyResDto2);
+        getOwnedCompanyResDtoList.add(getOwnedCompanyResDto3);
+        return getOwnedCompanyResDtoList;
     }
 
 }
