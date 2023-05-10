@@ -19,6 +19,7 @@ public class CompanyInfo {
         this.companyAddress = updateCompanyInfoReqDto.getCompanyAddress();
         this.companyContact = updateCompanyInfoReqDto.getCompanyContact();
         this.salaryDate = updateCompanyInfoReqDto.getSalaryDate();
+        this.logoImageUrl = updateCompanyInfoReqDto.getLogoImageUrl();
     }
 
 }

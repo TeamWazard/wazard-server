@@ -16,7 +16,8 @@ public enum StatusEnum {
     ACCOUNT_NOT_FOUND(406, "존재하지 않는 계정입니다."),
     NESTED_EMAIL(407, "이미 가입된 정보가 있습니다."),
     NOT_AUTHORIZED(408, "권한이 없습니다."),
-    COMPANY_NOT_FOUND(409, "존재하지 않는 업장입니다.");
+    COMPANY_NOT_FOUND(409, "존재하지 않는 업장입니다."),
+    FAIL_TO_UPLOAD_IMAGE(503, "이미지 업로드에 실패했습니다."),;
 
     private int statusCode;
     private String message;
