@@ -11,7 +11,7 @@ interface RosterJpaForCompanyManagementRepository extends JpaRepository<RosterJp
     RosterJpa save(RosterJpa rosterJpa);
 
     @Modifying(clearAutomatically = true)
-    @Query("update RosterJpa r set r.stateJpa = 'INACTIVE' where r.companyJpa.id = :companyId")
+    @Query("update RosterJpa r set r.baseStatusJpa = 'INACTIVE' where r.companyJpa.id = :companyId")
     void deleteCompanyAccountRel(@Param("companyId") Long companyId);
 
 }

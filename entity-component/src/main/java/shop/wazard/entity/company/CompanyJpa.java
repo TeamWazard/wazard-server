@@ -57,7 +57,7 @@ public class CompanyJpa extends BaseEntity {
     }
 
     public void delete() {
-        this.stateJpa = StateJpa.INACTIVE;
+        this.baseStatusJpa = BaseStatusJpa.INACTIVE;
     }
 
 }

@@ -18,8 +18,8 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.company.RelationTypeJpa;
 import shop.wazard.entity.company.RosterJpa;
+import shop.wazard.entity.company.RosterTypeJpa;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -93,7 +93,7 @@ class CompanyForManagementDbAdapterTest {
         // when
         accountJpaForCompanyManagementRepository.save(accountJpa);
         companyJpaForManagementRepository.save(companyJpa);
-        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
+        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
         RosterJpa result = rosterJpaForCompanyManagementRepository.save(rosterJpa);
         em.flush();
 
@@ -150,14 +150,14 @@ class CompanyForManagementDbAdapterTest {
         RosterJpa rosterJpa = rosterJpaForCompanyManagementRepository.save(RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa)
-                .relationTypeJpa(RelationTypeJpa.EMPLOYER)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
                 .build());
         rosterJpaForCompanyManagementRepository.deleteCompanyAccountRel(savedCompanyJpa.getId());
         List<RosterJpa> resultList = rosterJpaForCompanyManagementRepository.findAll();
         em.flush();
 
         // then
-        Assertions.assertEquals("INACTIVE", resultList.get(0).getStateJpa().getStatus());
+        Assertions.assertEquals("INACTIVE", resultList.get(0).getBaseStatusJpa().getStatus());
     }
 
     @Test
@@ -172,7 +172,7 @@ class CompanyForManagementDbAdapterTest {
         em.flush();
 
         // then
-        Assertions.assertEquals("INACTIVE", savedCompanyJpa.getStateJpa().getStatus());
+        Assertions.assertEquals("INACTIVE", savedCompanyJpa.getBaseStatusJpa().getStatus());
     }
 
     @Test
@@ -211,7 +211,7 @@ class CompanyForManagementDbAdapterTest {
                 .phoneNumber("010-1111-1111")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
-                .stateJpa(BaseEntity.StateJpa.ACTIVE)
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYER")
                 .build();
     }
@@ -248,17 +248,17 @@ class CompanyForManagementDbAdapterTest {
         rosterJpaForCompanyManagementRepository.save(RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa1)
-                .relationTypeJpa(RelationTypeJpa.EMPLOYER)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
                 .build());
         rosterJpaForCompanyManagementRepository.save(RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa2)
-                .relationTypeJpa(RelationTypeJpa.EMPLOYER)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
                 .build());
         rosterJpaForCompanyManagementRepository.save(RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa3)
-                .relationTypeJpa(RelationTypeJpa.EMPLOYER)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
                 .build());
         em.flush();
         return savedAccountJpa.getId();

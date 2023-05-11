@@ -30,13 +30,13 @@ public class RosterJpa extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RelationTypeJpa relationTypeJpa;
+    private RosterTypeJpa rosterTypeJpa;
 
     @Builder
-    public RosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
+    public RosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa, RosterTypeJpa rosterTypeJpa) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
-        this.relationTypeJpa = relationTypeJpa;
+        this.rosterTypeJpa = rosterTypeJpa;
     }
 
 }
