@@ -35,6 +35,7 @@ dependencies {
 	implementation project(':company-management-component')
 	implementation project(':entity-component')
 	implementation project(':s3-component')
+	implementation project(':worker-management-component')
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
