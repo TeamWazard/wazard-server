@@ -34,7 +34,7 @@ class AccountMapper {
                         .gender(GenderType.valueOf(accountJpa.getGender().toString()))
                         .birth(accountJpa.getBirth())
                         .build())
-                .accountStatus(AccountStatus.valueOf(accountJpa.getStateJpa().getStatus()))
+                .accountStatus(AccountStatus.valueOf(accountJpa.getBaseStatusJpa().getStatus()))
                 .roles(accountJpa.getRoles())
                 .build();
     }

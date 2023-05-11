@@ -6,8 +6,8 @@ import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.company.RelationTypeJpa;
 import shop.wazard.entity.company.RosterJpa;
+import shop.wazard.entity.company.RosterTypeJpa;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,11 +25,11 @@ class CompanyForCompanyManagementMapper {
                 .build();
     }
 
-    public RosterJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RelationTypeJpa relationTypeJpa) {
+    public RosterJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RosterTypeJpa rosterTypeJpa) {
         return RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
-                .relationTypeJpa(relationTypeJpa)
+                .rosterTypeJpa(rosterTypeJpa)
                 .build();
     }
 

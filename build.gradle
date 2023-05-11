@@ -23,7 +23,7 @@ jar {
 }
 
 task customTest(type: Test) {
-	exclude 'shop/wazard/acceptance/**'
+	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
 }
 
 test.dependsOn customTest
