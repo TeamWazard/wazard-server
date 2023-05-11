@@ -33,7 +33,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew customTest 
     - name: Notify Slack
-      uses: rtCamp/action-slack-notify@v3.4
+      uses: 8398a7/action-slack@v2.6.0
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       with:
