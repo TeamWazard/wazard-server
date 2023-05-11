@@ -15,7 +15,7 @@ public class WaitingInfo {
 
     public void changeWaitingStatus() {
         if (!isAgreed()) {
-            throw new JoinWorkerDeniedException(StatusEnum.IS_NOT_AGREED_WORKER.getMessage());
+            throw new JoinWorkerDeniedException(StatusEnum.JOIN_WORKER_DENIED.getMessage());
         }
         this.waitingStatus = WaitingStatus.JOINED;
     }
