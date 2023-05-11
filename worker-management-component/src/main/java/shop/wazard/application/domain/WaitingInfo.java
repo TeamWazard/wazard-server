@@ -20,7 +20,7 @@ public class WaitingInfo {
     }
 
     private boolean isAgreed() {
-        if (!this.waitingStatus.getStatus().equals(WaitingStatus.AGREED)) {
+        if (!this.waitingStatus.equals(WaitingStatus.AGREED)) {
             throw new JoinWorkerDeniedException(StatusEnum.IS_NOT_AGREED_WORKER.getMessage());
         }
         return false;

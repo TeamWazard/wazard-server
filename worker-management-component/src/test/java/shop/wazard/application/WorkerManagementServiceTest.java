@@ -10,6 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForWorkerManagement;
+import shop.wazard.application.domain.WaitingInfo;
+import shop.wazard.application.domain.WaitingStatus;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
@@ -17,6 +19,7 @@ import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
@@ -39,18 +42,24 @@ class WorkerManagementServiceTest {
     public void permitWorkerToJoinSuccess() throws Exception {
         // given
         PermitWorkerToJoinReqDto permitWorkerToJoinReqDto = PermitWorkerToJoinReqDto.builder()
-                .accountId(1L)
-                .companyId(2L)
+                .waitingListId(1L)
                 .email("test@email.com")
                 .build();
         AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
-                .id(3L)
+                .id(2L)
                 .roles("EMPLOYER")
+                .build();
+        WaitingInfo waitingInfo = WaitingInfo.builder()
+                .accountId(3L)
+                .companyId(4L)
+                .waitingStatus(WaitingStatus.AGREED)
                 .build();
 
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
+        Mockito.when(waitingListForWorkerManagementPort.findWaitingInfo(any(PermitWorkerToJoinReqDto.class)))
+                .thenReturn(waitingInfo);
 
         // then
         Assertions.assertDoesNotThrow(() -> workerManagementService.permitWorkerToJoin(permitWorkerToJoinReqDto));
