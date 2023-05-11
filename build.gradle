@@ -32,7 +32,7 @@ dependencies {
 	implementation project(':common-component')
 	implementation project(':account-component')
 	implementation project(':smtp-component')
-	implementation project(':company-management-component')
+	implementation project(':company-component')
 	implementation project(':entity-component')
 	implementation project(':s3-component')
 	implementation project(':worker-management-component')
