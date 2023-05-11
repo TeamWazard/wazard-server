@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import shop.wazard.entity.company.RosterJpa;
 
-interface RosterJpaForCompanyManagementRepository extends JpaRepository<RosterJpa, Long> {
+interface RosterJpaForCompanyRepository extends JpaRepository<RosterJpa, Long> {
 
     RosterJpa save(RosterJpa rosterJpa);
 

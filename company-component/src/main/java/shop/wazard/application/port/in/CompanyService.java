@@ -4,7 +4,7 @@ import shop.wazard.dto.*;
 
 import java.util.List;
 
-public interface CompanyManagementService {
+public interface CompanyService {
 
     RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto);
 

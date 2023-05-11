@@ -8,7 +8,7 @@ import shop.wazard.entity.company.CompanyJpa;
 
 import java.util.List;
 
-interface CompanyJpaForManagementRepository extends JpaRepository<CompanyJpa, Long> {
+interface CompanyJpaRepository extends JpaRepository<CompanyJpa, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("update CompanyJpa c set c.baseStatusJpa = 'INACTIVE' where c.id = :companyId")

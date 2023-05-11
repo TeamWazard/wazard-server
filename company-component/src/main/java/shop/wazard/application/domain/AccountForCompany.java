@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class AccountForManagement {
+public class AccountForCompany {
 
     private Long id;
     private String roles;

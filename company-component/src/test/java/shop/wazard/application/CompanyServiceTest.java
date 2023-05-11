@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.wazard.application.domain.AccountForManagement;
-import shop.wazard.application.domain.CompanyForManagement;
+import shop.wazard.application.domain.AccountForCompany;
+import shop.wazard.application.domain.Company;
 import shop.wazard.application.domain.CompanyInfo;
-import shop.wazard.application.port.in.CompanyManagementService;
-import shop.wazard.application.port.out.AccountForCompanyManagementPort;
-import shop.wazard.application.port.out.CompanyForManagementPort;
-import shop.wazard.application.port.out.RosterForCompanyManagementPort;
+import shop.wazard.application.port.in.CompanyService;
+import shop.wazard.application.port.out.AccountForCompanyPort;
+import shop.wazard.application.port.out.CompanyPort;
+import shop.wazard.application.port.out.RosterForCompanyPort;
 import shop.wazard.dto.*;
 
 import java.util.ArrayList;
@@ -25,17 +25,17 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CompanyManagementServiceImpl.class})
-class CompanyForManagementServiceTest {
+@ContextConfiguration(classes = {CompanyServiceImpl.class})
+class CompanyServiceTest {
 
     @Autowired
-    private CompanyManagementService companyManagementService;
+    private CompanyService companyService;
     @MockBean
-    private CompanyForManagementPort companyForManagementPort;
+    private CompanyPort companyPort;
     @MockBean
-    private AccountForCompanyManagementPort accountForCompanyManagementPort;
+    private AccountForCompanyPort accountForCompanyPort;
     @MockBean
-    private RosterForCompanyManagementPort rosterForCompanyManagementPort;
+    private RosterForCompanyPort rosterForCompanyPort;
 
     @Test
     @DisplayName("고용주 - 업장 등록 - 성공")
@@ -48,15 +48,15 @@ class CompanyForManagementServiceTest {
                 .companyContact("02-123-1234")
                 .salaryDate(10)
                 .build();
-        AccountForManagement accountForManagement = setDefaultAccountForManagement();
-        CompanyForManagement companyForManagement = setDefaultCompanyForManagement();
+        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        Company company = setDefaultCompanyForManagement();
 
         // when
-        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
-                .thenReturn(accountForManagement);
+        Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForCompany);
 
         // then
-        Assertions.assertDoesNotThrow(() -> companyManagementService.registerCompany(registerCompanyReqDto));
+        Assertions.assertDoesNotThrow(() -> companyService.registerCompany(registerCompanyReqDto));
     }
 
     @Test
@@ -71,22 +71,22 @@ class CompanyForManagementServiceTest {
                 .companyContact("02-123-1234")
                 .salaryDate(10)
                 .build();
-        AccountForManagement accountForManagement = setDefaultAccountForManagement();
-        CompanyForManagement companyForManagement = setDefaultCompanyForManagement();
+        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        Company company = setDefaultCompanyForManagement();
 
         //when
-        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
-                .thenReturn(accountForManagement);
-        Mockito.when(companyForManagementPort.findCompanyById(anyLong()))
-                .thenReturn(companyForManagement);
-        companyManagementService.updateCompanyInfo(updateCompanyInfoReqDto);
+        Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForCompany);
+        Mockito.when(companyPort.findCompanyById(anyLong()))
+                .thenReturn(company);
+        companyService.updateCompanyInfo(updateCompanyInfoReqDto);
 
         //then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(companyForManagement.getCompanyInfo().getCompanyName(), updateCompanyInfoReqDto.getCompanyName()),
-                () -> Assertions.assertEquals(companyForManagement.getCompanyInfo().getCompanyAddress(), updateCompanyInfoReqDto.getCompanyAddress()),
-                () -> Assertions.assertEquals(companyForManagement.getCompanyInfo().getCompanyContact(), updateCompanyInfoReqDto.getCompanyContact()),
-                () -> Assertions.assertEquals(companyForManagement.getCompanyInfo().getSalaryDate(), updateCompanyInfoReqDto.getSalaryDate())
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), updateCompanyInfoReqDto.getCompanyName()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), updateCompanyInfoReqDto.getCompanyAddress()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), updateCompanyInfoReqDto.getCompanyContact()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), updateCompanyInfoReqDto.getSalaryDate())
         );
     }
 
@@ -98,14 +98,14 @@ class CompanyForManagementServiceTest {
                 .email("test@email.com")
                 .companyId(1L)
                 .build();
-        AccountForManagement accountForManagement = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultAccountForManagement();
 
         //when
-        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
-                .thenReturn(accountForManagement);
+        Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForCompany);
 
         //then
-        Assertions.assertDoesNotThrow(() -> companyManagementService.deleteCompany(deleteCompanyReqDto));
+        Assertions.assertDoesNotThrow(() -> companyService.deleteCompany(deleteCompanyReqDto));
     }
 
     @Test
@@ -115,15 +115,15 @@ class CompanyForManagementServiceTest {
         GetOwnedCompanyReqDto getOwnedCompanyReqDto = GetOwnedCompanyReqDto.builder()
                 .email("test@gmail.com")
                 .build();
-        AccountForManagement accountForManagement = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultAccountForManagement();
         List<GetOwnedCompanyResDto> getOwnedCompanyResDtoList = setDefaultOwnedCompanyList();
 
         // when
-        Mockito.when(accountForCompanyManagementPort.findAccountByEmail(anyString()))
-                .thenReturn(accountForManagement);
-        Mockito.when(rosterForCompanyManagementPort.getOwnedCompanyList(anyLong()))
+        Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForCompany);
+        Mockito.when(rosterForCompanyPort.getOwnedCompanyList(anyLong()))
                 .thenReturn(getOwnedCompanyResDtoList);
-        List<GetOwnedCompanyResDto> result = companyManagementService.getOwnedCompanyList(1L,getOwnedCompanyReqDto);
+        List<GetOwnedCompanyResDto> result = companyService.getOwnedCompanyList(1L,getOwnedCompanyReqDto);
 
         // then
         Assertions.assertAll(
@@ -133,15 +133,15 @@ class CompanyForManagementServiceTest {
         );
     }
 
-    private AccountForManagement setDefaultAccountForManagement() {
-        return AccountForManagement.builder()
+    private AccountForCompany setDefaultAccountForManagement() {
+        return AccountForCompany.builder()
                 .id(1L)
                 .roles("EMPLOYER")
                 .build();
     }
 
-    private CompanyForManagement setDefaultCompanyForManagement() {
-        return CompanyForManagement.builder()
+    private Company setDefaultCompanyForManagement() {
+        return Company.builder()
                 .companyInfo(CompanyInfo.builder()
                         .companyName("테스트")
                         .companyAddress("테스트 주소")

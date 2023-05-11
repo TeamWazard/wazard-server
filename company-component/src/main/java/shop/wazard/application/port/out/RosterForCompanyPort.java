@@ -4,7 +4,7 @@ import shop.wazard.dto.GetOwnedCompanyResDto;
 
 import java.util.List;
 
-public interface RosterForCompanyManagementPort {
+public interface RosterForCompanyPort {
 
     void deleteRoster(Long companyId);
 

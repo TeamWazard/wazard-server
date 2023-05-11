@@ -1,7 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
-import shop.wazard.application.domain.CompanyForManagement;
+import shop.wazard.application.domain.Company;
 import shop.wazard.application.domain.CompanyInfo;
 import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-class CompanyForCompanyManagementMapper {
+class CompanyMapper {
 
-    public CompanyJpa toCompanyJpa(CompanyForManagement companyForManagement) {
+    public CompanyJpa toCompanyJpa(Company company) {
         return CompanyJpa.builder()
-                .companyName(companyForManagement.getCompanyInfo().getCompanyName())
-                .companyAddress(companyForManagement.getCompanyInfo().getCompanyAddress())
-                .companyContact(companyForManagement.getCompanyInfo().getCompanyContact())
-                .salaryDate(companyForManagement.getCompanyInfo().getSalaryDate())
-                .logoImageUrl(companyForManagement.getCompanyInfo().getLogoImageUrl())
+                .companyName(company.getCompanyInfo().getCompanyName())
+                .companyAddress(company.getCompanyInfo().getCompanyAddress())
+                .companyContact(company.getCompanyInfo().getCompanyContact())
+                .salaryDate(company.getCompanyInfo().getSalaryDate())
+                .logoImageUrl(company.getCompanyInfo().getLogoImageUrl())
                 .build();
     }
 
@@ -33,18 +33,18 @@ class CompanyForCompanyManagementMapper {
                 .build();
     }
 
-    public void updateCompanyInfo(CompanyJpa companyJpa, CompanyForManagement companyForManagement) {
+    public void updateCompanyInfo(CompanyJpa companyJpa, Company company) {
         companyJpa.updateCompanyInfo(
-                companyForManagement.getCompanyInfo().getCompanyName(),
-                companyForManagement.getCompanyInfo().getCompanyAddress(),
-                companyForManagement.getCompanyInfo().getCompanyContact(),
-                companyForManagement.getCompanyInfo().getSalaryDate(),
-                companyForManagement.getCompanyInfo().getLogoImageUrl()
+                company.getCompanyInfo().getCompanyName(),
+                company.getCompanyInfo().getCompanyAddress(),
+                company.getCompanyInfo().getCompanyContact(),
+                company.getCompanyInfo().getSalaryDate(),
+                company.getCompanyInfo().getLogoImageUrl()
         );
     }
 
-    public CompanyForManagement toCompanyDomain(CompanyJpa companyJpa) {
-        return CompanyForManagement.builder()
+    public Company toCompanyDomain(CompanyJpa companyJpa) {
+        return Company.builder()
                 .id(companyJpa.getId())
                 .companyInfo(
                         CompanyInfo.builder()
