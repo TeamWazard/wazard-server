@@ -14,16 +14,17 @@ public class WaitingInfo {
     private WaitingStatus waitingStatus;
 
     public void changeWaitingStatus() {
-        if (isAgreed()) {
-            this.waitingStatus = WaitingStatus.JOINED;
+        if (!isAgreed()) {
+            throw new JoinWorkerDeniedException(StatusEnum.IS_NOT_AGREED_WORKER.getMessage());
         }
+        this.waitingStatus = WaitingStatus.JOINED;
     }
 
     private boolean isAgreed() {
         if (!this.waitingStatus.equals(WaitingStatus.AGREED)) {
-            throw new JoinWorkerDeniedException(StatusEnum.IS_NOT_AGREED_WORKER.getMessage());
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
