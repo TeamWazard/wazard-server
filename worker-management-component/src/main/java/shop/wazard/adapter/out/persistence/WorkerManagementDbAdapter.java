@@ -38,7 +38,7 @@ class WorkerManagementDbAdapter implements WorkerManagementPort, AccountForWorke
     @Override
     public WaitingInfo findWaitingInfo(Long waitingListId) {
         WaitingListJpa waitingListJpa = WaitingListForWorkerManagementRepository.findById(waitingListId)
-                .orElseThrow(() - new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
+                .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
         return workerForManagementMapper.toWaitingInfoDomain(waitingListJpa);
     }
 }

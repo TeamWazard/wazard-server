@@ -29,6 +29,26 @@ public class WorkerManagementExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorMessage> notAuthorizedException(NotAuthorizedException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.NOT_AUTHORIZED.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(JoinWorkerDeniedException.class)
+    public ResponseEntity<ErrorMessage> joinWorkerDeniedException(JoinWorkerDeniedException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.JOIN_WORKER_DENIED.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
     @ExceptionHandler(WorkerNotFoundInWaitingListException.class)
     public ResponseEntity<ErrorMessage> workerNotFoundInWaitingListException(WorkerNotFoundInWaitingListException e) {
         return ResponseEntity.badRequest().body(
