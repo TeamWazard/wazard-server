@@ -2,7 +2,6 @@ package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
 
 @Getter
 @Builder
@@ -12,10 +11,10 @@ public class RosterForWorkerManagement {
     private Long accountId;
     RelationType relationType;
 
-    public static RosterForWorkerManagement createRosterForWorkerManagement(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
+    public static RosterForWorkerManagement createRosterForWorkerManagement(WaitingInfo waitingInfo) {
         return RosterForWorkerManagement.builder()
-                .accountId(permitWorkerToJoinReqDto.getAccountId())
-                .companyId(permitWorkerToJoinReqDto.getCompanyId())
+                .accountId(waitingInfo.getAccountId())
+                .companyId(waitingInfo.getCompanyId())
                 .relationType(RelationType.EMPLOYEE)
                 .build();
     }

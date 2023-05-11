@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PermitWorkerToJoinReqDto {
 
-    private Long accountId;
-    private Long companyId;
+    private Long waitingListId;
     private String email;
 
 }

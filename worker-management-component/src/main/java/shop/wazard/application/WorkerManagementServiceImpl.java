@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
+import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
@@ -31,8 +32,9 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         if (!accountForWorkerManagement.isEmployer()) {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
-        waitingListForWorkerManagementPort.changeWaitingStatus(permitWorkerToJoinReqDto);
-        rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(permitWorkerToJoinReqDto));
+        WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto);
+        waitingInfo.changeWaitingStatus();
+        rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
         return PermitWorkerToJoinResDto.builder()
                 .message("초대가 승인되었습니다.")
                 .build();
