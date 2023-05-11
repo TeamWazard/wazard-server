@@ -27,6 +27,8 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(permitWorkerToJoinReqDto.getEmail());
         accountForWorkerManagement.checkIsAuthorizedAccount();
         WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto.getWaitingListId());
+        waitingInfo.changeWaitingStatus();
+        waitingListForWorkerManagementPort.updateWaitingStatus(waitingInfo);
         rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
         return PermitWorkerToJoinResDto.builder()
                 .message("업장 근무자 명단에 추가되었습니다.")
