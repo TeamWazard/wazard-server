@@ -18,6 +18,7 @@ import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
+import shop.wazard.exception.JoinWorkerDeniedException;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -65,5 +66,32 @@ class WorkerManagementServiceTest {
         Assertions.assertDoesNotThrow(() -> workerManagementService.permitWorkerToJoin(permitWorkerToJoinReqDto));
     }
 
+    @Test
+    @DisplayName("고용주 - 계약정보 비동의 근무자(INVITED, JOINED, DISAGREED) 가입 수락 - 실패")
+    public void permitDisagreeWorkerToJoin() throws Exception {
+        // given
+        PermitWorkerToJoinReqDto permitWorkerToJoinReqDto = PermitWorkerToJoinReqDto.builder()
+                .waitingListId(1L)
+                .email("test@email.com")
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(2L)
+                .roles("EMPLOYER")
+                .build();
+        WaitingInfo waitingInfo = WaitingInfo.builder()
+                .accountId(3L)
+                .companyId(4L)
+                .waitingStatus(WaitingStatus.DISAGREED)
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(waitingListForWorkerManagementPort.findWaitingInfo(anyLong()))
+                .thenReturn(waitingInfo);
+
+        // then
+        Assertions.assertThrows(JoinWorkerDeniedException.class, () -> workerManagementService.permitWorkerToJoin(permitWorkerToJoinReqDto));
+    }
 
 }

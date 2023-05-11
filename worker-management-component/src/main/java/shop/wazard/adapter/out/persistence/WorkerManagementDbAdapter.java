@@ -13,8 +13,4 @@ class WorkerManagementDbAdapter implements WorkerManagementPort {
     private final RosterForWorkerManagementRepository rosterForWorkerManagementRepository;
     private final WaitingListForWorkerManagementRepository waitingListForWorkerManagementRepository;
 
-    @Override
-    public void updateWorkerWaitingStatus(Long accountId, Long companyId) {
-
-    }
 }
