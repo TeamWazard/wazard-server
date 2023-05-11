@@ -2,9 +2,6 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import shop.wazard.adapter.out.persistence.repository.AccountForWorkerManagementRepository;
-import shop.wazard.adapter.out.persistence.repository.RosterForWorkerManagementRepository;
-import shop.wazard.adapter.out.persistence.repository.WaitingListForWorkerManagementRepository;
 import shop.wazard.application.port.out.WorkerManagementPort;
 
 @Repository

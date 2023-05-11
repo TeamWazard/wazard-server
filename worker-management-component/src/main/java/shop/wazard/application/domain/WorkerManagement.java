@@ -7,6 +7,6 @@ import lombok.Getter;
 @Builder
 public class WorkerManagement {
 
-    private final Long id;
+    private WaitingInfo waitingInfo;
 
 }
