@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RelationTypeJpa {
+public enum RosterTypeJpa {
 
     EMPLOYER("EMPLOYER"), EMPLOYEE("EMPLOYEE");
 
-    public final String relation;
+    public final String roster;
 
 }
