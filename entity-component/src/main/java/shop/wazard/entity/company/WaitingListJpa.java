@@ -39,7 +39,7 @@ public class WaitingListJpa extends BaseEntity {
         this.waitingStatusJpa = waitingStatusJpa;
     }
 
-    public void updateWaitingStatus() {
-        this.waitingStatusJpa = WaitingStatusJpa.JOINED;
+    public void updateWaitingStatus(WaitingStatusJpa waitingStatusJpa) {
+        this.waitingStatusJpa = waitingStatusJpa;
     }
 }

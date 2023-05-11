@@ -9,10 +9,7 @@ import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.company.RosterJpa;
-import shop.wazard.entity.company.RosterTypeJpa;
-import shop.wazard.entity.company.WaitingListJpa;
+import shop.wazard.entity.company.*;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
@@ -59,12 +56,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     @Override
     public void updateWaitingStatus(WaitingInfo waitingInfo) {
-        AccountJpa accountJpa = accountForWorkerManagementRepository.findById(waitingInfo.getAccountId())
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        CompanyJpa companyJpa = companyForWorkerManagementRepository.findById(waitingInfo.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findByAccountJpaAndCompanyJpa(accountJpa, companyJpa)
+        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findById(waitingInfo.getWaitingListId())
                 .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
-        waitingListJpa.updateWaitingStatus();
+        waitingListJpa.updateWaitingStatus(WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
     }
 }

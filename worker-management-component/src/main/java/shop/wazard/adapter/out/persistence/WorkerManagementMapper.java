@@ -12,9 +12,11 @@ class WorkerManagementMapper {
 
     public WaitingInfo toWaitingInfoDomain(WaitingListJpa waitingListJpa) {
         return WaitingInfo.builder()
+                .waitingListId(waitingListJpa.getId())
                 .companyId(waitingListJpa.getCompanyJpa().getId())
                 .accountId(waitingListJpa.getAccountJpa().getId())
                 .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
                 .build();
     }
+
 }

@@ -53,7 +53,7 @@ public class WorkerManagementExceptionHandler {
     public ResponseEntity<ErrorMessage> workerNotFoundInWaitingListException(WorkerNotFoundInWaitingListException e) {
         return ResponseEntity.badRequest().body(
                 ErrorMessage.builder()
-                        .errorCode(StatusEnum.ACCOUNT_NOT_FOUND.getStatusCode())
+                        .errorCode(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getStatusCode())
                         .errorMessage(e.getMessage())
                         .build()
         );

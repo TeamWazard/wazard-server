@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.wazard.application.domain.WaitingInfo;
+import shop.wazard.application.domain.WaitingStatus;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
@@ -47,11 +49,11 @@ class WorkerManagementDbAdapterTest {
         // given
         WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
 
-        //when
+        // when
         WaitingListJpa result = waitingListForWorkerManagementRepository.findById(waitingListJpa.getId()).get();
         em.flush();
 
-        //then
+        // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(result.getCompanyJpa(), waitingListJpa.getCompanyJpa()),
                 () -> Assertions.assertEquals(result.getAccountJpa(), waitingListJpa.getAccountJpa()),
@@ -64,11 +66,14 @@ class WorkerManagementDbAdapterTest {
     public void changeWaitingStatus() throws Exception {
         // given
         WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
+        WaitingInfo waitingInfo = WaitingInfo.builder()
+                .waitingStatus(WaitingStatus.JOINED)
+                .build();
 
-        //when
-        waitingListJpa.updateWaitingStatus();
+        // when
+        waitingListJpa.updateWaitingStatus(WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
 
-        //then
+        // then
         Assertions.assertEquals(waitingListJpa.getWaitingStatusJpa(), WaitingStatusJpa.JOINED);
     }
     
@@ -85,11 +90,11 @@ class WorkerManagementDbAdapterTest {
                 .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
                 .build();
 
-        //when
+        // when
         RosterJpa savedRosterJpa = rosterForWorkerManagementRepository.save(rosterJpa);
         em.flush();
         
-        //then
+        // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(savedRosterJpa.getCompanyJpa(), companyJpa),
                 () -> Assertions.assertEquals(savedRosterJpa.getAccountJpa(), accountJpa),
@@ -97,14 +102,7 @@ class WorkerManagementDbAdapterTest {
         );
     }
 
-    private WaitingListJpa setDefaultWaitingListJpa() {
-        CompanyJpa companyJpa = CompanyJpa.builder()
-                .companyName("companyName")
-                .companyAddress("companyAddress")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .logoImageUrl("www.test.com")
-                .build();
+    private AccountJpa setDefaultAccountJpa() {
         AccountJpa accountJpa = AccountJpa.builder()
                 .email("test@email.com")
                 .password("testPwd")
@@ -115,17 +113,29 @@ class WorkerManagementDbAdapterTest {
                 .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYER")
                 .build();
+        return accountForWorkerManagementRepository.save(accountJpa);
+    }
+
+    private CompanyJpa setDefaultCompanyJpa() {
+        CompanyJpa companyJpa = CompanyJpa.builder()
+                .companyName("companyName")
+                .companyAddress("companyAddress")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test.com")
+                .build();
+        return companyForWorkerManagementRepository.save(companyJpa);
+    }
+
+    private WaitingListJpa setDefaultWaitingListJpa() {
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+        AccountJpa accountJpa = setDefaultAccountJpa();
         WaitingListJpa waitingListJpa = WaitingListJpa.builder()
                 .companyJpa(companyJpa)
                 .accountJpa(accountJpa)
                 .waitingStatusJpa(WaitingStatusJpa.AGREED)
                 .build();
-
-        CompanyJpa savedCompanyJpa = companyForWorkerManagementRepository.save(companyJpa);
-        AccountJpa savedAccountJpa = accountForWorkerManagementRepository.save(accountJpa);
-        WaitingListJpa savedWaitingListJpa = waitingListForWorkerManagementRepository.save(waitingListJpa);
-
-        return savedWaitingListJpa;
+        return waitingListForWorkerManagementRepository.save(waitingListJpa);
     }
 
 }
