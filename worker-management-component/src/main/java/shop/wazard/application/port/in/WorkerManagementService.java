@@ -1,10 +1,10 @@
 package shop.wazard.application.port.in;
 
-import shop.wazard.dto.ApproveWorkerReqDto;
-import shop.wazard.dto.ApproveWorkerResDto;
+import shop.wazard.dto.PermitWorkerToJoinReqDto;
+import shop.wazard.dto.PermitWorkerToJoinResDto;
 
 public interface WorkerManagementService {
 
-    public ApproveWorkerResDto permitWorkerToJoin(ApproveWorkerReqDto approveWorkerReqDto);
+    PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto);
 
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApproveWorkerReqDto {
+public class PermitWorkerToJoinReqDto {
 
     private Long accountId;
     private Long companyId;
