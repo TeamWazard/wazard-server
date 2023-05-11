@@ -35,14 +35,11 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         CompanyJpa companyJpa = companyForWorkerManagementRepository.findById(rosterForWorkerManagement.getCompanyId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findByAccountJpaAndCompanyJpa(accountJpa, companyJpa)
-                .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
         RosterJpa rosterJpa = RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .rosterTypeJpa(RosterTypeJpa.valueOf(rosterForWorkerManagement.getRelationType().getType()))
                 .build();
-        waitingListJpa.permitWaitingStatus();
         rosterForWorkerManagementRepository.save(rosterJpa);
     }
 
@@ -58,5 +55,16 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
         AccountJpa accountJpa = accountForWorkerManagementRepository.findByEmail(email)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForWorkerManagementMapper.toAccountDomain(accountJpa);
+    }
+
+    @Override
+    public void updateWaitingStatus(WaitingInfo waitingInfo) {
+        AccountJpa accountJpa = accountForWorkerManagementRepository.findById(waitingInfo.getAccountId())
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa = companyForWorkerManagementRepository.findById(waitingInfo.getCompanyId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findByAccountJpaAndCompanyJpa(accountJpa, companyJpa)
+                .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
+        waitingListJpa.updateWaitingStatus();
     }
 }

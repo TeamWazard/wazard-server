@@ -66,7 +66,7 @@ class WorkerManagementDbAdapterTest {
         WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
 
         //when
-        waitingListJpa.permitWaitingStatus();
+        waitingListJpa.updateWaitingStatus();
 
         //then
         Assertions.assertEquals(waitingListJpa.getWaitingStatusJpa(), WaitingStatusJpa.JOINED);
