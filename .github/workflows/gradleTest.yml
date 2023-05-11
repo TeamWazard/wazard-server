@@ -36,6 +36,7 @@ jobs:
       uses: 8398a7/action-slack@v2.6.0
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         status: ${{ job.status }}
         message: |
