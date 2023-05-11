@@ -6,4 +6,6 @@ public interface WaitingListForWorkerManagementPort {
 
     WaitingInfo findWaitingInfo(Long waitingListId);
 
+    void updateWaitingStatus(WaitingInfo waitingInfo);
+
 }
