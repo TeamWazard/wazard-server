@@ -10,13 +10,13 @@ public class RosterForWorkerManagement {
 
     private Long companyId;
     private Long accountId;
-    WaitingStatus waitingStatus;
+    RelationType relationType;
 
     public static RosterForWorkerManagement createRosterForWorkerManagement(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
         return RosterForWorkerManagement.builder()
                 .accountId(permitWorkerToJoinReqDto.getAccountId())
                 .companyId(permitWorkerToJoinReqDto.getCompanyId())
-                .waitingStatus(WaitingStatus.JOINED)
+                .relationType(RelationType.EMPLOYEE)
                 .build();
     }
 
