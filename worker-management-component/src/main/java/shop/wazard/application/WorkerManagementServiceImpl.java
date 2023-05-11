@@ -32,7 +32,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         waitingInfo.changeWaitingStatus();
         rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
         return PermitWorkerToJoinResDto.builder()
-                .message("근무자 목록에 등록되었습니다.")
+                .message("업장 근무자 명단에 추가되었습니다.")
                 .build();
     }
 
