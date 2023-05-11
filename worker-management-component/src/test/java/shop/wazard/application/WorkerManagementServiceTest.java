@@ -16,7 +16,6 @@ import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 import shop.wazard.exception.JoinWorkerDeniedException;
 
@@ -29,8 +28,6 @@ class WorkerManagementServiceTest {
 
     @Autowired
     private WorkerManagementService workerManagementService;
-    @MockBean
-    private WorkerManagementPort workerManagementPort;
     @MockBean
     private AccountForWorkerManagementPort accountForWorkerManagementPort;
     @MockBean

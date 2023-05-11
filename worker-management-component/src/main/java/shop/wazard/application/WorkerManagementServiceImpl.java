@@ -10,7 +10,6 @@ import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 import shop.wazard.dto.PermitWorkerToJoinResDto;
 
@@ -19,7 +18,6 @@ import shop.wazard.dto.PermitWorkerToJoinResDto;
 @RequiredArgsConstructor
 class WorkerManagementServiceImpl implements WorkerManagementService {
 
-    private final WorkerManagementPort workerManagementPort;
     private final AccountForWorkerManagementPort accountForWorkerManagementPort;
     private final RosterForWorkerManagementPort rosterForWorkerManagementPort;
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
@@ -29,7 +27,6 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(permitWorkerToJoinReqDto.getEmail());
         accountForWorkerManagement.checkIsAuthorizedAccount();
         WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto.getWaitingListId());
-        waitingInfo.changeWaitingStatus();
         rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
         return PermitWorkerToJoinResDto.builder()
                 .message("업장 근무자 명단에 추가되었습니다.")

@@ -23,11 +23,13 @@ import java.time.LocalDate;
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, WorkerManagementDbAdapter.class, WorkerManagementMapper.class, RosterForWorkerManagementRepository.class, WaitingListForWorkerManagementRepository.class, AccountForWorkerManagementRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, WorkerManagementDbAdapter.class, AccountForWorkerManagementMapper.class, WorkerManagementMapper.class, RosterForWorkerManagementRepository.class, WaitingListForWorkerManagementRepository.class, AccountForWorkerManagementRepository.class})
 class WorkerManagementDbAdapterTest {
 
     @Autowired
     private WorkerManagementMapper workerManagementMapper;
+    @Autowired
+    private AccountForWorkerManagementMapper accountForWorkerManagementMapper;
     @Autowired
     private RosterForWorkerManagementRepository rosterForWorkerManagementRepository;
     @Autowired
