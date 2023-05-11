@@ -35,7 +35,7 @@ class WorkerManagementServiceTest {
     private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
 
     @Test
-    @DisplayName("고용주 - 알바생 가입 수락 - 성공")
+    @DisplayName("고용주 - 근무자 가입 수락 - 성공")
     public void permitWorkerToJoinSuccess() throws Exception {
         // given
         PermitWorkerToJoinReqDto permitWorkerToJoinReqDto = PermitWorkerToJoinReqDto.builder()
