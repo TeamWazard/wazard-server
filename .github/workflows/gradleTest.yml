@@ -32,3 +32,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew customTest
+    - name: Action-Slack
+      uses: rtCamp/action-slack-notify@v3.4
+      with:
+        status: ${{job.status}}
+        author_name: Jarvis
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secret.SLACK_WEBHOOK_URL }}
