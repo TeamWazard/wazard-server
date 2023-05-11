@@ -19,7 +19,7 @@ import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
@@ -58,7 +58,7 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(waitingListForWorkerManagementPort.findWaitingInfo(any(PermitWorkerToJoinReqDto.class)))
+        Mockito.when(waitingListForWorkerManagementPort.findWaitingInfo(anyLong()))
                 .thenReturn(waitingInfo);
 
         // then

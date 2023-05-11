@@ -2,6 +2,8 @@ package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import shop.wazard.exception.NotAuthorizedException;
+import shop.wazard.util.exception.StatusEnum;
 
 @Getter
 @Builder
@@ -10,7 +12,13 @@ public class AccountForWorkerManagement {
     private Long id;
     private String roles;
 
-    public boolean isEmployer() {
+    public void checkIsAuthorizedAccount() {
+        if (!isEmployer()) {
+            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
+        }
+    }
+
+    private boolean isEmployer() {
         if (this.roles.equals("EMPLOYER")) {
             return true;
         } else {

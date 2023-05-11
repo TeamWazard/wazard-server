@@ -13,8 +13,6 @@ import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.application.port.out.WorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 import shop.wazard.dto.PermitWorkerToJoinResDto;
-import shop.wazard.exception.NotAuthorizedException;
-import shop.wazard.util.exception.StatusEnum;
 
 @Transactional
 @Service
@@ -29,10 +27,8 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(permitWorkerToJoinReqDto.getEmail());
-        if (!accountForWorkerManagement.isEmployer()) {
-            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
-        }
-        WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto);
+        accountForWorkerManagement.checkIsAuthorizedAccount();
+        WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto.getWaitingListId());
         waitingInfo.changeWaitingStatus();
         rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
         return PermitWorkerToJoinResDto.builder()

@@ -7,6 +7,6 @@ public interface WaitingListForWorkerManagementPort {
 
     void changeWaitingStatus(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto);
 
-    WaitingInfo findWaitingInfo(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto);
+    WaitingInfo findWaitingInfo(Long waitingListId);
 
 }
