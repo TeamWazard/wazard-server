@@ -1,24 +1,22 @@
-package shop.wazard.entity.commuteRecord;
+package shop.wazard.entity.company;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
-import shop.wazard.entity.company.CompanyJpa;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Getter
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CommuteRecord")
-public class CommuteRecordJpa extends BaseEntity {
+@Table(name = "WaitingList")
+public class WaitingListJpa extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "commuteRecordId")
+    @Column(name = "waitingListId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,8 +28,7 @@ public class CommuteRecordJpa extends BaseEntity {
     private CompanyJpa companyJpa;
 
     @Enumerated(EnumType.STRING)
-    private CommuteTypeJpa commuteTypeJpa;
-
-    private LocalDateTime commuteTime;
+    @Column(nullable = false)
+    private WaitingStatusJpa waitingStatusJpa;
 
 }

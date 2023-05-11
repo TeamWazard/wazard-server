@@ -10,8 +10,8 @@ import shop.wazard.application.port.out.RosterForCompanyManagementPort;
 import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.company.RelationTypeJpa;
 import shop.wazard.entity.company.RosterJpa;
+import shop.wazard.entity.company.RosterTypeJpa;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -37,7 +37,7 @@ class CompanyManagementDbAdapter implements CompanyForManagementPort, AccountFor
     public void saveCompany(String email, CompanyForManagement companyForManagement) {
         CompanyJpa companyJpa = companyForCompanyManagementMapper.toCompanyJpa(companyForManagement);
         AccountJpa accountJpa = accountJpaForCompanyManagementRepository.findByEmail(email);
-        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RelationTypeJpa.EMPLOYER);
+        RosterJpa rosterJpa = companyForCompanyManagementMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
         companyJpaForManagementRepository.save(companyJpa);
         rosterJpaForCompanyManagementRepository.save(rosterJpa);
     }

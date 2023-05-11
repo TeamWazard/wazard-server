@@ -51,7 +51,7 @@ public class AccountJpa extends BaseEntity {
     }
 
     @Builder
-    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, StateJpa stateJpa,  List<RosterJpa> rosterJpaList) {
+    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, BaseStatusJpa baseStatusJpa,  List<RosterJpa> rosterJpaList) {
         this.email = email;
         this.password = password;
         this.userName = userName;
@@ -59,7 +59,7 @@ public class AccountJpa extends BaseEntity {
         this.gender = GenderTypeJpa.valueOf(gender);
         this.birth = birth;
         this.roles = roles;
-        this.stateJpa = stateJpa;
+        this.baseStatusJpa = baseStatusJpa;
         this.rosterJpaList = rosterJpaList;
     }
 

@@ -10,4 +10,5 @@ public enum CommuteTypeJpa {
     ON("ON"), OFF("OFF");
 
     public final String commuteType;
+
 }
