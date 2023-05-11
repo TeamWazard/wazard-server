@@ -68,7 +68,7 @@ class WorkerManagementServiceTest {
 
     @Test
     @DisplayName("고용주 - 계약정보 비동의 근무자(INVITED, JOINED, DISAGREED) 가입 수락 - 실패")
-    public void permitDisagreeWorkerToJoin() throws Exception {
+    public void permitDisagreedWorkerToJoin() throws Exception {
         // given
         PermitWorkerToJoinReqDto permitWorkerToJoinReqDto = PermitWorkerToJoinReqDto.builder()
                 .waitingListId(1L)
