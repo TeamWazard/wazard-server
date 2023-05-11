@@ -29,4 +29,14 @@ public class WorkerManagementExceptionHandler {
         );
     }
 
+    @ExceptionHandler(WorkerNotFoundInWaitingListException.class)
+    public ResponseEntity<ErrorMessage> workerNotFoundInWaitingListException(WorkerNotFoundInWaitingListException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.ACCOUNT_NOT_FOUND.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }

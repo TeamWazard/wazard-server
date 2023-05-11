@@ -1,7 +1,9 @@
 package shop.wazard.application.port.out;
 
+import shop.wazard.application.domain.WaitingInfo;
+
 public interface WorkerManagementPort {
 
-    void updateWorkerWaitingStatus(Long accountId, Long companyId);
+    void changeWaitingStatus(WaitingInfo waitingInfo);
 
 }

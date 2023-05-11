@@ -17,6 +17,7 @@ public enum StatusEnum {
     NESTED_EMAIL(407, "이미 가입된 정보가 있습니다."),
     NOT_AUTHORIZED(408, "권한이 없습니다."),
     COMPANY_NOT_FOUND(409, "존재하지 않는 업장입니다."),
+    WORKER_NOT_FOUND_IN_WAITING_LIST(410, "대기자 명단에 존재하지 않는 근무자입니다."),
     FAIL_TO_UPLOAD_IMAGE(503, "이미지 업로드에 실패했습니다."),;
 
     private int statusCode;

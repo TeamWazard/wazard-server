@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.WorkerManagementPort;
-import shop.wazard.dto.ApproveWorkerReqDto;
-import shop.wazard.dto.ApproveWorkerResDto;
+import shop.wazard.dto.PermitWorkerToJoinReqDto;
+import shop.wazard.dto.PermitWorkerToJoinResDto;
 
 @Transactional
 @Service
@@ -16,7 +16,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final WorkerManagementPort workerManagementPort;
 
     @Override
-    public ApproveWorkerResDto permitWorkerToJoin(ApproveWorkerReqDto approveWorkerReqDto) {
+    public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto approveWorkerReqDto) {
         return null;
     }
 
