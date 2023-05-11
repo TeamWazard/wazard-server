@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ApproveWorkerResDto {
+public class PermitWorkerToJoinResDto {
 
     private String message;
 

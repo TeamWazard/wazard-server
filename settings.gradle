@@ -6,4 +6,3 @@ include 'entity-component'
 include 'company-component'
 include 's3-component'
 include 'worker-management-component'
-
