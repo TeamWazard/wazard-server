@@ -31,12 +31,16 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew customTest
-    - name: Action-Slack
+      run: ./gradlew customTest 
+    - name: Notify Slack
       uses: rtCamp/action-slack-notify@v3.4
-      with:
-        status: ${{job.status}}
-        author_name: Jarvis
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SLACK_WEBHOOK_URL: ${{ secret.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        status: ${{ job.status }}
+        message: |
+          Job: ${{ github.job }}
+          Repository: ${{ github.repository }}
+          Commit: ${{ github.sha }}
+          Event: ${{ github.event_name }}
+          Branch: ${{ github.ref }} 
