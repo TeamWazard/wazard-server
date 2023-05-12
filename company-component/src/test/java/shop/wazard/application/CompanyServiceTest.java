@@ -152,9 +152,9 @@ class CompanyServiceTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.get(0).getCompanyName(),getBelongedCompanyResDtoList.get(0).getCompanyName()),
-                () -> Assertions.assertEquals(result.get(1).getCompanyName(),getBelongedCompanyResDtoList.get(1).getCompanyName()),
-                () -> Assertions.assertEquals(result.get(2).getCompanyName(),getBelongedCompanyResDtoList.get(2).getCompanyName())
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(0).getCompanyName(), result.get(0).getCompanyName()),
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(1).getCompanyName(), result.get(1).getCompanyName()),
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(2).getCompanyName(), result.get(2).getCompanyName())
         );
     }
 
