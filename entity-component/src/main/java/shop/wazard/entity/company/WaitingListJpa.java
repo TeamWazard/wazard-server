@@ -21,11 +21,11 @@ public class WaitingListJpa extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
+    @JoinColumn(name = "accountId", nullable = false)
     private AccountJpa accountJpa;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "companyId")
+    @JoinColumn(name = "companyId", nullable = false)
     private CompanyJpa companyJpa;
 
     @Enumerated(EnumType.STRING)
