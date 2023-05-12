@@ -19,13 +19,14 @@ import shop.wazard.entity.company.*;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, WorkerManagementDbAdapter.class, AccountForWorkerManagementMapper.class, WorkerManagementMapper.class, RosterForWorkerManagementRepository.class, WaitingListForWorkerManagementRepository.class, AccountForWorkerManagementRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, WorkerManagementDbAdapter.class, AccountForWorkerManagementMapper.class, WorkerManagementMapper.class, RosterJpaForWorkerManagementRepository.class, WaitingListJpaForWorkerManagementRepository.class, AccountJpaForWorkerManagementRepository.class})
 class WorkerManagementDbAdapterTest {
 
     @Autowired
@@ -33,13 +34,13 @@ class WorkerManagementDbAdapterTest {
     @Autowired
     private AccountForWorkerManagementMapper accountForWorkerManagementMapper;
     @Autowired
-    private RosterForWorkerManagementRepository rosterForWorkerManagementRepository;
+    private RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
     @Autowired
-    private WaitingListForWorkerManagementRepository waitingListForWorkerManagementRepository;
+    private WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
     @Autowired
-    private AccountForWorkerManagementRepository accountForWorkerManagementRepository;
+    private AccountJpaForWorkerManagementRepository accountJpaForWorkerManagementRepository;
     @Autowired
-    private CompanyForWorkerManagementRepository companyForWorkerManagementRepository;
+    private CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
     @Autowired
     private EntityManager em;
     
@@ -50,8 +51,8 @@ class WorkerManagementDbAdapterTest {
         WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
 
         // when
-        WaitingListJpa savedWaitingListJpa = waitingListForWorkerManagementRepository.save(waitingListJpa);
-        WaitingListJpa result = waitingListForWorkerManagementRepository.findById(savedWaitingListJpa.getId()).get();
+        WaitingListJpa savedWaitingListJpa = waitingListJpaForWorkerManagementRepository.save(waitingListJpa);
+        WaitingListJpa result = waitingListJpaForWorkerManagementRepository.findById(savedWaitingListJpa.getId()).get();
 
         // then
         Assertions.assertAll(
@@ -71,7 +72,7 @@ class WorkerManagementDbAdapterTest {
                 .build();
 
         // when
-        WaitingListJpa savedWaitingListJpa = waitingListForWorkerManagementRepository.save(waitingListJpa);
+        WaitingListJpa savedWaitingListJpa = waitingListJpaForWorkerManagementRepository.save(waitingListJpa);
         savedWaitingListJpa.updateWaitingStatus(WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
 
         // then
@@ -86,9 +87,9 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
-        AccountJpa savedAccountJpa = accountForWorkerManagementRepository.save(accountJpa);
-        CompanyJpa savedCompanyJpa = companyForWorkerManagementRepository.save(companyJpa);
-        RosterJpa savedRosterJpa = rosterForWorkerManagementRepository.save(
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(
                 RosterJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa)
@@ -101,6 +102,81 @@ class WorkerManagementDbAdapterTest {
                 () -> Assertions.assertEquals(savedRosterJpa.getAccountJpa(), savedAccountJpa),
                 () -> Assertions.assertEquals(savedRosterJpa.getRosterTypeJpa(), RosterTypeJpa.EMPLOYEE)
         );
+    }
+
+    @Test
+    @DisplayName("고용주 - List<AccountJpa> 조회 - 성공")
+    public void getWorkersBelongedToCompanySuccess() throws Exception {
+        // given
+        Long companyId = setDefaultWorkerList();
+
+        // when
+        List<AccountJpa> result = accountJpaForWorkerManagementRepository.findWorkersBelongedToCompany(companyId);
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("test1@email.com", result.get(0).getEmail()),
+                () -> Assertions.assertEquals("test2@email.com", result.get(1).getEmail()),
+                () -> Assertions.assertEquals("test3@email.com", result.get(2).getEmail())
+        );
+    }
+
+    private Long setDefaultWorkerList() {
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+        AccountJpa accountJpa1 = AccountJpa.builder()
+                .email("test1@email.com")
+                .password("testPwd")
+                .userName("testName")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa accountJpa2 = AccountJpa.builder()
+                .email("test2@email.com")
+                .password("testPwd")
+                .userName("testName")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa accountJpa3 = AccountJpa.builder()
+                .email("test3@email.com")
+                .password("testPwd")
+                .userName("testName")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        AccountJpa savedAccountJpa1 = accountJpaForWorkerManagementRepository.save(accountJpa1);
+        AccountJpa savedAccountJpa2 = accountJpaForWorkerManagementRepository.save(accountJpa2);
+        AccountJpa savedAccountJpa3 = accountJpaForWorkerManagementRepository.save(accountJpa3);
+
+        rosterJpaForWorkerManagementRepository.save(RosterJpa.builder()
+                .accountJpa(savedAccountJpa1)
+                .companyJpa(savedCompanyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build());
+        rosterJpaForWorkerManagementRepository.save(RosterJpa.builder()
+                .accountJpa(savedAccountJpa2)
+                .companyJpa(savedCompanyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build());
+        rosterJpaForWorkerManagementRepository.save(RosterJpa.builder()
+                .accountJpa(savedAccountJpa3)
+                .companyJpa(savedCompanyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build());
+        em.flush();
+        return savedCompanyJpa.getId();
     }
 
     private AccountJpa setDefaultAccountJpa() {

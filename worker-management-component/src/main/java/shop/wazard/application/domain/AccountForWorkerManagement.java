@@ -12,7 +12,7 @@ public class AccountForWorkerManagement {
     private Long id;
     private String roles;
 
-    public void checkIsAuthorizedAccount() {
+    public void checkIsEmployer() {
         if (!isEmployer()) {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }

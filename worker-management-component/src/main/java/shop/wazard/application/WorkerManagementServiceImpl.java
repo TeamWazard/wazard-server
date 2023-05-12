@@ -29,7 +29,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(permitWorkerToJoinReqDto.getEmail());
-        accountForWorkerManagement.checkIsAuthorizedAccount();
+        accountForWorkerManagement.checkIsEmployer();
         WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto.getWaitingListId());
         waitingInfo.changeWaitingStatus();
         waitingListForWorkerManagementPort.updateWaitingStatus(waitingInfo);
@@ -39,10 +39,12 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
-        accountForWorkerManagement.checkIsAuthorizedAccount();
+        accountForWorkerManagement.checkIsEmployer();
         return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
     }
+
 }
