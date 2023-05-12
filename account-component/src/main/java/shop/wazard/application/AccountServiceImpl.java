@@ -58,6 +58,7 @@ class AccountServiceImpl implements AccountService {
         return LoginResDto.builder()
                 .accountId(account.getId())
                 .email(account.getMyProfile().getEmail())
+                .userName(account.getMyProfile().getUserName())
                 .role(account.getRoles())
                 .accessToken(jwtProvider.createAccessToken(authentication, account.getId()))
                 .build();
