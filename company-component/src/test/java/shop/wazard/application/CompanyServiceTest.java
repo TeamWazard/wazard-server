@@ -48,7 +48,7 @@ class CompanyServiceTest {
                 .companyContact("02-123-1234")
                 .salaryDate(10)
                 .build();
-        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultEmployerAccountForManagement();
         Company company = setDefaultCompanyForManagement();
 
         // when
@@ -71,7 +71,7 @@ class CompanyServiceTest {
                 .companyContact("02-123-1234")
                 .salaryDate(10)
                 .build();
-        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultEmployerAccountForManagement();
         Company company = setDefaultCompanyForManagement();
 
         //when
@@ -98,7 +98,7 @@ class CompanyServiceTest {
                 .email("test@email.com")
                 .companyId(1L)
                 .build();
-        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultEmployerAccountForManagement();
 
         //when
         Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
@@ -115,7 +115,7 @@ class CompanyServiceTest {
         GetOwnedCompanyReqDto getOwnedCompanyReqDto = GetOwnedCompanyReqDto.builder()
                 .email("test@gmail.com")
                 .build();
-        AccountForCompany accountForCompany = setDefaultAccountForManagement();
+        AccountForCompany accountForCompany = setDefaultEmployerAccountForManagement();
         List<GetOwnedCompanyResDto> getOwnedCompanyResDtoList = setDefaultOwnedCompanyList();
 
         // when
@@ -133,10 +133,42 @@ class CompanyServiceTest {
         );
     }
 
-    private AccountForCompany setDefaultAccountForManagement() {
+    @Test
+    @DisplayName("근무자 - 소속 업장 리스트 조회 - 성공")
+    void getBelongedCompany() throws Exception {
+        // given
+        GetBelongedCompanyReqDto getBelongedCompanyReqDto = GetBelongedCompanyReqDto.builder()
+                .email("test@email.com")
+                .build();
+        AccountForCompany accountForCompany = setDefaultEmployeeAccountForManagement();
+        List<GetBelongedCompanyResDto> getBelongedCompanyResDtoList = setDefaultBelongedCompanyList();
+
+        // when
+        Mockito.when(accountForCompanyPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForCompany);
+        Mockito.when(rosterForCompanyPort.getBelongedCompanyList(anyLong()))
+                .thenReturn(getBelongedCompanyResDtoList);
+        List<GetBelongedCompanyResDto> result = companyService.getBelongedCompanyList(1L, getBelongedCompanyReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(0).getCompanyName(), result.get(0).getCompanyName()),
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(1).getCompanyName(), result.get(1).getCompanyName()),
+                () -> Assertions.assertEquals(getBelongedCompanyResDtoList.get(2).getCompanyName(), result.get(2).getCompanyName())
+        );
+    }
+
+    private AccountForCompany setDefaultEmployerAccountForManagement() {
         return AccountForCompany.builder()
                 .id(1L)
                 .roles("EMPLOYER")
+                .build();
+    }
+
+    private AccountForCompany setDefaultEmployeeAccountForManagement() {
+        return AccountForCompany.builder()
+                .id(1L)
+                .roles("EMPLOYEE")
                 .build();
     }
 
@@ -178,6 +210,35 @@ class CompanyServiceTest {
         getOwnedCompanyResDtoList.add(getOwnedCompanyResDto2);
         getOwnedCompanyResDtoList.add(getOwnedCompanyResDto3);
         return getOwnedCompanyResDtoList;
+    }
+
+    private List<GetBelongedCompanyResDto> setDefaultBelongedCompanyList() {
+        List<GetBelongedCompanyResDto> getBelongedCompanyResDto = new ArrayList<>();
+        GetBelongedCompanyResDto getBelongedCompanyResDto1 = GetBelongedCompanyResDto.builder()
+                .companyName("companyName1")
+                .companyAddress("companyAddress1")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test1.com")
+                .build();
+        GetBelongedCompanyResDto getBelongedCompanyResDto2 = GetBelongedCompanyResDto.builder()
+                .companyName("companyName2")
+                .companyAddress("companyAddress2")
+                .companyContact("02-222-2222")
+                .salaryDate(2)
+                .logoImageUrl("www.test2.com")
+                .build();
+        GetBelongedCompanyResDto getBelongedCompanyResDto3 = GetBelongedCompanyResDto.builder()
+                .companyName("companyName3")
+                .companyAddress("companyAddress3")
+                .companyContact("02-333-3333")
+                .salaryDate(3)
+                .logoImageUrl("www.test3.com")
+                .build();
+        getBelongedCompanyResDto.add(getBelongedCompanyResDto1);
+        getBelongedCompanyResDto.add(getBelongedCompanyResDto2);
+        getBelongedCompanyResDto.add(getBelongedCompanyResDto3);
+        return getBelongedCompanyResDto;
     }
 
 }
