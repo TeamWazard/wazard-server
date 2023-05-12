@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.domain.WaitingStatus;
 import shop.wazard.entity.company.WaitingListJpa;
+import shop.wazard.entity.company.WaitingStatusJpa;
 
 @Component
 @Slf4j
@@ -19,4 +20,7 @@ class WorkerManagementMapper {
                 .build();
     }
 
+    public void updateWaitingStatus(WaitingListJpa waitingListJpa, WaitingInfo waitingInfo) {
+        waitingListJpa.updateWaitingStatus(WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
+    }
 }
