@@ -32,6 +32,10 @@ public class CommuteRecordJpa extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CommuteTypeJpa commuteTypeJpa;
 
+    private boolean absent;
+
+    private boolean tardy;
+
     private LocalDateTime commuteTime;
 
 }

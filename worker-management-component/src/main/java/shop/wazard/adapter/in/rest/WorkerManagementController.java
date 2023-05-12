@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerManagementService;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
-import shop.wazard.dto.PermitWorkerToJoinResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.dto.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,4 +28,9 @@ class WorkerManagementController {
         return ResponseEntity.ok(workerBelongedToCompanyResDtoList);
     }
 
+    @PostMapping("/absent/{accountId}")
+    public ResponseEntity<UpdateAbsentResDto> markingAbsent(@PathVariable Long accountId, @Valid @RequestBody UpdateAbsentReqDto updateAbsentReqDto) {
+        UpdateAbsentResDto updateAbsentResDto = workerManagementService.markingAbsent(updateAbsentReqDto);
+        return ResponseEntity.ok(updateAbsentResDto);
+    }
 }

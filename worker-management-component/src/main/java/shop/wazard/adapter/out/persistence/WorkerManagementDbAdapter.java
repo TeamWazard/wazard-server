@@ -6,6 +6,7 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort {
+class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, CommuteRecordForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -31,6 +32,7 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final CompanyForWorkerManagementRepository companyForWorkerManagementRepository;
     private final RosterForWorkerManagementRepository rosterForWorkerManagementRepository;
     private final WaitingListForWorkerManagementRepository waitingListForWorkerManagementRepository;
+    private final CommuteRecordForWorkerManagementRepository commuteRecordForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
