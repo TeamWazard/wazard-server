@@ -23,7 +23,9 @@ public class AbsentJpa extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
+    @Column(nullable = false)
     private AccountJpa accountJpa;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId")
