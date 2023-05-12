@@ -14,4 +14,6 @@ public interface CompanyService {
 
     List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId, GetOwnedCompanyReqDto getOwnedCompanyReqDto);
 
+    List<GetBelongedCompanyResDto> getBelongedCompanyList(Long accountId, GetBelongedCompanyReqDto getBelongedCompanyReqDto);
+
 }

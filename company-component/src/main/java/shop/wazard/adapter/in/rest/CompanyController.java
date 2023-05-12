@@ -45,4 +45,11 @@ class CompanyController {
         return ResponseEntity.ok(getOwnedCompanyList);
     }
 
+    @Certification
+    @GetMapping("/belong/{accountId}")
+    public ResponseEntity<List<GetBelongedCompanyResDto>> getBelongedCompanyList(@PathVariable Long accountId, @Valid @RequestBody GetBelongedCompanyReqDto getBelongedCompanyReqDto) {
+        List<GetBelongedCompanyResDto> getBelongedCompanyResDto = companyService.getBelongedCompanyList(accountId, getBelongedCompanyReqDto);
+        return ResponseEntity.ok(getBelongedCompanyResDto);
+    }
+
 }
