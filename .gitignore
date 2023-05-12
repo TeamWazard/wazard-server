@@ -54,7 +54,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-out/production/*
+*/out/production/*
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
