@@ -11,7 +11,7 @@ import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForAttendancePort {
 
     private final AttendanceMapper attendanceMapper;
-    private final AccountJpaFroAttendanceRepository accountJpaFroAttendanceRepository;
+    private final AccountJpaForAttendanceRepository accountJpaForAttendanceRepository;
     private final CommuteRecordJpaForAttendancePort commuteRecordJpaForAttendancePort;
 
     @Override

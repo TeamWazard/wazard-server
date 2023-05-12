@@ -5,7 +5,7 @@ import shop.wazard.entity.account.AccountJpa;
 
 import java.util.Optional;
 
-interface AccountJpaFroAttendanceRepository extends JpaRepository<AccountJpa, Long> {
+interface AccountJpaForAttendanceRepository extends JpaRepository<AccountJpa, Long> {
 
     Optional<AccountJpa> findByEmail(String email);
 
