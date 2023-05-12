@@ -31,7 +31,7 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
     private final RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
     private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
-    private final CommuteRecordForWorkerManagementRepository commuteRecordForWorkerManagementRepository;
+    private final CommuteRecordJpaForWorkerManagementRepository commuteRecordForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
