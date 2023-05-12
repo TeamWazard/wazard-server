@@ -8,12 +8,10 @@ import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
-import shop.wazard.dto.PermitWorkerToJoinResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.dto.*;
 
 import java.util.List;
 
@@ -25,6 +23,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final AccountForWorkerManagementPort accountForWorkerManagementPort;
     private final RosterForWorkerManagementPort rosterForWorkerManagementPort;
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    private final CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
 
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
@@ -45,6 +44,11 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
+    }
+
+    @Override
+    public UpdateAbsentResDto markingAbsent(UpdateAbsentReqDto updateAbsentReqDto) {
+        return null;
     }
 
 }
