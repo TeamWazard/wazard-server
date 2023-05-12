@@ -84,19 +84,21 @@ class WorkerManagementDbAdapterTest {
         // given
         AccountJpa accountJpa = setDefaultAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
-        RosterJpa rosterJpa = RosterJpa.builder()
-                .accountJpa(accountJpa)
-                .companyJpa(companyJpa)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
-                .build();
 
         // when
-        RosterJpa savedRosterJpa = rosterForWorkerManagementRepository.save(rosterJpa);
+        AccountJpa savedAccountJpa = accountForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyForWorkerManagementRepository.save(companyJpa);
+        RosterJpa savedRosterJpa = rosterForWorkerManagementRepository.save(
+                RosterJpa.builder()
+                .accountJpa(savedAccountJpa)
+                .companyJpa(savedCompanyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build());
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(savedRosterJpa.getCompanyJpa(), companyJpa),
-                () -> Assertions.assertEquals(savedRosterJpa.getAccountJpa(), accountJpa),
+                () -> Assertions.assertEquals(savedRosterJpa.getCompanyJpa(), savedCompanyJpa),
+                () -> Assertions.assertEquals(savedRosterJpa.getAccountJpa(), savedAccountJpa),
                 () -> Assertions.assertEquals(savedRosterJpa.getRosterTypeJpa(), RosterTypeJpa.EMPLOYEE)
         );
     }
