@@ -10,8 +10,6 @@ import shop.wazard.application.port.out.AccountForCompanyPort;
 import shop.wazard.application.port.out.CompanyPort;
 import shop.wazard.application.port.out.RosterForCompanyPort;
 import shop.wazard.dto.*;
-import shop.wazard.exception.NotAuthorizedException;
-import shop.wazard.util.exception.StatusEnum;
 
 import java.util.List;
 
@@ -27,9 +25,7 @@ class CompanyServiceImpl implements CompanyService {
     @Override
     public RegisterCompanyResDto registerCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         AccountForCompany accountForCompany = accountForCompanyPort.findAccountByEmail(registerCompanyReqDto.getEmail());
-        if (!accountForCompany.isEmployer()) {
-            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
-        }
+        accountForCompany.checkIsEmployer();
         companyPort.saveCompany(accountForCompany.getEmail(), Company.createCompany(registerCompanyReqDto));
         return RegisterCompanyResDto.builder()
                 .message("업장 등록이 완료되었습니다.")
@@ -39,9 +35,7 @@ class CompanyServiceImpl implements CompanyService {
     @Override
     public UpdateCompanyInfoResDto updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
         AccountForCompany accountForCompany = accountForCompanyPort.findAccountByEmail(updateCompanyInfoReqDto.getEmail());
-        if (!accountForCompany.isEmployer()) {
-            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
-        }
+        accountForCompany.checkIsEmployer();
         Company company = companyPort.findCompanyById(updateCompanyInfoReqDto.getCompanyId());
         company.getCompanyInfo().updateCompanyInfo(updateCompanyInfoReqDto);
         companyPort.updateCompanyInfo(company);
@@ -53,9 +47,7 @@ class CompanyServiceImpl implements CompanyService {
     @Override
     public DeleteCompanyResDto deleteCompany(DeleteCompanyReqDto deleteCompanyReqDto) {
         AccountForCompany accountForCompany = accountForCompanyPort.findAccountByEmail(deleteCompanyReqDto.getEmail());
-        if (!accountForCompany.isEmployer()) {
-            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
-        }
+        accountForCompany.checkIsEmployer();
         rosterForCompanyPort.deleteRoster(deleteCompanyReqDto.getCompanyId());
         return DeleteCompanyResDto.builder()
                 .message("업장이 삭제되었습니다.")
@@ -66,10 +58,16 @@ class CompanyServiceImpl implements CompanyService {
     @Override
     public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId, GetOwnedCompanyReqDto getOwnedCompanyReqDto) {
         AccountForCompany accountForCompany = accountForCompanyPort.findAccountByEmail(getOwnedCompanyReqDto.getEmail());
-        if (!accountForCompany.isEmployer()) {
-            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
-        }
+        accountForCompany.checkIsEmployer();
         return rosterForCompanyPort.getOwnedCompanyList(accountId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetBelongedCompanyResDto> getBelongedCompanyList(Long accountId, GetBelongedCompanyReqDto getBelongedCompanyReqDto) {
+        AccountForCompany accountForCompany = accountForCompanyPort.findAccountByEmail(getBelongedCompanyReqDto.getEmail());
+        accountForCompany.checkIsEmployee();
+        return rosterForCompanyPort.getBelongedCompanyList(accountId);
     }
 
 }

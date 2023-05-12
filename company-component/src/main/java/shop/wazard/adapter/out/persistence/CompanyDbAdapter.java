@@ -7,6 +7,7 @@ import shop.wazard.application.domain.Company;
 import shop.wazard.application.port.out.AccountForCompanyPort;
 import shop.wazard.application.port.out.CompanyPort;
 import shop.wazard.application.port.out.RosterForCompanyPort;
+import shop.wazard.dto.GetBelongedCompanyResDto;
 import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
@@ -68,6 +69,12 @@ class CompanyDbAdapter implements CompanyPort, AccountForCompanyPort, RosterForC
     public List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId) {
         List<CompanyJpa> ownedCompanyJpaList = companyJpaRepository.findOwnedCompanyList(accountId);
         return companyMapper.toOwnedCompanyList(ownedCompanyJpaList);
+    }
+
+    @Override
+    public List<GetBelongedCompanyResDto> getBelongedCompanyList(Long accountId) {
+        List<CompanyJpa> ownedCompanyJpaList = companyJpaRepository.findBelongedCompanyList(accountId);
+        return companyMapper.toBelongedCompanyList(ownedCompanyJpaList);
     }
 
 }

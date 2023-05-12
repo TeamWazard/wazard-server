@@ -3,6 +3,7 @@ package shop.wazard.adapter.out.persistence;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.Company;
 import shop.wazard.application.domain.CompanyInfo;
+import shop.wazard.dto.GetBelongedCompanyResDto;
 import shop.wazard.dto.GetOwnedCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
@@ -61,6 +62,19 @@ class CompanyMapper {
     public List<GetOwnedCompanyResDto> toOwnedCompanyList(List<CompanyJpa> ownedCompanyJpaList) {
         return ownedCompanyJpaList.stream()
                 .map(companyJpa -> GetOwnedCompanyResDto.builder()
+                        .companyId(companyJpa.getId())
+                        .companyName(companyJpa.getCompanyName())
+                        .companyAddress(companyJpa.getCompanyAddress())
+                        .companyContact(companyJpa.getCompanyContact())
+                        .logoImageUrl(companyJpa.getLogoImageUrl())
+                        .salaryDate(companyJpa.getSalaryDate())
+                        .build()
+                ).collect(Collectors.toList());
+    }
+
+    public List<GetBelongedCompanyResDto> toBelongedCompanyList(List<CompanyJpa> belongedCompanyJpaList) {
+        return belongedCompanyJpaList.stream()
+                .map(companyJpa -> GetBelongedCompanyResDto.builder()
                         .companyId(companyJpa.getId())
                         .companyName(companyJpa.getCompanyName())
                         .companyAddress(companyJpa.getCompanyAddress())

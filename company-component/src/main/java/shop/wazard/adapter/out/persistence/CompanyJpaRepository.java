@@ -17,4 +17,7 @@ interface CompanyJpaRepository extends JpaRepository<CompanyJpa, Long> {
     @Query("select c from CompanyJpa c inner join c.rosterJpaList r where r.accountJpa.id = :accountId and r.baseStatusJpa = 'ACTIVE'")
     List<CompanyJpa> findOwnedCompanyList(@Param("accountId") Long accountId);
 
+    @Query("select c from CompanyJpa c inner join c.rosterJpaList r where r.accountJpa.id = :accountId and r.baseStatusJpa = 'ACTIVE'")
+    List<CompanyJpa> findBelongedCompanyList(@Param("accountId") Long accountId);
+
 }
