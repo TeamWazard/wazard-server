@@ -6,7 +6,6 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
@@ -28,50 +27,50 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
-    private final AccountForWorkerManagementRepository accountForWorkerManagementRepository;
-    private final CompanyForWorkerManagementRepository companyForWorkerManagementRepository;
-    private final RosterForWorkerManagementRepository rosterForWorkerManagementRepository;
-    private final WaitingListForWorkerManagementRepository waitingListForWorkerManagementRepository;
+    private final AccountJpaForWorkerManagementRepository accountJpaForWorkerManagementRepository;
+    private final CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
+    private final RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
+    private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
     private final CommuteRecordForWorkerManagementRepository commuteRecordForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
-        AccountJpa accountJpa = accountForWorkerManagementRepository.findById(rosterForWorkerManagement.getAccountId())
+        AccountJpa accountJpa = accountJpaForWorkerManagementRepository.findById(rosterForWorkerManagement.getAccountId())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        CompanyJpa companyJpa = companyForWorkerManagementRepository.findById(rosterForWorkerManagement.getCompanyId())
+        CompanyJpa companyJpa = companyJpaForWorkerManagementRepository.findById(rosterForWorkerManagement.getCompanyId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         RosterJpa rosterJpa = RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .rosterTypeJpa(RosterTypeJpa.valueOf(rosterForWorkerManagement.getRelationType().getType()))
                 .build();
-        rosterForWorkerManagementRepository.save(rosterJpa);
+        rosterJpaForWorkerManagementRepository.save(rosterJpa);
     }
 
     @Override
     public WaitingInfo findWaitingInfo(Long waitingListId) {
-        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findById(waitingListId)
+        WaitingListJpa waitingListJpa = waitingListJpaForWorkerManagementRepository.findById(waitingListId)
                 .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
         return workerForManagementMapper.toWaitingInfoDomain(waitingListJpa);
     }
 
     @Override
     public AccountForWorkerManagement findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountForWorkerManagementRepository.findByEmail(email)
+        AccountJpa accountJpa = accountJpaForWorkerManagementRepository.findByEmail(email)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForWorkerManagementMapper.toAccountDomain(accountJpa);
     }
 
     @Override
     public void updateWaitingStatus(WaitingInfo waitingInfo) {
-        WaitingListJpa waitingListJpa = waitingListForWorkerManagementRepository.findById(waitingInfo.getWaitingListId())
+        WaitingListJpa waitingListJpa = waitingListJpaForWorkerManagementRepository.findById(waitingInfo.getWaitingListId())
                 .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
         workerForManagementMapper.updateWaitingStatus(waitingListJpa, waitingInfo);
     }
 
     @Override
     public List<WorkerBelongedToCompanyResDto> getWorkersBelongedToCompany(Long companyId) {
-        List<AccountJpa> workersBelongedCompany = rosterForWorkerManagementRepository.findAllByCompanyId(companyId);
+        List<AccountJpa> workersBelongedCompany = accountJpaForWorkerManagementRepository.findWorkersBelongedToCompany(companyId);
         return workerForManagementMapper.toWorkersBelongedToCompany(workersBelongedCompany);
     }
 

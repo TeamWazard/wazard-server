@@ -17,7 +17,9 @@ import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
+import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
 import shop.wazard.exception.JoinWorkerDeniedException;
+import shop.wazard.exception.NotAuthorizedException;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -89,6 +91,48 @@ class WorkerManagementServiceTest {
 
         // then
         Assertions.assertThrows(JoinWorkerDeniedException.class, () -> workerManagementService.permitWorkerToJoin(permitWorkerToJoinReqDto));
+    }
+
+    @Test
+    @DisplayName("고용주 - 업장 근무자 리스트 조회 - 성공")
+    public void getWorkersBelongedToCompanySuccess() throws Exception {
+        // given
+        WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto = WorkerBelongedToCompanyReqDto.builder()
+                .companyId(1L)
+                .email("test@email.com")
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(2L)
+                .roles("EMPLOYER")
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+
+        // then
+        Assertions.assertDoesNotThrow(() -> workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto));
+    }
+
+    @Test
+    @DisplayName("근무자 - 업장 근무자 리스트 조회 불가능 - 실패")
+    public void getWorkersBelongedToCompanyByWorkerFailed() throws Exception {
+        // given
+        WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto = WorkerBelongedToCompanyReqDto.builder()
+                .companyId(1L)
+                .email("test@email.com")
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(2L)
+                .roles("EMPLOYEE")
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+
+        // then
+        Assertions.assertThrows(NotAuthorizedException.class, () -> workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto));
     }
 
 }
