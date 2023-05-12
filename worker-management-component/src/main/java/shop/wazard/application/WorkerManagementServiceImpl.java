@@ -12,6 +12,10 @@ import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 import shop.wazard.dto.PermitWorkerToJoinResDto;
+import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
+import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+
+import java.util.List;
 
 @Transactional
 @Service
@@ -35,4 +39,10 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
                 .build();
     }
 
+    @Override
+    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
+        accountForWorkerManagement.checkIsAuthorizedAccount();
+        return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
+    }
 }

@@ -8,6 +8,7 @@ import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
@@ -17,6 +18,8 @@ import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
 import shop.wazard.util.exception.StatusEnum;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -63,4 +66,11 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
                 .orElseThrow(() -> new WorkerNotFoundInWaitingListException(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getMessage()));
         workerForManagementMapper.updateWaitingStatus(waitingListJpa, waitingInfo);
     }
+
+    @Override
+    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedToCompany(Long companyId) {
+        List<AccountJpa> workersBelongedCompany = rosterForWorkerManagementRepository.findAllByCompanyId(companyId);
+        return workerForManagementMapper.toWorkersBelongedToCompany(workersBelongedCompany);
+    }
+
 }
