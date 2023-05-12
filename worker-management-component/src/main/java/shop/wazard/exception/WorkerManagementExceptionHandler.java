@@ -49,4 +49,14 @@ public class WorkerManagementExceptionHandler {
         );
     }
 
+    @ExceptionHandler(WorkerNotFoundInWaitingListException.class)
+    public ResponseEntity<ErrorMessage> workerNotFoundInWaitingListException(WorkerNotFoundInWaitingListException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.WORKER_NOT_FOUND_IN_WAITING_LIST.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }

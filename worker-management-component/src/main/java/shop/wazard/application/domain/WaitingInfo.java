@@ -9,6 +9,7 @@ import shop.wazard.util.exception.StatusEnum;
 @Builder
 public class WaitingInfo {
 
+    private Long waitingListId;
     private Long companyId;
     private Long accountId;
     private WaitingStatus waitingStatus;
