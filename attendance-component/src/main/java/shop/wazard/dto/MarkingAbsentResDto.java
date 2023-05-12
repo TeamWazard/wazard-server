@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UpdateAbsentResDto {
+public class MarkingAbsentResDto {
 
     private String message;
 
