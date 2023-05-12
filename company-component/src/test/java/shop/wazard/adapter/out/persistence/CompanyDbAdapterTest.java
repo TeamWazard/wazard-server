@@ -187,9 +187,27 @@ class CompanyDbAdapterTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.get(0).getCompanyName(), "companyName1"),
-                () -> Assertions.assertEquals(result.get(1).getCompanyName(), "companyName2"),
-                () -> Assertions.assertEquals(result.get(2).getCompanyName(), "companyName3")
+                () -> Assertions.assertEquals("companyName1", result.get(0).getCompanyName()),
+                () -> Assertions.assertEquals("companyName2", result.get(1).getCompanyName()),
+                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName())
+        );
+    }
+
+    @Test
+    @DisplayName("고용주 - 소속 업장 리스트 조회 - 리스트 조회")
+    public void getBelongdeCompanyList() throws Exception {
+        // given
+        Long accountId = setDefaultOwnedCompanyList();
+
+        // when
+        List<CompanyJpa> result = companyJpaRepository.findBelongedCompanyList(accountId);
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals("companyName1", result.get(0).getCompanyName()),
+                () -> Assertions.assertEquals("companyName2", result.get(1).getCompanyName()),
+                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName())
         );
     }
 
