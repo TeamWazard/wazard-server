@@ -54,7 +54,7 @@ class AttendanceDbAdapterTest {
     @DisplayName("고용주 - 근무자 결석 처리 - 성공")
     void markingAbsent() throws Exception {
         // given
-        AccountJpa accountJpa = setDefaultAccountJpa();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
@@ -72,16 +72,29 @@ class AttendanceDbAdapterTest {
         Assertions.assertEquals(LocalDate.now().getDayOfWeek(), absentJpa.getAbsentDate().getDayOfWeek());
     }
 
-    private AccountJpa setDefaultAccountJpa() {
+    private AccountJpa setDefaultEmployerAccountJpa() {
         return AccountJpa.builder()
-                .email("test@email.com")
+                .email("testEmployer@email.com")
                 .password("testPwd")
-                .userName("testName")
+                .userName("testName1")
                 .phoneNumber("010-1111-1111")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
                 .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYER")
+                .build();
+    }
+
+    private AccountJpa setDefaultEmployeeAccountJpa() {
+        return AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName2")
+                .phoneNumber("010-2222-2222")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
                 .build();
     }
 
