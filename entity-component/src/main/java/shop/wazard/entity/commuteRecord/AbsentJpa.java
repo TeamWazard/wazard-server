@@ -1,6 +1,7 @@
 package shop.wazard.entity.commuteRecord;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
@@ -22,17 +23,22 @@ public class AbsentJpa extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
-    @Column(nullable = false)
+    @JoinColumn(name = "accountId", nullable = false)
     private AccountJpa accountJpa;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "companyId")
-    @Column(nullable = false)
+    @JoinColumn(name = "companyId", nullable = false)
     private CompanyJpa companyJpa;
 
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate absentDate;
+
+    @Builder
+    public AbsentJpa(AccountJpa accountJpa, CompanyJpa companyJpa, LocalDate absentDate) {
+        this.accountJpa = accountJpa;
+        this.companyJpa = companyJpa;
+        this.absentDate = absentDate;
+    }
 
 }

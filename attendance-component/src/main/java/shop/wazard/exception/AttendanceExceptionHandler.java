@@ -19,6 +19,16 @@ public class AttendanceExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CompanyNotFoundException.class)
+    public ResponseEntity<ErrorMessage> companyNotFoundException(CompanyNotFoundException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.COMPANY_NOT_FOUND.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
     @ExceptionHandler(NotAuthorizedException.class)
     public ResponseEntity<ErrorMessage> notAuthorizedException(NotAuthorizedException e) {
         return ResponseEntity.badRequest().body(
