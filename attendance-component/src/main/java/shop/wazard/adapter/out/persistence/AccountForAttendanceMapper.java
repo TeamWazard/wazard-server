@@ -14,6 +14,4 @@ public class AccountForAttendanceMapper {
                 .build();
     }
 
-    public AccountJpa toAccountJpaForAttendance(AccountForAttendance accountForAttendance) {
-    }
 }

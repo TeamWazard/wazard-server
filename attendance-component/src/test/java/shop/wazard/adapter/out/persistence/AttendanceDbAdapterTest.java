@@ -28,6 +28,7 @@ import java.time.LocalDate;
         EntityManager.class,
         AttendanceDbAdapter.class,
         AttendanceMapper.class,
+        AccountForAttendanceMapper.class,
         AccountJpaForAttendanceRepository.class,
         AbsentJpaForAttendanceRepository.class,
         CompanyJpaForAttendanceRepository.class,
@@ -36,6 +37,8 @@ class AttendanceDbAdapterTest {
 
     @Autowired
     private AttendanceMapper attendanceMapper;
+    @Autowired
+    private AccountForAttendanceMapper accountForAttendanceMapper;
     @Autowired
     private AccountJpaForAttendanceRepository accountJpaForAttendanceRepository;
     @Autowired

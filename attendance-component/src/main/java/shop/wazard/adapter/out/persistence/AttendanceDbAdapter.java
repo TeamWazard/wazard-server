@@ -36,10 +36,8 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
 
     @Override
     public void markingAbsent(AbsentForAttendance absentForAttendance) {
-        AccountJpa accountJpa = accountJpaForAttendanceRepository.findById(absentForAttendance.getAccountId())
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        CompanyJpa companyJpa = companyJpaForAttendanceRepository.findById(absentForAttendance.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        AccountJpa accountJpa = findByAccountId(absentForAttendance.getAccountId());
+        CompanyJpa companyJpa = findByCompanyId(absentForAttendance.getCompanyId());
         absentJpaForAttendanceRepository.save(
                 AbsentJpa.builder()
                 .accountJpa(accountJpa)
@@ -47,4 +45,15 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
                 .absentDate(LocalDate.now())
                 .build());
     }
+
+    public AccountJpa findByAccountId(Long accountId) {
+        return accountJpaForAttendanceRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+    }
+
+    public CompanyJpa findByCompanyId(Long companyId) {
+        return companyJpaForAttendanceRepository.findById(companyId)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+    }
+
 }
