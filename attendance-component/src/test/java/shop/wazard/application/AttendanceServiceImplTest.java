@@ -11,7 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForAttendance;
 import shop.wazard.application.port.in.AttendanceService;
+import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
+import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.MarkingAbsentReqDto;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,6 +26,10 @@ class AttendanceServiceImplTest {
     private AttendanceService attendanceService;
     @MockBean
     private AccountForAttendancePort accountForAttendancePort;
+    @MockBean
+    private CommuteRecordForAttendancePort commuteRecordForAttendancePort;
+    @MockBean
+    private AbsentForAttendancePort absentForAttendancePort;
 
     @Test
     @DisplayName("고용주 - 근무자 결석 처리 - 성공")
@@ -46,4 +52,5 @@ class AttendanceServiceImplTest {
         // then
         Assertions.assertDoesNotThrow(() -> attendanceService.markingAbsent(markingAbsentReqDto));
     }
+
 }
