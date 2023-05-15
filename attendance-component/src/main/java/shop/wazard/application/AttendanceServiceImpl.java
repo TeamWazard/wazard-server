@@ -38,7 +38,8 @@ class AttendanceServiceImpl implements AttendanceService {
     public CommuteRecordResDto recordCommute(CommuteRecordReqDto commuteRecordReqDto) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(commuteRecordReqDto.getEmail());
         accountForAttendance.checkIsEmployee();
-        commuteRecordForAttendancePort.recordCommute(CommuteRecordForAttendance.createCommuteRecordForAttendance(commuteRecordReqDto));
+        CommuteRecordForAttendance commuteRecordForAttendance = CommuteRecordForAttendance.createCommuteRecordForAttendance(commuteRecordReqDto);
+        commuteRecordForAttendance.checkTardyState();
         return CommuteRecordResDto.builder()
                 .message("기록 되었습니다.")
                 .build();
