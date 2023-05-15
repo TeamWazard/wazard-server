@@ -4,6 +4,6 @@ import shop.wazard.application.domain.CommuteRecordForAttendance;
 
 public interface CommuteRecordForAttendancePort {
 
-    void goToWork(CommuteRecordForAttendance commuteRecordForAttendance);
+    void recordCommute(CommuteRecordForAttendance commuteRecordForAttendance);
 
 }

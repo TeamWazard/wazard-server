@@ -50,7 +50,7 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
     }
 
     @Override
-    public void goToWork(CommuteRecordForAttendance commuteRecordForAttendance) {
+    public void recordCommute(CommuteRecordForAttendance commuteRecordForAttendance) {
 
     }
 }

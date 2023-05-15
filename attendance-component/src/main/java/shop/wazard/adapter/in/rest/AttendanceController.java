@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.AttendanceService;
-import shop.wazard.dto.GoToWorkReqDto;
-import shop.wazard.dto.GoToWorkResDto;
+import shop.wazard.dto.CommuteRecordReqDto;
+import shop.wazard.dto.CommuteRecordResDto;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.MarkingAbsentResDto;
 
@@ -24,10 +24,10 @@ class AttendanceController {
         return ResponseEntity.ok(markingAbsentResDto);
     }
 
-    @PostMapping("/attend/{accountId}")
-    public ResponseEntity<GoToWorkResDto> goToWork(@PathVariable Long accountId, @Valid @RequestBody GoToWorkReqDto goToWorkReqDto) {
-        GoToWorkResDto goToWorkResDto = attendanceService.goToWork(goToWorkReqDto);
-        return ResponseEntity.ok(goToWorkResDto);
+    @PostMapping("/commute/{accountId}")
+    public ResponseEntity<CommuteRecordResDto> recordCommute(@PathVariable Long accountId, @Valid @RequestBody CommuteRecordReqDto commuteRecordReqDto) {
+        CommuteRecordResDto commuteRecordResDto = attendanceService.recordCommute(commuteRecordReqDto);
+        return ResponseEntity.ok(commuteRecordResDto);
     }
 
 }

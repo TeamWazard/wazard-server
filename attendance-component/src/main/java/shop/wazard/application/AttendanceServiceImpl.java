@@ -9,8 +9,8 @@ import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.GoToWorkReqDto;
-import shop.wazard.dto.GoToWorkResDto;
+import shop.wazard.dto.CommuteRecordReqDto;
+import shop.wazard.dto.CommuteRecordResDto;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.MarkingAbsentResDto;
 
@@ -34,7 +34,7 @@ class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public GoToWorkResDto goToWork(GoToWorkReqDto goToWorkReqDto) {
+    public CommuteRecordResDto recordCommute(CommuteRecordReqDto commuteRecordReqDto) {
         return null;
     }
 }
