@@ -59,11 +59,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { data: pullRequest } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
+            const pullRequest = context.payload.pull_request;
 
             await github.rest.issues.createComment({
               owner: context.repo.owner,
