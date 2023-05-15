@@ -45,12 +45,21 @@ class WorkerManagementDbAdapterTest {
     private EntityManager em;
     
     @Test
-    @DisplayName("고용주 - 대기자 명단에서 특정 근무자 조회 - 성공")
+    @DisplayName("고용주 - 업장 초대 대기목록에서 근무자 존재 유무 확인 - WaitingListJpa 조회")
     public void findWaitingInfo() throws Exception {
         // given
-        WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        WaitingListJpa waitingListJpa = WaitingListJpa.builder()
+                .companyJpa(companyJpa)
+                .accountJpa(accountJpa)
+                .waitingStatusJpa(WaitingStatusJpa.AGREED)
+                .build();
+
         WaitingListJpa savedWaitingListJpa = waitingListJpaForWorkerManagementRepository.save(waitingListJpa);
         WaitingListJpa result = waitingListJpaForWorkerManagementRepository.findById(savedWaitingListJpa.getId()).get();
 
@@ -63,10 +72,19 @@ class WorkerManagementDbAdapterTest {
     }
 
     @Test
-    @DisplayName("고용주 - 근무자 업장 초대 수락 상태 변경 - 성공")
+    @DisplayName("고용주 - 근무자 업장 초대 시, JOINED 상태로 변경 - WaitingListJpa waitingStatus 변경")
     public void changeWaitingStatus() throws Exception {
         // given
-        WaitingListJpa waitingListJpa = setDefaultWaitingListJpa();
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        WaitingListJpa waitingListJpa = WaitingListJpa.builder()
+                .companyJpa(companyJpa)
+                .accountJpa(accountJpa)
+                .waitingStatusJpa(WaitingStatusJpa.AGREED)
+                .build();
         WaitingInfo waitingInfo = WaitingInfo.builder()
                 .waitingStatus(WaitingStatus.JOINED)
                 .build();
@@ -199,16 +217,6 @@ class WorkerManagementDbAdapterTest {
                 .companyContact("02-111-1111")
                 .salaryDate(1)
                 .logoImageUrl("www.test.com")
-                .build();
-    }
-
-    private WaitingListJpa setDefaultWaitingListJpa() {
-        CompanyJpa companyJpa = setDefaultCompanyJpa();
-        AccountJpa accountJpa = setDefaultAccountJpa();
-        return WaitingListJpa.builder()
-                .companyJpa(companyJpa)
-                .accountJpa(accountJpa)
-                .waitingStatusJpa(WaitingStatusJpa.AGREED)
                 .build();
     }
 
