@@ -24,7 +24,6 @@ jar {
 
 task customTest(type: Test) {
 	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
-	useJUnitPlatform()
 }
 
 test.dependsOn customTest
