@@ -15,7 +15,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -48,16 +47,20 @@ jobs:
         run: echo "::set-output name=mergeable::false"
       - name: Comment on pull request
         if: always() && github.event.pull_request
-        run: |
-          const { context } = require('@actions/github');
-          const core = require('@actions/core');
-          const { Octokit } = require('@octokit/rest');
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pullRequestNumber = context.payload.pull_request.number;
+            const { data: pullRequest } = await github.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullRequestNumber
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pullRequestNumber,
+              body: 'The tests have completed. You can find the status in the workflow logs.'
+            });
 
-          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-
-          octokit.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.payload.pull_request.number,
-            body: 'The tests have completed. You can find the status in the workflow logs.'
-          });
