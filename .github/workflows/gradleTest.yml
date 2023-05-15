@@ -47,16 +47,15 @@ jobs:
         run: echo "::set-output name=mergeable::false"
       - name: Comment on pull request
         if: always() && github.event.pull_request
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const pullRequestNumber = context.payload.pull_request.number;
-            const response = await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+            github.rest.issues.createComment({
+              issue_number: pullRequestNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: pullRequestNumber,
               body: 'The tests have completed. You can find the status in the workflow logs.'
-            });
+            })
 
 
