@@ -1,6 +1,7 @@
 package shop.wazard.entity.commuteRecord;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
@@ -35,5 +36,14 @@ public class CommuteRecordJpa extends BaseEntity {
     private boolean tardy;
 
     private LocalDateTime commuteTime;
+
+    @Builder
+    public CommuteRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, CommuteTypeJpa commuteTypeJpa, boolean tardy, LocalDateTime commuteTime) {
+        this.accountJpa = accountJpa;
+        this.companyJpa = companyJpa;
+        this.commuteTypeJpa = commuteTypeJpa;
+        this.tardy = tardy;
+        this.commuteTime = commuteTime;
+    }
 
 }
