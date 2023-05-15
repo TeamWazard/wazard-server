@@ -22,13 +22,12 @@ jar {
 	enabled = false;
 }
 
-task customTest(type: Test) {
+test {
 	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
 }
 
-test {
+tasks.named('test') {
 	useJUnitPlatform()
-	dependsOn customTest // customTest 태스크를 test 태스크에 의존시킴
 }
 
 dependencies {
