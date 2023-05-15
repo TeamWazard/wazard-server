@@ -188,16 +188,16 @@ class AttendanceDbAdapterTest {
         );
     }
 
-//    @Test
-//    @DisplayName("실패 테스트")
-//    public void test() throws Exception {
-//        // given
-//
-//        // when
-//
-//        // then
-//        Assertions.assertEquals(1, 2);
-//    }
+    @Test
+    @DisplayName("실패 테스트")
+    public void test() throws Exception {
+        // given
+
+        // when
+
+        // then
+        Assertions.assertEquals(1, 2);
+    }
 
     private AccountJpa setDefaultEmployerAccountJpa() {
         return AccountJpa.builder()
