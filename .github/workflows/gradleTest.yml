@@ -60,11 +60,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pullRequest = context.payload.pull_request;
-
-            await github.rest.issues.createComment({
+            const octokit = github.getOctokit(github.token);
+            
+            await octokit.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pullRequest.number,
               body: 'The tests have completed. You can find the status in the workflow logs.'
             });
-
