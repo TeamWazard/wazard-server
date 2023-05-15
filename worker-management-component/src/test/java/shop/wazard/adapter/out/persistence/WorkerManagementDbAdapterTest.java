@@ -98,7 +98,7 @@ class WorkerManagementDbAdapterTest {
     }
     
     @Test
-    @DisplayName("고용주 - 업장 근무자 리스트에 근무자 추가 - 성공")
+    @DisplayName("고용주 - 업장 근무자 리스트에 근무자 초대 완료 - RosterJpa 저장")
     public void joinWorker() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultAccountJpa();
@@ -123,7 +123,7 @@ class WorkerManagementDbAdapterTest {
     }
 
     @Test
-    @DisplayName("고용주 - List<AccountJpa> 조회 - 성공")
+    @DisplayName("고용주 - 업장 소속 근무자 리스트 조회 - List<AccountJpa> 조회")
     public void getWorkersBelongedToCompanySuccess() throws Exception {
         // given
         Long companyId = setDefaultWorkerList();
