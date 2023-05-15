@@ -18,12 +18,18 @@ public class AccountForAttendance {
         }
     }
 
-    private boolean isEmployer() {
-        if (this.roles.equals("EMPLOYER")) {
-            return true;
-        } else {
-            return false;
+    public void checkIsEmployee() {
+        if (!isEmployee()) {
+            throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
+    }
+
+    private boolean isEmployer() {
+        return this.roles.equals("EMPLOYER");
+    }
+
+    private boolean isEmployee() {
+        return this.roles.equals("EMPLOYEE");
     }
 
 }
