@@ -38,7 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           status: ${{ job.status }}
-          mention: here
           message: |
             Job: ${{ github.job }}
             Repository: ${{ github.repository }}
@@ -86,7 +85,7 @@ jobs:
             await github.issues.createComment({
               ...context.repo,
               issue_number: pull_number,
-              body: "🚀",
+              body: "Build Success!",
               commit_id
             })
         if: success()
