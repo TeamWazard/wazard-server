@@ -11,6 +11,8 @@ import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.MarkingAbsentResDto;
+import shop.wazard.dto.RecordAttendanceReqDto;
+import shop.wazard.dto.RecordAttendanceResDto;
 
 @Transactional
 @Service
@@ -31,4 +33,8 @@ class AttendanceServiceImpl implements AttendanceService {
                 .build();
     }
 
+    @Override
+    public RecordAttendanceResDto recordAttendance(RecordAttendanceReqDto recordAttendanceReqDto) {
+        return null;
+    }
 }
