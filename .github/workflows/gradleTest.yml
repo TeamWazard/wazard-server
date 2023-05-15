@@ -79,7 +79,7 @@ jobs:
             const ref = "${{github.ref}}"
             const pull_number = Number(ref.split("/")[2])
 
-            await github.pulls.createReview({
+            await github.pulls.createComment({
               ...context.repo,
               pull_number,
               body: "Success!"
