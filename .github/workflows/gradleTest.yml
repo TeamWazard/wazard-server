@@ -46,25 +46,19 @@ jobs:
       - name: Prevent merge on failure
         if: ${{ failure() }}
         run: echo "::set-output name=mergeable::false"
-      - name: Update pull request mergeability status
-        if: always()
-        run: |
-          if [ "${{ steps.prevent_merge.outputs.mergeable }}" == "false" ]; then
-            echo "The pull request contains failed tests. Merging is not allowed."
-            exit 1
-          fi
       - name: Comment on pull request
         if: always() && github.event.pull_request
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const pullRequest = context.payload.pull_request;
-            const octokit = github.getOctokit(github.token);
-            
-            await octokit.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pullRequest.number,
-              body: 'The tests have completed. You can find the status in the workflow logs.'
-            });
+        run: |
+          const pullRequest = github.context.payload.pull_request;
+          const githubToken = process.env.GITHUB_TOKEN;
+          const { Octokit } = require('@octokit/core');
+
+          const octokit = new Octokit({ auth: githubToken });
+
+          octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: pullRequest.number,
+            body: 'The tests have completed. You can find the status in the workflow logs.'
+          });
+
