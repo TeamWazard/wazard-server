@@ -25,8 +25,8 @@ class AttendanceController {
     }
 
     @PostMapping("/attend/{accountId}")
-    public ResponseEntity<GoToWorkResDto> goToWork(@PathVariable Long accountId, @Valid @RequestBody GoToWorkReqDto recordAttendanceReqDto) {
-        GoToWorkResDto goToWorkResDto = attendanceService.goToWork(recordAttendanceReqDto);
+    public ResponseEntity<GoToWorkResDto> goToWork(@PathVariable Long accountId, @Valid @RequestBody GoToWorkReqDto goToWorkReqDto) {
+        GoToWorkResDto goToWorkResDto = attendanceService.goToWork(goToWorkReqDto);
         return ResponseEntity.ok(goToWorkResDto);
     }
 
