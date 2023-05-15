@@ -28,11 +28,11 @@ jobs:
           distribution: 'temurin'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle and Run Tests
-        run: ./gradlew customTest
+      - name: Build with Gradle
+        run: ./gradlew clean build
       - name: Check Test Results
         run: |
-          TEST_RESULT=$(./gradlew customTest --quiet)
+          TEST_RESULT=$(./gradlew test --quiet)
           if [[ $TEST_RESULT == *"FAILURE"* ]]; then
             echo "::error::Unit tests failed. Please check the code and try again."
             exit 1
@@ -54,7 +54,7 @@ jobs:
       - name: Prevent merge on failure
         if: ${{ failure() }}
         run: echo "::set-output name=mergeable::false"
-      - name: Comment on pull request If Failed
+      - name: Review on pull request If Failed
         uses: actions/github-script@0.2.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
