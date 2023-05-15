@@ -49,16 +49,15 @@ jobs:
       - name: Comment on pull request
         if: always() && github.event.pull_request
         run: |
-          const pullRequest = github.context.payload.pull_request;
-          const githubToken = process.env.GITHUB_TOKEN;
-          const { Octokit } = require('@octokit/core');
+          const { context } = require('@actions/github');
+          const core = require('@actions/core');
+          const { Octokit } = require('@octokit/rest');
 
-          const octokit = new Octokit({ auth: githubToken });
+          const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
-          octokit.request('POST /repos/:owner/:repo/issues/:issue_number/comments', {
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: pullRequest.number,
+          octokit.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
             body: 'The tests have completed. You can find the status in the workflow logs.'
           });
-
