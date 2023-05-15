@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,8 +23,6 @@ import shop.wazard.entity.company.CompanyJpa;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -91,10 +88,12 @@ class AttendanceDbAdapterTest {
                 .tardy(false)
                 .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
                 .build();
-
-        // when
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
         CommuteRecordJpa commuteRecordJpa = CommuteRecordJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
@@ -102,9 +101,8 @@ class AttendanceDbAdapterTest {
                 .tardy(false)
                 .commuteTime(commuteRecordForAttendance.getCommuteTime())
                 .build();
-        Mockito.when(attendanceMapper.toCommuteRecordJpa(any(CommuteRecordForAttendance.class)))
-                .thenReturn(commuteRecordJpa);
         CommuteRecordJpa result = commuteRecordJpaForAttendanceRepository.save(commuteRecordJpa);
+        em.flush();
 
         // then
         Assertions.assertAll(
