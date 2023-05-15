@@ -52,15 +52,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pullRequestNumber = context.payload.pull_request.number;
-            const { data: pullRequest } = await github.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullRequestNumber
-            });
-            await github.rest.issues.createComment({
+            const response = await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: pullRequestNumber,
               body: 'The tests have completed. You can find the status in the workflow logs.'
             });
+
 
