@@ -4,44 +4,90 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 permissions:
   contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew customTest 
-    - name: Notify Slack
-      uses: 8398a7/action-slack@v2.6.0
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        status: ${{ job.status }}
-        message: |
-          Job: ${{ github.job }}
-          Repository: ${{ github.repository }}
-          Commit: ${{ github.sha }}
-          Event: ${{ github.event_name }}
-          Branch: ${{ github.ref }} 
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew customTest 
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v2.6.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          status: ${{ job.status }}
+          message: |
+            Job: ${{ github.job }}
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Event: ${{ github.event_name }}
+            Branch: ${{ github.ref }}
+      - name: Prevent merge on failure
+        if: ${{ failure() }}
+        run: echo "::set-output name=mergeable::false"
+      - name: Comment on pull request If Failed
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const ref = "${{github.ref}}"
+            const pull_number = Number(ref.split("/")[2])
+
+            await github.pulls.createReview({
+              ...context.repo,
+              pull_number,
+              body: "A failed test code exists. Please check the code again.",
+              event: "REQUEST_CHANGES"
+            })
+
+            await github.pulls.update({
+             ...context.repo,
+             pull_number,
+             state: "open"
+            })  
+           
+            core.setFailed("A failed test code exists. Merge is not allowed.")
+        if: failure()
+      - name: Comment on pull request If Success
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const ref = "${{ github.ref }}"
+            const pull_number = Number(ref.split("/")[2])
+            const { data: pullRequest } = await github.pulls.get({
+              ...context.repo,
+              pull_number
+            })
+            const commit_id = pullRequest.head.sha
+            await github.issues.createComment({
+              ...context.repo,
+              issue_number: pull_number,
+              body: "Build Success!",
+              commit_id
+            })
+        if: success()
+
+
