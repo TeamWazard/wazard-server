@@ -46,16 +46,28 @@ jobs:
         if: ${{ failure() }}
         run: echo "::set-output name=mergeable::false"
       - name: Comment on pull request
-        if: always() && github.event.pull_request
-        uses: actions/github-script@v5
+        uses: actions/github-script@0.2.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'The tests have completed. You can find the status in the workflow logs.'
+            const ref = "${{github.ref}}"
+            const pull_number = Number(ref.split("/")[2])
+
+            await github.pulls.createReview({
+              ...context.repo,
+              pull_number,
+              body: "A failed test code exists. Please check the code again.",
+              event: "REQUEST_CHANGES"
             })
+
+            await github.pulls.update({
+             ...context.repo,
+             pull_number,
+             state: "open"
+            })  
+           
+            core.setFailed("A failed test code exists. Merge is not allowed.")
+        if: failure()
+
 
 
