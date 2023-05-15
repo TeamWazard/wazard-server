@@ -4,7 +4,6 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -32,7 +31,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew customTest 
-    - name: Notify Slack
+    - name: Notify Slack on failure
+      if: ${{ failure() }}
       uses: 8398a7/action-slack@v2.6.0
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -44,4 +44,27 @@ jobs:
           Repository: ${{ github.repository }}
           Commit: ${{ github.sha }}
           Event: ${{ github.event_name }}
-          Branch: ${{ github.ref }} 
+          Branch: ${{ github.ref }}
+    - name: Prevent merge on failure
+      if: ${{ failure() }}
+      run: echo "::set-output name=mergeable::false"
+    - name: Update pull request mergeability status
+      if: always()
+      run: |
+        if [ "${{ steps.prevent_merge.outputs.mergeable }}" == "false" ]; then
+          echo "The pull request contains failed tests. Merging is not allowed."
+          exit 1
+        fi
+    - name: Comment on pull request
+      if: always()
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const response = await github.rest.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+            event: 'COMMENT',
+            body: 'The tests have completed. You can find the status in the workflow logs.'
+          });
