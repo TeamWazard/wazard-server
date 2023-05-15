@@ -36,30 +36,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           status: ${{ job.status }}
+          mention: here
           message: |
             Job: ${{ github.job }}
             Repository: ${{ github.repository }}
             Commit: ${{ github.sha }}
             Event: ${{ github.event_name }}
             Branch: ${{ github.ref }}
-      - name: Comment on pull request (Success)
+      - name: Prevent merge on failure
+        if: ${{ failure() }}
+        run: echo "::set-output name=mergeable::false"
+      - name: Comment on pull request If Failed
         uses: actions/github-script@0.2.0
-        if: success()
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const ref = "${{github.ref}}"
-            const pull_number = Number(ref.split("/")[2])
-
-            await github.pulls.createReview({
-              ...context.repo,
-              pull_number,
-              body: "The build completed successfully. You can proceed with the merge.",
-              event: "COMMENT"
-            })
-      - name: Comment on pull request (Failure)
-        uses: actions/github-script@0.2.0
-        if: failure()
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -80,3 +68,21 @@ jobs:
             })  
            
             core.setFailed("A failed test code exists. Merge is not allowed.")
+        if: failure()
+      - name: Comment on pull request If Success
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const ref = "${{github.ref}}"
+            const pull_number = Number(ref.split("/")[2])
+
+            await github.pulls.createReview({
+              ...context.repo,
+              pull_number,
+              body: "Success!"
+            })
+
+        if: success()
+
+
