@@ -54,26 +54,29 @@ jobs:
       - name: Prevent merge on failure
         if: ${{ failure() }}
         run: echo "::set-output name=mergeable::false"
-      - name: Review on pull request If Failed
+      - name: Comment on pull request If Failed
         uses: actions/github-script@0.2.0
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const ref = "${{github.ref}}"
+            const core = require('@actions/core'); // actions/core 모듈 추가
+            
+            const ref = "${{ github.ref }}"
             const pull_number = Number(ref.split("/")[2])
-
+            
             await github.pulls.createReview({
               ...context.repo,
               pull_number,
               body: "A failed test code exists. Please check the code again.",
               event: "REQUEST_CHANGES"
             })
-
+            
             await github.pulls.update({
-             ...context.repo,
-             pull_number,
-             state: "open"
-            })  
+              ...context.repo,
+              pull_number,
+              state: "open"
+            })
             
             core.setFailed("A failed test code exists. Merge is not allowed.")
         if: failure()
+

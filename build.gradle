@@ -26,7 +26,10 @@ task customTest(type: Test) {
 	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
 }
 
-test.dependsOn customTest
+test {
+	useJUnitPlatform()
+	dependsOn customTest // customTest 태스크를 test 태스크에 의존시킴
+}
 
 dependencies {
 	implementation project(':common-component')
@@ -64,6 +67,3 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
