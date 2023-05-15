@@ -23,7 +23,7 @@ jar {
 }
 
 test {
-	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
+	exclude '**/shop/wazard/acceptance/**', '**/s3-component/**'
 }
 
 tasks.named('test') {
