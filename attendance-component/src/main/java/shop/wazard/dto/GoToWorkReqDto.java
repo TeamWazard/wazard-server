@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecordAttendanceReqDto {
+public class GoToWorkReqDto {
 
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
     @NotBlank(message = "이메일은 필수 입력 값입니다.")

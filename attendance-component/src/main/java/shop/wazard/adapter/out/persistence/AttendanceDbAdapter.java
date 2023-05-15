@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
+import shop.wazard.application.domain.CommuteRecordForAttendance;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.RecordAttendanceReqDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.company.CompanyJpa;
@@ -50,7 +50,7 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
     }
 
     @Override
-    public void recordAttendance(RecordAttendanceReqDto recordAttendanceReqDto) {
+    public void goToWork(CommuteRecordForAttendance commuteRecordForAttendance) {
 
     }
 }

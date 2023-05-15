@@ -2,7 +2,7 @@ package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.wazard.dto.RecordAttendanceReqDto;
+import shop.wazard.dto.GoToWorkReqDto;
 
 @Getter
 @Builder
@@ -13,12 +13,12 @@ public class CommuteRecordForAttendance {
     private boolean tardy;
     private CommuteType commuteType;
 
-    public static CommuteRecordForAttendance recordAttendanceForAttendance(RecordAttendanceReqDto recordAttendanceReqDto) {
+    public static CommuteRecordForAttendance goToWorkForAttendance(GoToWorkReqDto goToWorkReqDto) {
         return CommuteRecordForAttendance.builder()
-                .accountId(recordAttendanceReqDto.getAccountId())
-                .companyId(recordAttendanceReqDto.getCompanyId())
-                .tardy(recordAttendanceReqDto.isTardy())
-                .commuteType(recordAttendanceReqDto.getCommuteType())
+                .accountId(goToWorkReqDto.getAccountId())
+                .companyId(goToWorkReqDto.getCompanyId())
+                .tardy(goToWorkReqDto.isTardy())
+                .commuteType(goToWorkReqDto.getCommuteType())
                 .build();
     }
 
