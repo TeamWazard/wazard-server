@@ -59,24 +59,28 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const core = require('@actions/core'); // actions/core 모듈 추가
+            import { GitHub, context } from '@actions/github';
+            import * as core from '@actions/core';
             
-            const ref = "${{ github.ref }}"
-            const pull_number = Number(ref.split("/")[2])
+            const ref = "${{ github.ref }}";
+            const pull_number = Number(ref.split("/")[2]);
+            
+            const github = new GitHub(process.env.GITHUB_TOKEN);
             
             await github.pulls.createReview({
               ...context.repo,
               pull_number,
               body: "A failed test code exists. Please check the code again.",
               event: "REQUEST_CHANGES"
-            })
+            });
             
             await github.pulls.update({
               ...context.repo,
               pull_number,
               state: "open"
-            })
+            });
             
-            core.setFailed("A failed test code exists. Merge is not allowed.")
+            core.setFailed("A failed test code exists. Merge is not allowed.");
         if: failure()
+
 
