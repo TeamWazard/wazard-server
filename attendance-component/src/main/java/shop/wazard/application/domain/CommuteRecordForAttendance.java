@@ -3,6 +3,8 @@ package shop.wazard.application.domain;
 import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.CommuteRecordReqDto;
+import shop.wazard.exception.InvalidTardyStateException;
+import shop.wazard.util.exception.StatusEnum;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +26,12 @@ public class CommuteRecordForAttendance {
                 .commuteType(commuteRecordReqDto.getCommuteType())
                 .commuteTime(LocalDateTime.now())
                 .build();
+    }
+
+    public void checkTardyState() {
+        if (commuteType.equals(CommuteType.OFF) && tardy) {
+            throw new InvalidTardyStateException(StatusEnum.INVALID_TARDY_STATE.getMessage());
+        }
     }
 
 }
