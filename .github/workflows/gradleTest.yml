@@ -28,14 +28,15 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew customTest 
-      - name: Notify Slack on failure
-        if: ${{ failure() }}
+      - name: Notify Slack
+        if: always()
         uses: 8398a7/action-slack@v2.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           status: ${{ job.status }}
+          mention: here
           message: |
             Job: ${{ github.job }}
             Repository: ${{ github.repository }}
