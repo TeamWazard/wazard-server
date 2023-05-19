@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
+import shop.wazard.application.domain.Attendance;
 import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
+import shop.wazard.dto.GetAttendanceResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
@@ -58,6 +60,11 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         EnterRecordJpa enterRecordJpa = attendanceMapper.toEnterRecordJpa(enterRecord, accountJpa, companyJpa);
         commuteRecordJpaForAttendanceRepository.save(enterRecordJpa);
+    }
+
+    @Override
+    public GetAttendanceResDto getMyAttendance(Attendance attendance) {
+        return null;
     }
 
 }
