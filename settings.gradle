@@ -7,4 +7,5 @@ include 'company-component'
 include 's3-component'
 include 'worker-management-component'
 include 'attendance-component'
+include 'worker-component'
 

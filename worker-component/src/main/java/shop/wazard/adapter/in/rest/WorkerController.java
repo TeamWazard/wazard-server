@@ -1,0 +1,15 @@
+package shop.wazard.adapter.in.rest;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import shop.wazard.application.port.in.WorkerService;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/worker")
+class WorkerController {
+
+    private final WorkerService workerService;
+
+}
