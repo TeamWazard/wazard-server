@@ -30,8 +30,9 @@ public class ExitRecordJpa extends BaseEntity {
     private LocalDateTime exitTime;
 
     @Builder
-    public ExitRecordJpa(EnterRecordJpa enterRecordJpa, LocalDateTime exitTime) {
+    public ExitRecordJpa(EnterRecordJpa enterRecordJpa, LocalDate exitDate, LocalDateTime exitTime) {
         this.enterRecordJpa = enterRecordJpa;
+        this.exitDate = exitDate;
         this.exitTime = exitTime;
     }
 
