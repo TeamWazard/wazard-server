@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,6 +24,8 @@ public class ExitRecordJpa extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "enterRecordId")
     private EnterRecordJpa enterRecordJpa;
+
+    private LocalDate exitDate;
 
     private LocalDateTime exitTime;
 
