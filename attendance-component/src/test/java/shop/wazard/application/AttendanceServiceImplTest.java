@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForAttendance;
+import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.domain.ExitRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
@@ -68,6 +69,8 @@ class AttendanceServiceImplTest {
                 .build();
 
         // when
+        Mockito.doNothing().when(commuteRecordForAttendancePort)
+                .recordEnterTime(any(EnterRecord.class));
 
         // then
         Assertions.assertDoesNotThrow(() -> attendanceService.recordEnterTime(recordEnterTimeReqDto));
