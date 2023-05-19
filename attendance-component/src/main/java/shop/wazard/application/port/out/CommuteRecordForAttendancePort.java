@@ -8,8 +8,8 @@ public interface CommuteRecordForAttendancePort {
 
     void recordEnterTime(EnterRecord enterRecord);
 
-    void recordExitTime(ExitRecord exitRecord);
+    void recordExitTime(ExitRecord exitRecord, Long enterRecordId);
 
-    boolean findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto);
+    Long findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto);
 
 }

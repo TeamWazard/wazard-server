@@ -158,7 +158,6 @@ class AttendanceDbAdapterTest {
         LocalDateTime enterTime = LocalDateTime.of(2023, 1, 1, 12, 12, 12);
         LocalDateTime exitTime = LocalDateTime.of(2023, 1, 1, 20, 12, 12);
 
-
         // when
         AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);

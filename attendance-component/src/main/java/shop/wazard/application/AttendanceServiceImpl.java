@@ -12,8 +12,6 @@ import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.*;
-import shop.wazard.exception.EnterRecordNotFoundException;
-import shop.wazard.util.exception.StatusEnum;
 
 @Transactional
 @Service
@@ -46,10 +44,8 @@ class AttendanceServiceImpl implements AttendanceService {
     @Override
     public RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto) {
         ExitRecord exitRecord = ExitRecord.createExitRecordForAttendance(recordExitTimeReqDto);
-        if (!commuteRecordForAttendancePort.findEnterRecord(recordExitTimeReqDto)) {
-            throw new EnterRecordNotFoundException(StatusEnum.ENTER_RECORD_NOT_FOUND.getMessage());
-        }
-        commuteRecordForAttendancePort.recordExitTime(exitRecord);
+        Long enterRecordId = commuteRecordForAttendancePort.findEnterRecord(recordExitTimeReqDto);
+        commuteRecordForAttendancePort.recordExitTime(exitRecord, enterRecordId);
         return RecordExitTimeResDto.builder()
                 .message("퇴근 시간이 기록되었습니다.")
                 .build();

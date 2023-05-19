@@ -66,21 +66,22 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
     }
 
     @Override
-    public void recordExitTime(ExitRecord exitRecord) {
+    public void recordExitTime(ExitRecord exitRecord, Long enterRecordId) {
         AccountJpa accountJpa = accountJpaForAttendanceRepository.findById(exitRecord.getAccountId())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         CompanyJpa companyJpa = companyJpaForAttendanceRepository.findById(exitRecord.getCompanyId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        EnterRecordJpa enterRecordJpa = enterRecordJpaForAttendanceRepository.findEnterRecordJpa(exitRecord.getAccountId(), exitRecord.getCompanyId())
+        EnterRecordJpa enterRecordJpa = enterRecordJpaForAttendanceRepository.findById(enterRecordId)
                 .orElseThrow(() -> new EnterRecordNotFoundException(StatusEnum.ENTER_RECORD_NOT_FOUND.getMessage()));
         ExitRecordJpa exitRecordJpa = attendanceMapper.toExitRecordJpa(exitRecord, enterRecordJpa);
         exitRecordJpaForAttendanceRepository.save(exitRecordJpa);
     }
 
     @Override
-    public boolean findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto) {
-        return enterRecordJpaForAttendanceRepository.findEnterRecordJpa(recordExitTimeReqDto.getAccountId(), recordExitTimeReqDto.getCompanyId())
-                .isPresent();
+    public Long findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto) {
+        EnterRecordJpa enterRecordJpa = enterRecordJpaForAttendanceRepository.findEnterRecordJpa(recordExitTimeReqDto.getAccountId(), recordExitTimeReqDto.getCompanyId())
+                .orElseThrow(() -> new EnterRecordNotFoundException(StatusEnum.ENTER_RECORD_NOT_FOUND.getMessage()));
+        return enterRecordJpa.getId();
     }
 
 }

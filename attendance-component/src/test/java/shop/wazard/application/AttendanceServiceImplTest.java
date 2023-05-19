@@ -18,9 +18,9 @@ import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.RecordEnterTimeReqDto;
 import shop.wazard.dto.RecordExitTimeReqDto;
+import shop.wazard.exception.EnterRecordNotFoundException;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {AttendanceServiceImpl.class})
@@ -83,10 +83,30 @@ class AttendanceServiceImplTest {
                 .build();
 
         // when
-        Mockito.doNothing().when(commuteRecordForAttendancePort).recordExitTime(any(ExitRecord.class));
+        Mockito.when(commuteRecordForAttendancePort.findEnterRecord(any(RecordExitTimeReqDto.class)))
+                .thenReturn(3L);
+        Mockito.doNothing().when(commuteRecordForAttendancePort)
+                .recordExitTime(any(ExitRecord.class), anyLong());
 
         // then
         Assertions.assertDoesNotThrow(() -> attendanceService.recordExitTime(recordExitTimeReqDto));
+    }
+
+    @Test
+    @DisplayName("근무자 - 퇴근 시간 기록 실패 - 출근 기록이 없는 경우")
+    public void recordExitTimeFailed() throws Exception {
+        // given
+        RecordExitTimeReqDto recordExitTimeReqDto = RecordExitTimeReqDto.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .build();
+
+        // when
+        Mockito.when(commuteRecordForAttendancePort.findEnterRecord(any(RecordExitTimeReqDto.class)))
+                .thenThrow(EnterRecordNotFoundException.class);
+
+        // then
+        Assertions.assertThrows(EnterRecordNotFoundException.class, () -> attendanceService.recordExitTime(recordExitTimeReqDto));
     }
 
 }
