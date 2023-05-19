@@ -34,6 +34,9 @@ public class EnterRecordJpa extends BaseEntity {
 
     private LocalDateTime enterTime;
 
+    @OneToOne(mappedBy = "enterRecordJpa")
+    private ExitRecordJpa exitRecordJpa;
+
     @Builder
     public EnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime enterTime) {
         this.accountJpa = accountJpa;
