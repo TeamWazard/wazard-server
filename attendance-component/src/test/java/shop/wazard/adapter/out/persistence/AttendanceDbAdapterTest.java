@@ -155,6 +155,9 @@ class AttendanceDbAdapterTest {
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
+        LocalDateTime enterTime = LocalDateTime.of(2023, 1, 1, 12, 12, 12);
+        LocalDateTime exitTime = LocalDateTime.of(2023, 1, 1, 20, 12, 12);
+
 
         // when
         AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
@@ -163,18 +166,20 @@ class AttendanceDbAdapterTest {
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .tardy(false)
-                .enterTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .enterTime(enterTime)
                 .build();
         EnterRecordJpa savedEnterRecordJpa = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         ExitRecordJpa exitRecordJpa = ExitRecordJpa.builder()
                 .enterRecordJpa(savedEnterRecordJpa)
+                .exitTime(exitTime)
                 .build();
         ExitRecordJpa result = exitRecordJpaForAttendanceRepository.save(exitRecordJpa);
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(savedEnterRecordJpa, result.getEnterRecordJpa())
+                () -> Assertions.assertEquals(savedEnterRecordJpa, result.getEnterRecordJpa()),
+                () -> Assertions.assertEquals(exitTime, result.getExitTime())
         );
     }
 
