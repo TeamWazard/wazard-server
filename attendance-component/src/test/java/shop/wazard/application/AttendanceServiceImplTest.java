@@ -10,14 +10,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.CommuteType;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.CommuteRecordReqDto;
 import shop.wazard.dto.MarkingAbsentReqDto;
-import shop.wazard.exception.InvalidTardyStateException;
+import shop.wazard.dto.RecordEnterTimeReqDto;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -57,53 +55,20 @@ class AttendanceServiceImplTest {
     }
 
     @Test
-    @DisplayName("근무자 - 출/퇴근 등록 - 성공")
-    public void recordCommuteSuccess() throws Exception {
+    @DisplayName("근무자 - 출근 시간 기록 - 성공")
+    public void recordEnterTimeSuccess() throws Exception {
         // given
-        // 예) 정상 출근
-        CommuteRecordReqDto commuteRecordReqDto = CommuteRecordReqDto.builder()
+        RecordEnterTimeReqDto recordEnterTimeReqDto = RecordEnterTimeReqDto.builder()
                 .email("test@naver.com")
                 .accountId(1L)
                 .companyId(2L)
-                .commuteType(CommuteType.ON)
                 .tardy(false)
                 .build();
-        AccountForAttendance accountForAttendance = AccountForAttendance.builder()
-                .id(1L)
-                .roles("EMPLOYEE")
-                .build();
 
         // when
-        Mockito.when(accountForAttendancePort.findAccountByEmail(anyString()))
-                .thenReturn(accountForAttendance);
 
         // then
-        Assertions.assertDoesNotThrow(() -> attendanceService.recordCommute(commuteRecordReqDto));
-    }
-
-    @Test
-    @DisplayName("근무자 - 출/퇴근 등록 - 실패")
-    void recordCommuteFail() throws Exception {
-        // given
-        // 예외 처리: 퇴근 - 지각
-        CommuteRecordReqDto commuteRecordReqDto = CommuteRecordReqDto.builder()
-                .email("test@naver.com")
-                .accountId(1L)
-                .companyId(2L)
-                .commuteType(CommuteType.OFF)
-                .tardy(true)
-                .build();
-        AccountForAttendance accountForAttendance = AccountForAttendance.builder()
-                .id(1L)
-                .roles("EMPLOYEE")
-                .build();
-
-        // when
-        Mockito.when(accountForAttendancePort.findAccountByEmail(anyString()))
-                .thenReturn(accountForAttendance);
-
-        // then
-        Assertions.assertThrows(InvalidTardyStateException.class, () -> attendanceService.recordCommute(commuteRecordReqDto));
+        Assertions.assertDoesNotThrow(() -> attendanceService.recordEnterTime(recordEnterTimeReqDto));
     }
 
 }

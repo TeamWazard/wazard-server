@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommuteRecordResDto {
+public class RecordEnterTimeResDto {
 
     private String message;
 

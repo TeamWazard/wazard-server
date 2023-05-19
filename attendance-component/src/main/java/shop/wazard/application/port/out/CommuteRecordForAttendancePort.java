@@ -1,9 +1,9 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.application.domain.CommuteRecordForAttendance;
+import shop.wazard.application.domain.EnterRecord;
 
 public interface CommuteRecordForAttendancePort {
 
-    void recordCommute(CommuteRecordForAttendance commuteRecordForAttendance);
+    void recordEnterTime(EnterRecord enterRecord);
 
 }

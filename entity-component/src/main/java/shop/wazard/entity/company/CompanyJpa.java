@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
-import shop.wazard.entity.commuteRecord.CommuteRecordJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class CompanyJpa extends BaseEntity {
     private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
     @OneToMany(mappedBy = "companyJpa")
-    private List<CommuteRecordJpa> commuteRecordJpa = new ArrayList<>();
+    private List<EnterRecordJpa> enterRecordJpa = new ArrayList<>();
 
 
     @Builder
