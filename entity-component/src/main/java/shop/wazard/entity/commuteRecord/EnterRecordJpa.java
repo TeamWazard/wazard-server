@@ -9,6 +9,7 @@ import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,6 +32,8 @@ public class EnterRecordJpa extends BaseEntity {
     private CompanyJpa companyJpa;
 
     private boolean tardy;
+
+    private LocalDate enterDate;
 
     private LocalDateTime enterTime;
 
