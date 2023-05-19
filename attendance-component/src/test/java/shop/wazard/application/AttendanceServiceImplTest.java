@@ -16,6 +16,7 @@ import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.RecordEnterTimeReqDto;
+import shop.wazard.dto.RecordExitTimeReqDto;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -68,6 +69,21 @@ class AttendanceServiceImplTest {
 
         // then
         Assertions.assertDoesNotThrow(() -> attendanceService.recordEnterTime(recordEnterTimeReqDto));
+    }
+
+    @Test
+    @DisplayName("근무자 - 퇴근 시간 기록 - 성공")
+    public void recordExitTimeSuccess() throws Exception {
+        // given
+        RecordExitTimeReqDto recordExitTimeReqDto = RecordExitTimeReqDto.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .build();
+
+        // when
+
+        // then
+        Assertions.assertDoesNotThrow(() -> attendanceService.recordExitTime(recordExitTimeReqDto));
     }
 
 }
