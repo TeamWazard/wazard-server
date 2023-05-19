@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.RecordEnterTimeReqDto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,6 +14,7 @@ public class EnterRecord {
     private Long accountId;
     private Long companyId;
     private boolean tardy;
+    private LocalDate enterDate;
     private LocalDateTime enterTime;
 
     public static EnterRecord createEnterRecordForAttendance(RecordEnterTimeReqDto recordEnterTimeReqDto) {
@@ -20,6 +22,7 @@ public class EnterRecord {
                 .accountId(recordEnterTimeReqDto.getAccountId())
                 .companyId(recordEnterTimeReqDto.getCompanyId())
                 .tardy(recordEnterTimeReqDto.isTardy())
+                .enterDate(LocalDate.now())
                 .enterTime(LocalDateTime.now())
                 .build();
     }

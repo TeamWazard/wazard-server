@@ -16,6 +16,7 @@ class AttendanceMapper {
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .enterTime(enterRecord.getEnterTime())
+                .enterDate(enterRecord.getEnterDate())
                 .tardy(enterRecord.isTardy())
                 .build();
     }
