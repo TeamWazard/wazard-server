@@ -6,14 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
 import shop.wazard.application.domain.EnterRecord;
+import shop.wazard.application.domain.ExitRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.MarkingAbsentReqDto;
-import shop.wazard.dto.MarkingAbsentResDto;
-import shop.wazard.dto.RecordEnterTimeReqDto;
-import shop.wazard.dto.RecordEnterTimeResDto;
+import shop.wazard.dto.*;
 
 @Transactional
 @Service
@@ -42,4 +40,14 @@ class AttendanceServiceImpl implements AttendanceService {
                 .message("출근 시간이 기록되었습니다.")
                 .build();
     }
+
+    @Override
+    public RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto) {
+        ExitRecord exitRecord = ExitRecord.createExitRecordForAttendance(recordExitTimeReqDto);
+        commuteRecordForAttendancePort.recordExitTime(exitRecord);
+        return RecordExitTimeResDto.builder()
+                .message("퇴근 시간이 기록되었습니다.")
+                .build();
+    }
+
 }

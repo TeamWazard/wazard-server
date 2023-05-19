@@ -13,14 +13,14 @@ public class EnterRecord {
     private Long accountId;
     private Long companyId;
     private boolean tardy;
-    private LocalDateTime commuteTime;
+    private LocalDateTime enterTime;
 
     public static EnterRecord createEnterRecordForAttendance(RecordEnterTimeReqDto recordEnterTimeReqDto) {
         return EnterRecord.builder()
                 .accountId(recordEnterTimeReqDto.getAccountId())
                 .companyId(recordEnterTimeReqDto.getCompanyId())
                 .tardy(recordEnterTimeReqDto.isTardy())
-                .commuteTime(LocalDateTime.now())
+                .enterTime(LocalDateTime.now())
                 .build();
     }
 

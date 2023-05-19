@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForAttendance;
+import shop.wazard.application.domain.ExitRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
@@ -18,6 +19,7 @@ import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.RecordEnterTimeReqDto;
 import shop.wazard.dto.RecordExitTimeReqDto;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
@@ -81,6 +83,7 @@ class AttendanceServiceImplTest {
                 .build();
 
         // when
+        Mockito.doNothing().when(commuteRecordForAttendancePort).recordExitTime(any(ExitRecord.class));
 
         // then
         Assertions.assertDoesNotThrow(() -> attendanceService.recordExitTime(recordExitTimeReqDto));

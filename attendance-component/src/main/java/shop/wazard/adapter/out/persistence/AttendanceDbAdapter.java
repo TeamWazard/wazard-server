@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
 import shop.wazard.application.domain.EnterRecord;
+import shop.wazard.application.domain.ExitRecord;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
@@ -58,6 +59,15 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         EnterRecordJpa enterRecordJpa = attendanceMapper.toEnterRecordJpa(enterRecord, accountJpa, companyJpa);
         commuteRecordJpaForAttendanceRepository.save(enterRecordJpa);
+    }
+
+    @Override
+    public void recordExitTime(ExitRecord exitRecord) {
+        AccountJpa accountJpa = accountJpaForAttendanceRepository.findById(exitRecord.getAccountId())
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa = companyJpaForAttendanceRepository.findById(exitRecord.getCompanyId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+//        ExitRecordJpa exitRecordJpa = attendanceMapper.toExit
     }
 
 }
