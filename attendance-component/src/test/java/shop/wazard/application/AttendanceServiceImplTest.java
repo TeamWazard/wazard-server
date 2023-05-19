@@ -59,7 +59,6 @@ class AttendanceServiceImplTest {
     public void recordEnterTimeSuccess() throws Exception {
         // given
         RecordEnterTimeReqDto recordEnterTimeReqDto = RecordEnterTimeReqDto.builder()
-                .email("test@naver.com")
                 .accountId(1L)
                 .companyId(2L)
                 .tardy(false)
