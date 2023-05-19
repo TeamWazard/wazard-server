@@ -22,11 +22,13 @@ jar {
 	enabled = false;
 }
 
-task customTest(type: Test) {
-	exclude 'shop/wazard/acceptance/**', '**/s3-component/**'
+test {
+	exclude '**/shop/wazard/acceptance/**', '**/s3-component/**'
 }
 
-test.dependsOn customTest
+tasks.named('test') {
+	useJUnitPlatform()
+}
 
 dependencies {
 	implementation project(':common-component')
@@ -51,6 +53,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2:2.1.214'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 
 	// JWT
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -62,6 +66,3 @@ dependencies {
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}

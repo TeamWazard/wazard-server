@@ -10,14 +10,19 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.wazard.application.domain.CommuteRecordForAttendance;
+import shop.wazard.application.domain.CommuteType;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
+import shop.wazard.entity.commuteRecord.CommuteRecordJpa;
+import shop.wazard.entity.commuteRecord.CommuteTypeJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -51,8 +56,8 @@ class AttendanceDbAdapterTest {
     private EntityManager em;
 
     @Test
-    @DisplayName("고용주 - 근무자 결석 처리 - 성공")
-    void markingAbsent() throws Exception {
+    @DisplayName("고용주 - 근무자 결석 처리 - AbsentJpa 저장")
+    void markingAbsentSuccess() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
@@ -70,6 +75,117 @@ class AttendanceDbAdapterTest {
         Assertions.assertEquals(savedAccountJpa.getEmail(), absentJpa.getAccountJpa().getEmail());
         Assertions.assertEquals(savedCompanyJpa.getCompanyName(), absentJpa.getCompanyJpa().getCompanyName());
         Assertions.assertEquals(LocalDate.now().getDayOfWeek(), absentJpa.getAbsentDate().getDayOfWeek());
+    }
+
+    @Test
+    @DisplayName("근무자 - 정상 출근 기록 - CommuteRecordJpa 저장")
+    public void saveCommuteRecordJpaSuccess_ON() throws Exception {
+        // given
+        CommuteRecordForAttendance commuteRecordForAttendance = CommuteRecordForAttendance.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .commuteType(CommuteType.ON)
+                .tardy(false)
+                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .build();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
+        CommuteRecordJpa commuteRecordJpa = CommuteRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .commuteTypeJpa(CommuteTypeJpa.valueOf(commuteRecordForAttendance.getCommuteType().toString()))
+                .tardy(commuteRecordForAttendance.isTardy())
+                .commuteTime(commuteRecordForAttendance.getCommuteTime())
+                .build();
+        CommuteRecordJpa result = commuteRecordJpaForAttendanceRepository.save(commuteRecordJpa);
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
+                () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteType().commuteType, result.getCommuteTypeJpa().commuteType),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteTime(), result.getCommuteTime()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.isTardy(), result.isTardy())
+        );
+    }
+
+    @Test
+    @DisplayName("근무자 - 지각 출근 기록 - CommuteRecordJpa 저장")
+    public void saveCommuteRecordJpaSuccess_LATE() throws Exception {
+        // given
+        CommuteRecordForAttendance commuteRecordForAttendance = CommuteRecordForAttendance.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .commuteType(CommuteType.ON)
+                .tardy(true)
+                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .build();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
+        CommuteRecordJpa commuteRecordJpa = CommuteRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .commuteTypeJpa(CommuteTypeJpa.valueOf(commuteRecordForAttendance.getCommuteType().toString()))
+                .tardy(commuteRecordForAttendance.isTardy())
+                .commuteTime(commuteRecordForAttendance.getCommuteTime())
+                .build();
+        CommuteRecordJpa result = commuteRecordJpaForAttendanceRepository.save(commuteRecordJpa);
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
+                () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteType().commuteType, result.getCommuteTypeJpa().commuteType),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteTime(), result.getCommuteTime()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.isTardy(), result.isTardy())
+        );
+    }
+
+    @Test
+    @DisplayName("근무자 - 퇴근 기록 - CommuteRecordJpa 저장")
+    public void saveCommuteRecordJpaSuccess_OFF() throws Exception {
+        // given
+        CommuteRecordForAttendance commuteRecordForAttendance = CommuteRecordForAttendance.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .commuteType(CommuteType.OFF)
+                .tardy(false)
+                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .build();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
+        CommuteRecordJpa commuteRecordJpa = CommuteRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .commuteTypeJpa(CommuteTypeJpa.valueOf(commuteRecordForAttendance.getCommuteType().toString()))
+                .tardy(commuteRecordForAttendance.isTardy())
+                .commuteTime(commuteRecordForAttendance.getCommuteTime())
+                .build();
+        CommuteRecordJpa result = commuteRecordJpaForAttendanceRepository.save(commuteRecordJpa);
+        em.flush();
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
+                () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteType().commuteType, result.getCommuteTypeJpa().commuteType),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.getCommuteTime(), result.getCommuteTime()),
+                () -> Assertions.assertEquals(commuteRecordForAttendance.isTardy(), result.isTardy())
+        );
     }
 
     private AccountJpa setDefaultEmployerAccountJpa() {
