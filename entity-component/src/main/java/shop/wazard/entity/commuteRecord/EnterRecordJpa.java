@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CommuteRecord")
-public class CommuteRecordJpa extends BaseEntity {
+@Table(name = "EnterRecord")
+public class EnterRecordJpa extends BaseEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "commuteRecordId")
+    @Column(name = "enterRecordId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,20 +30,16 @@ public class CommuteRecordJpa extends BaseEntity {
     @JoinColumn(name = "companyId")
     private CompanyJpa companyJpa;
 
-    @OneToOne
-    @JoinColumn(name = "exitRecordId")
-    private ExitRecordJpa exitRecordJpa;
-
     private boolean tardy;
 
-    private LocalDateTime commuteTime;
+    private LocalDateTime enterTime;
 
     @Builder
-    public CommuteRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime commuteTime) {
+    public EnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime enterTime) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.tardy = tardy;
-        this.commuteTime = commuteTime;
+        this.enterTime = enterTime;
     }
 
 }

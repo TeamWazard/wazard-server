@@ -20,11 +20,15 @@ public class ExitRecordJpa extends BaseEntity {
     @Column(name = "exitRecordId")
     private Long id;
 
-    private LocalDateTime commuteTime;
+    @OneToOne
+    @JoinColumn(name = "enterRecordId")
+    private EnterRecordJpa enterRecordJpa;
+
+    private LocalDateTime exitTime;
 
     @Builder
-    public ExitRecordJpa(LocalDateTime commuteTime) {
-        this.commuteTime = commuteTime;
+    public ExitRecordJpa(LocalDateTime exitTime) {
+        this.exitTime = exitTime;
     }
 
 }

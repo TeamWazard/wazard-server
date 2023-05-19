@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.CommuteRecordForAttendance;
+import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.CommuteRecordReqDto;
-import shop.wazard.dto.CommuteRecordResDto;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.MarkingAbsentResDto;
+import shop.wazard.dto.RecordEnterTimeReqDto;
+import shop.wazard.dto.RecordEnterTimeResDto;
 
 @Transactional
 @Service
@@ -35,13 +35,11 @@ class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public CommuteRecordResDto recordCommute(CommuteRecordReqDto commuteRecordReqDto) {
-        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(commuteRecordReqDto.getEmail());
-        accountForAttendance.checkIsEmployee();
-        CommuteRecordForAttendance commuteRecordForAttendance = CommuteRecordForAttendance.createCommuteRecordForAttendance(commuteRecordReqDto);
-        commuteRecordForAttendance.checkTardyState();
-        return CommuteRecordResDto.builder()
-                .message("기록 되었습니다.")
+    public RecordEnterTimeResDto recordEnterTime(RecordEnterTimeReqDto recordEnterTimeReqDto) {
+        EnterRecord enterRecord = EnterRecord.createEnterRecordForAttendance(recordEnterTimeReqDto);
+        commuteRecordForAttendancePort.recordEnterTime(enterRecord);
+        return RecordEnterTimeResDto.builder()
+                .message("출근 시간이 기록되었습니다.")
                 .build();
     }
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.wazard.application.domain.CommuteType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommuteRecordReqDto {
+public class RecordEnterTimeReqDto {
 
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
@@ -24,7 +23,5 @@ public class CommuteRecordReqDto {
     private Long companyId;
 
     private boolean tardy;
-
-    private CommuteType commuteType;
 
 }
