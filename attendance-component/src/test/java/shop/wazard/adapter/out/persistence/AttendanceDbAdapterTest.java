@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
         AccountJpaForAttendanceRepository.class,
         AbsentJpaForAttendanceRepository.class,
         CompanyJpaForAttendanceRepository.class,
-        CommuteRecordJpaForAttendanceRepository.class})
+        EnterRecordJpaForAttendanceRepository.class})
 class AttendanceDbAdapterTest {
 
     @Autowired
@@ -49,7 +49,7 @@ class AttendanceDbAdapterTest {
     @Autowired
     private AbsentJpaForAttendanceRepository absentJpaForAttendanceRepository;
     @Autowired
-    private CommuteRecordJpaForAttendanceRepository commuteRecordJpaForAttendanceRepository;
+    private EnterRecordJpaForAttendanceRepository enterRecordJpaForAttendanceRepository;
     @Autowired
     private EntityManager em;
 
@@ -97,7 +97,7 @@ class AttendanceDbAdapterTest {
                 .tardy(enterRecord.isTardy())
                 .enterTime(enterRecord.getEnterTime())
                 .build();
-        EnterRecordJpa result = commuteRecordJpaForAttendanceRepository.save(enterRecordJpa);
+        EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         em.flush();
 
         // then
@@ -131,7 +131,7 @@ class AttendanceDbAdapterTest {
                 .tardy(enterRecord.isTardy())
                 .enterTime(enterRecord.getEnterTime())
                 .build();
-        EnterRecordJpa result = commuteRecordJpaForAttendanceRepository.save(enterRecordJpa);
+        EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         em.flush();
 
         // then
@@ -165,7 +165,7 @@ class AttendanceDbAdapterTest {
                 .tardy(enterRecord.isTardy())
                 .enterTime(enterRecord.getEnterTime())
                 .build();
-        EnterRecordJpa result = commuteRecordJpaForAttendanceRepository.save(enterRecordJpa);
+        EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         em.flush();
 
         // then
