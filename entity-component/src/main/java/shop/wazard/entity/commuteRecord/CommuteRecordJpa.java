@@ -30,18 +30,18 @@ public class CommuteRecordJpa extends BaseEntity {
     @JoinColumn(name = "companyId")
     private CompanyJpa companyJpa;
 
-    @Enumerated(EnumType.STRING)
-    private CommuteTypeJpa commuteTypeJpa;
+    @OneToOne
+    @JoinColumn(name = "exitRecordId")
+    private ExitRecordJpa exitRecordJpa;
 
     private boolean tardy;
 
     private LocalDateTime commuteTime;
 
     @Builder
-    public CommuteRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, CommuteTypeJpa commuteTypeJpa, boolean tardy, LocalDateTime commuteTime) {
+    public CommuteRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime commuteTime) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
-        this.commuteTypeJpa = commuteTypeJpa;
         this.tardy = tardy;
         this.commuteTime = commuteTime;
     }

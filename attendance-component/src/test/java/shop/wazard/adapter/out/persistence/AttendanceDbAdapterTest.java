@@ -17,7 +17,6 @@ import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.CommuteRecordJpa;
-import shop.wazard.entity.commuteRecord.CommuteTypeJpa;
 import shop.wazard.entity.company.CompanyJpa;
 
 import javax.persistence.EntityManager;
