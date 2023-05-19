@@ -10,10 +10,10 @@ import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.MarkingAbsentReqDto;
-import shop.wazard.dto.MarkingAbsentResDto;
-import shop.wazard.dto.RecordEnterTimeReqDto;
-import shop.wazard.dto.RecordEnterTimeResDto;
+import shop.wazard.dto.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Transactional
 @Service
@@ -41,5 +41,12 @@ class AttendanceServiceImpl implements AttendanceService {
         return RecordEnterTimeResDto.builder()
                 .message("출근 시간이 기록되었습니다.")
                 .build();
+    }
+
+    @Override
+    public List<GetAttendanceResDto> getAllAttendances(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
+        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceReqDto.getEmail());
+        accountForAttendance.checkIsEmployer();
+        return commuteRecordForAttendancePort.getAllAttendances(Commute);
     }
 }

@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.AttendanceService;
-import shop.wazard.dto.MarkingAbsentReqDto;
-import shop.wazard.dto.MarkingAbsentResDto;
-import shop.wazard.dto.RecordEnterTimeReqDto;
-import shop.wazard.dto.RecordEnterTimeResDto;
+import shop.wazard.dto.*;
+import shop.wazard.util.aop.Certification;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +28,14 @@ class AttendanceController {
     public ResponseEntity<RecordEnterTimeResDto> recordEnterTime(@PathVariable Long accountId, @Valid @RequestBody RecordEnterTimeReqDto recordEnterTimeReqDto) {
         RecordEnterTimeResDto recordEnterTimeResDto = attendanceService.recordEnterTime(recordEnterTimeReqDto);
         return ResponseEntity.ok(recordEnterTimeResDto);
+    }
+
+    @Certification
+    @GetMapping("/employer/{accountId}/{year}/{month}/{day}")
+    public ResponseEntity<List<GetAttendanceResDto>> getAllAttendances(@PathVariable Long accountId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceReqDto getAttendanceReqDto) {
+        LocalDate date = LocalDate.of(year, month, day);
+        List<GetAttendanceResDto> getAttendanceResDtoList = attendanceService.getAllAttendances(getAttendanceReqDto, date);
+        return ResponseEntity.ok(getAttendanceResDtoList);
     }
 
 }

@@ -1,9 +1,9 @@
 package shop.wazard.application.port.in;
 
-import shop.wazard.dto.MarkingAbsentReqDto;
-import shop.wazard.dto.MarkingAbsentResDto;
-import shop.wazard.dto.RecordEnterTimeReqDto;
-import shop.wazard.dto.RecordEnterTimeResDto;
+import shop.wazard.dto.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface AttendanceService {
 
@@ -11,4 +11,6 @@ public interface AttendanceService {
 
     RecordEnterTimeResDto recordEnterTime(RecordEnterTimeReqDto recordEnterTimeReqDto);
 
+    List<GetAttendanceResDto> getAllAttendances(GetAttendanceReqDto getAttendanceReqDto, LocalDate date);
+    
 }
