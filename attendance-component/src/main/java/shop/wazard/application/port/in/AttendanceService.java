@@ -11,6 +11,6 @@ public interface AttendanceService {
 
     RecordEnterTimeResDto recordEnterTime(RecordEnterTimeReqDto recordEnterTimeReqDto);
 
-    List<GetAttendanceResDto> getAllAttendances(GetAttendanceReqDto getAttendanceReqDto, LocalDate date);
+    List<GetAttendanceResDto> getAttendancesByDayOfTheWeek(GetAttendanceReqDto getAttendanceReqDto, LocalDate date);
     
 }

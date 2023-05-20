@@ -41,11 +41,12 @@ public class EnterRecordJpa extends BaseEntity {
     private ExitRecordJpa exitRecordJpa;
 
     @Builder
-    public EnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime enterTime) {
+    public EnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDateTime enterTime, LocalDate enterDate) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.tardy = tardy;
         this.enterTime = enterTime;
+        this.enterDate = enterDate;
     }
 
 }

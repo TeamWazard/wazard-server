@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AbsentForAttendance;
 import shop.wazard.application.domain.AccountForAttendance;
+import shop.wazard.application.domain.Attendance;
 import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
@@ -44,9 +45,12 @@ class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<GetAttendanceResDto> getAllAttendances(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
+    public List<GetAttendanceResDto> getAttendancesByDayOfTheWeek(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceReqDto.getEmail());
         accountForAttendance.checkIsEmployer();
-        return commuteRecordForAttendancePort.getAllAttendances(Commute);
+        return commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(
+                Attendance.createAttendance(getAttendanceReqDto, date)
+        );
     }
+
 }
