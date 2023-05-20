@@ -106,14 +106,15 @@ class AttendanceDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근무자 - 정상 출근 기록 - CommuteRecordJpa 저장")
-    public void saveCommuteRecordJpaSuccess_ON() throws Exception {
+    @DisplayName("근무자 - 정상 출근 기록 - EnterRecordJpa 저장")
+    public void saveEnterRecordJpaSuccess_ON() throws Exception {
         // given
         EnterRecord enterRecord = EnterRecord.builder()
                 .accountId(1L)
                 .companyId(2L)
                 .tardy(false)
-                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .enterDate(LocalDate.of(2023, 1, 1))
+                .enterTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
                 .build();
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
@@ -125,7 +126,8 @@ class AttendanceDbAdapterTest {
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .tardy(enterRecord.isTardy())
-                .enterTime(enterRecord.getCommuteTime())
+                .enterDate(enterRecord.getEnterDate())
+                .enterTime(enterRecord.getEnterTime())
                 .build();
         EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         em.flush();
@@ -134,20 +136,22 @@ class AttendanceDbAdapterTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
                 () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
-                () -> Assertions.assertEquals(enterRecord.getCommuteTime(), result.getEnterTime()),
+                () -> Assertions.assertEquals(enterRecord.getEnterDate(), result.getEnterDate()),
+                () -> Assertions.assertEquals(enterRecord.getEnterTime(), result.getEnterTime()),
                 () -> Assertions.assertEquals(enterRecord.isTardy(), result.isTardy())
         );
     }
 
     @Test
-    @DisplayName("근무자 - 지각 출근 기록 - CommuteRecordJpa 저장")
-    public void saveCommuteRecordJpaSuccess_LATE() throws Exception {
+    @DisplayName("근무자 - 지각 출근 기록 - EnterRecordJpa 저장")
+    public void saveEnterRecordJpaSuccess_LATE() throws Exception {
         // given
         EnterRecord enterRecord = EnterRecord.builder()
                 .accountId(1L)
                 .companyId(2L)
                 .tardy(true)
-                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
+                .enterDate(LocalDate.of(2023, 1, 1))
+                .enterTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
                 .build();
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
@@ -159,7 +163,8 @@ class AttendanceDbAdapterTest {
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .tardy(enterRecord.isTardy())
-                .enterTime(enterRecord.getCommuteTime())
+                .enterDate(enterRecord.getEnterDate())
+                .enterTime(enterRecord.getEnterTime())
                 .build();
         EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
         em.flush();
@@ -168,23 +173,23 @@ class AttendanceDbAdapterTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
                 () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
-                () -> Assertions.assertEquals(enterRecord.getCommuteTime(), result.getEnterTime()),
+                () -> Assertions.assertEquals(enterRecord.getEnterDate(), result.getEnterDate()),
+                () -> Assertions.assertEquals(enterRecord.getEnterTime(), result.getEnterTime()),
                 () -> Assertions.assertEquals(enterRecord.isTardy(), result.isTardy())
         );
     }
 
     @Test
-    @DisplayName("근무자 - 퇴근 기록 - CommuteRecordJpa 저장")
-    public void saveCommuteRecordJpaSuccess_OFF() throws Exception {
+    @DisplayName("근무자 - 퇴근 기록 - ExitRecordJpa 저장")
+    public void saveExitRecordJpaSuccess() throws Exception {
         // given
-        EnterRecord enterRecord = EnterRecord.builder()
-                .accountId(1L)
-                .companyId(2L)
-                .tardy(false)
-                .commuteTime(LocalDateTime.of(2023, 1, 1, 12, 12, 12))
-                .build();
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        LocalDate enterDate = LocalDate.of(2023, 1, 1);
+        LocalDateTime enterTime = LocalDateTime.of(2023, 1, 1, 12, 12, 12);
+        LocalDate exitDate = LocalDate.of(2023, 1, 1);
+        LocalDateTime exitTime = LocalDateTime.of(2023, 1, 1, 20, 12, 12);
 
         // when
         AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
@@ -192,18 +197,24 @@ class AttendanceDbAdapterTest {
         EnterRecordJpa enterRecordJpa = EnterRecordJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
-                .tardy(enterRecord.isTardy())
-                .enterTime(enterRecord.getCommuteTime())
+                .tardy(false)
+                .enterDate(enterDate)
+                .enterTime(enterTime)
                 .build();
-        EnterRecordJpa result = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
+        EnterRecordJpa savedEnterRecordJpa = enterRecordJpaForAttendanceRepository.save(enterRecordJpa);
+        ExitRecordJpa exitRecordJpa = ExitRecordJpa.builder()
+                .enterRecordJpa(savedEnterRecordJpa)
+                .exitDate(exitDate)
+                .exitTime(exitTime)
+                .build();
+        ExitRecordJpa result = exitRecordJpaForAttendanceRepository.save(exitRecordJpa);
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(accountJpa, result.getAccountJpa()),
-                () -> Assertions.assertEquals(companyJpa, result.getCompanyJpa()),
-                () -> Assertions.assertEquals(enterRecord.getCommuteTime(), result.getEnterTime()),
-                () -> Assertions.assertEquals(enterRecord.isTardy(), result.isTardy())
+                () -> Assertions.assertEquals(savedEnterRecordJpa, result.getEnterRecordJpa()),
+                () -> Assertions.assertEquals(exitDate, result.getExitDate()),
+                () -> Assertions.assertEquals(exitTime, result.getExitTime())
         );
     }
 

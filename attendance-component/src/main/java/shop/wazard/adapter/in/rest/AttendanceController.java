@@ -30,6 +30,12 @@ class AttendanceController {
         return ResponseEntity.ok(recordEnterTimeResDto);
     }
 
+    @PostMapping("/exit/{accountId}")
+    public ResponseEntity<RecordExitTimeResDto> recordExitTime(@PathVariable Long accountId, @Valid @RequestBody RecordExitTimeReqDto recordExitTimeReqDto) {
+        RecordExitTimeResDto recordExitTimeResDto = attendanceService.recordExitTime(recordExitTimeReqDto);
+        return ResponseEntity.ok(recordExitTimeResDto);
+    }
+
     @Certification
     @GetMapping("/employer/{accountId}/{year}/{month}/{day}")
     public ResponseEntity<List<GetAttendanceResDto>> getAttendancesByDayOfTheWeek(@PathVariable Long accountId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceReqDto getAttendanceReqDto) {
