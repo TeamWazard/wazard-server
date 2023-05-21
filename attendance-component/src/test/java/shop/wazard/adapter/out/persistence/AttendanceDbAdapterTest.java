@@ -22,6 +22,8 @@ import shop.wazard.entity.company.CompanyJpa;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -37,8 +39,7 @@ import java.time.LocalDateTime;
         AbsentJpaForAttendanceRepository.class,
         CompanyJpaForAttendanceRepository.class,
         EnterRecordJpaForAttendanceRepository.class,
-        ExitRecordJpaForAttendanceRepository.class
-})
+        ExitRecordJpaForAttendanceRepository.class})
 class AttendanceDbAdapterTest {
 
     @Autowired
@@ -57,6 +58,37 @@ class AttendanceDbAdapterTest {
     private ExitRecordJpaForAttendanceRepository exitRecordJpaForAttendanceRepository;
     @Autowired
     private EntityManager em;
+
+    @Test
+    @DisplayName("고용주 - 요일별 출근부 조회 - 성공")
+    void getAttendancesByDay() throws Exception {
+        // given
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+        List<AccountJpa> accountJpaList = setDefaultAccountJpaList();
+
+        // when
+        CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
+        List<EnterRecordJpa> enterRecordJpaList = setEnterRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(accountJpaList, savedCompanyJpa);
+        List<ExitRecordJpa> exitRecordJpaList = setExitRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(enterRecordJpaList);
+        em.flush();
+        em.clear();
+        List<EnterRecordJpa> findEnter = enterRecordJpaForAttendanceRepository
+                .findAllByCompanyJpaAndEnterDateOrderByAccountJpaAsc(savedCompanyJpa, enterRecordJpaList.get(0).getEnterDate());
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterDate(), findEnter.get(0).getEnterDate()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterTime(), findEnter.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitDate(), findEnter.get(0).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitTime(), findEnter.get(0).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(accountJpaList.get(0).getUserName(), findEnter.get(0).getAccountJpa().getUserName()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterDate(), findEnter.get(1).getEnterDate()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterTime(), findEnter.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitDate(), findEnter.get(1).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitTime(), findEnter.get(1).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(accountJpaList.get(1).getUserName(), findEnter.get(1).getAccountJpa().getUserName())
+        );
+    }
 
     @Test
     @DisplayName("고용주 - 근무자 결석 처리 - AbsentJpa 저장")
@@ -227,6 +259,71 @@ class AttendanceDbAdapterTest {
                 .salaryDate(1)
                 .logoImageUrl("www.test.com")
                 .build();
+    }
+
+    private List<AccountJpa> setDefaultAccountJpaList() {
+        List<AccountJpa> accountJpaList = new ArrayList<>();
+        AccountJpa accountJpa1 = AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName2")
+                .phoneNumber("010-2222-2222")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa accountJpa2 = AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName3")
+                .phoneNumber("010-3333-3333")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        accountJpaList.add(accountJpaForAttendanceRepository.save(accountJpa1));
+        accountJpaList.add(accountJpaForAttendanceRepository.save(accountJpa2));
+        return accountJpaList;
+    }
+
+    private List<EnterRecordJpa> setEnterRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
+                .accountJpa(accountJpaList.get(0))
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterTime(LocalDateTime.now())
+                .enterDate(LocalDate.now())
+                .build();
+        EnterRecordJpa enterRecordJpa2 = EnterRecordJpa.builder()
+                .accountJpa(accountJpaList.get(1))
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterTime(LocalDateTime.now())
+                .enterDate(LocalDate.now())
+                .build();
+        enterRecordJpaList.add(enterRecordJpaForAttendanceRepository.save(enterRecordJpa1));
+        enterRecordJpaList.add(enterRecordJpaForAttendanceRepository.save(enterRecordJpa2));
+        return enterRecordJpaList;
+    }
+
+    private List<ExitRecordJpa> setExitRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(List<EnterRecordJpa> enterRecordJpaList) {
+        List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
+        ExitRecordJpa exitRecordJpa1 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(0))
+                .exitTime(LocalDateTime.now())
+                .exitDate(LocalDate.now())
+                .build();
+        ExitRecordJpa exitRecordJpa2 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(1))
+                .exitTime(LocalDateTime.now())
+                .exitDate(LocalDate.now())
+                .build();
+        exitRecordJpaList.add(exitRecordJpaForAttendanceRepository.save(exitRecordJpa1));
+        exitRecordJpaList.add(exitRecordJpaForAttendanceRepository.save(exitRecordJpa2));
+        return exitRecordJpaList;
     }
 
 }

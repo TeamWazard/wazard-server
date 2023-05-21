@@ -2,13 +2,11 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import shop.wazard.application.domain.AbsentForAttendance;
-import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.EnterRecord;
-import shop.wazard.application.domain.ExitRecord;
+import shop.wazard.application.domain.*;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
+import shop.wazard.dto.GetAttendanceByDayOfTheWeekResDto;
 import shop.wazard.dto.RecordExitTimeReqDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
@@ -21,6 +19,7 @@ import shop.wazard.exception.EnterRecordNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -84,4 +83,11 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
         return enterRecordJpa.getId();
     }
 
+    @Override
+    public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(Attendance attendance) {
+        CompanyJpa companyJpa = companyJpaForAttendanceRepository.findById(attendance.getCompanyId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForAttendanceRepository.findAllByCompanyJpaAndEnterDateOrderByAccountJpaAsc(companyJpa, attendance.getEnterDate());
+        return attendanceMapper.getAllAttendances(enterRecordJpaList);
+    }
 }
