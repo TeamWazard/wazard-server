@@ -16,10 +16,13 @@ import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
+import shop.wazard.dto.GetAttendanceByDayOfTheWeekReqDto;
 import shop.wazard.dto.MarkingAbsentReqDto;
 import shop.wazard.dto.RecordEnterTimeReqDto;
 import shop.wazard.dto.RecordExitTimeReqDto;
 import shop.wazard.exception.EnterRecordNotFoundException;
+
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.*;
 
@@ -110,6 +113,28 @@ class AttendanceServiceImplTest {
 
         // then
         Assertions.assertThrows(EnterRecordNotFoundException.class, () -> attendanceService.recordExitTime(recordExitTimeReqDto));
+    }
+
+    @Test
+    @DisplayName("고용주 - 요일별 출근부 조회 - 성공")
+    void getAttendanceByDayOfTheWeekForEmployer() throws Exception {
+        // given
+        AccountForAttendance accountForAttendance = AccountForAttendance.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+        GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto = GetAttendanceByDayOfTheWeekReqDto.builder()
+                .email("test@email.com")
+                .companyId(2L)
+                .build();
+        LocalDate date = LocalDate.now();
+
+        // when
+        Mockito.when(accountForAttendancePort.findAccountByEmail(anyString()))
+                .thenReturn(accountForAttendance);
+
+        // then
+        Assertions.assertDoesNotThrow(() -> attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date));
     }
 
 }
