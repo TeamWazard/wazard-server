@@ -68,19 +68,26 @@ class AttendanceDbAdapterTest {
 
         // when
         CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
-        List<EnterRecordJpa> enterRecordJpaList = setDefaultEnterRecordJpaList(accountJpaList, savedCompanyJpa);
-        List<ExitRecordJpa> exitRecordJpaList = setDefaultExitRecordJpaList(enterRecordJpaList);
+        List<EnterRecordJpa> enterRecordJpaList = setEnterRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(accountJpaList, savedCompanyJpa);
+        List<ExitRecordJpa> exitRecordJpaList = setExitRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(enterRecordJpaList);
         em.flush();
         em.clear();
         List<EnterRecordJpa> findEnter = enterRecordJpaForAttendanceRepository
                 .findAllByCompanyJpaAndEnterDateOrderByAccountJpaAsc(savedCompanyJpa, enterRecordJpaList.get(0).getEnterDate());
 
         // then
-        Assertions.assertEquals(enterRecordJpaList.get(0).getEnterDate(), findEnter.get(0).getEnterDate());
-        Assertions.assertEquals(enterRecordJpaList.get(0).getEnterTime(), findEnter.get(0).getEnterTime());
-        Assertions.assertEquals(exitRecordJpaList.get(0).getExitDate(), findEnter.get(0).getExitRecordJpa().getExitDate());
-        Assertions.assertEquals(exitRecordJpaList.get(0).getExitTime(), findEnter.get(0).getExitRecordJpa().getExitTime());
-        Assertions.assertEquals(accountJpaList.get(1).getUserName(), findEnter.get(1).getAccountJpa().getUserName());
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterDate(), findEnter.get(0).getEnterDate()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterTime(), findEnter.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitDate(), findEnter.get(0).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitTime(), findEnter.get(0).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(accountJpaList.get(0).getUserName(), findEnter.get(0).getAccountJpa().getUserName()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterDate(), findEnter.get(1).getEnterDate()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterTime(), findEnter.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitDate(), findEnter.get(1).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitTime(), findEnter.get(1).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(accountJpaList.get(1).getUserName(), findEnter.get(1).getAccountJpa().getUserName())
+        );
     }
 
     @Test
@@ -281,7 +288,7 @@ class AttendanceDbAdapterTest {
         return accountJpaList;
     }
 
-    private List<EnterRecordJpa> setDefaultEnterRecordJpaList(List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
+    private List<EnterRecordJpa> setEnterRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
         List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
         EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
                 .accountJpa(accountJpaList.get(0))
@@ -302,7 +309,7 @@ class AttendanceDbAdapterTest {
         return enterRecordJpaList;
     }
 
-    private List<ExitRecordJpa> setDefaultExitRecordJpaList(List<EnterRecordJpa> enterRecordJpaList) {
+    private List<ExitRecordJpa> setExitRecordJpaListForEmployerGetAttendanceByDayOfTheWeek(List<EnterRecordJpa> enterRecordJpaList) {
         List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
         ExitRecordJpa exitRecordJpa1 = ExitRecordJpa.builder()
                 .enterRecordJpa(enterRecordJpaList.get(0))

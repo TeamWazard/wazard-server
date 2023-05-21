@@ -3,7 +3,7 @@ package shop.wazard.adapter.out.persistence;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.domain.ExitRecord;
-import shop.wazard.dto.GetAttendanceResDto;
+import shop.wazard.dto.GetAttendanceByDayOfTheWeekResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.commuteRecord.ExitRecordJpa;
@@ -32,9 +32,9 @@ class AttendanceMapper {
                 .build();
     }
 
-    public List<GetAttendanceResDto> getAllAttendances(List<EnterRecordJpa> enterRecordJpaList) {
+    public List<GetAttendanceByDayOfTheWeekResDto> getAllAttendances(List<EnterRecordJpa> enterRecordJpaList) {
         return enterRecordJpaList.stream()
-                .map(enterRecord -> GetAttendanceResDto.builder()
+                .map(enterRecord -> GetAttendanceByDayOfTheWeekResDto.builder()
                         .accountId(enterRecord.getId())
                         .userName(enterRecord.getAccountJpa().getUserName())
                         .enterTime(enterRecord.getEnterTime())

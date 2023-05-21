@@ -3,11 +3,7 @@ package shop.wazard.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wazard.application.domain.AbsentForAttendance;
-import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.Attendance;
-import shop.wazard.application.domain.EnterRecord;
-import shop.wazard.application.domain.ExitRecord;
+import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
@@ -56,11 +52,11 @@ class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<GetAttendanceResDto> getAttendancesByDayOfTheWeek(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
-        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceReqDto.getEmail());
+    public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
         accountForAttendance.checkIsEmployer();
         return commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(
-                Attendance.createAttendance(getAttendanceReqDto, date)
+                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date)
         );
     }
 

@@ -2,7 +2,7 @@ package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.wazard.dto.GetAttendanceReqDto;
+import shop.wazard.dto.GetAttendanceByDayOfTheWeekReqDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,10 +18,10 @@ public class Attendance {
     private LocalDate exitDate;
     private LocalDateTime exitTime;
 
-    public static Attendance createAttendance(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
+    public static Attendance createAttendance(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
         return Attendance.builder()
-                .accountId(getAttendanceReqDto.getAccountId())
-                .companyId(getAttendanceReqDto.getCompanyId())
+                .accountId(getAttendanceByDayOfTheWeekReqDto.getAccountId())
+                .companyId(getAttendanceByDayOfTheWeekReqDto.getCompanyId())
                 .enterDate(date)
                 .build();
     }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GetAttendanceResDto {
+public class GetAttendanceByDayOfTheWeekResDto {
 
     private Long accountId;
     private String userName;
