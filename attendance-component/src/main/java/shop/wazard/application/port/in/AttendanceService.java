@@ -13,6 +13,8 @@ public interface AttendanceService {
 
     RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto);
 
+    List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date);
+
     List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date);
 
 }

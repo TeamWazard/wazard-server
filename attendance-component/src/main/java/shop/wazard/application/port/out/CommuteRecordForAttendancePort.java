@@ -18,4 +18,6 @@ public interface CommuteRecordForAttendancePort {
 
     Long findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto);
 
+    List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(Attendance attendance);
+
 }
