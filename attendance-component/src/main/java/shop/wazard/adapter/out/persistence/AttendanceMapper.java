@@ -32,7 +32,7 @@ class AttendanceMapper {
                 .build();
     }
 
-    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(List<EnterRecordJpa> enterRecordJpaList) {
+    public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(List<EnterRecordJpa> enterRecordJpaList) {
         return enterRecordJpaList.stream()
                 .map(enterRecord -> GetAttendanceByDayOfTheWeekResDto.builder()
                         .accountId(enterRecord.getId())
