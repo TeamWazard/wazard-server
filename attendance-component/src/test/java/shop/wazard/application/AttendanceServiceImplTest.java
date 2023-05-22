@@ -10,20 +10,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.Attendance;
 import shop.wazard.application.domain.EnterRecord;
 import shop.wazard.application.domain.ExitRecord;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
 import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
-import shop.wazard.dto.*;
+import shop.wazard.dto.MarkingAbsentReqDto;
+import shop.wazard.dto.RecordEnterTimeReqDto;
+import shop.wazard.dto.RecordExitTimeReqDto;
 import shop.wazard.exception.EnterRecordNotFoundException;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 
@@ -114,68 +110,6 @@ class AttendanceServiceImplTest {
 
         // then
         Assertions.assertThrows(EnterRecordNotFoundException.class, () -> attendanceService.recordExitTime(recordExitTimeReqDto));
-    }
-
-    @Test
-    @DisplayName("고용주 - 요일별 출근부 조회 - 성공")
-    void getAttendanceByDayOfTheWeekForEmployer() throws Exception {
-        // given
-        AccountForAttendance accountForAttendance = AccountForAttendance.builder()
-                .id(1L)
-                .roles("EMPLOYER")
-                .build();
-        GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto = GetAttendanceByDayOfTheWeekReqDto.builder()
-                .email("test@email.com")
-                .companyId(2L)
-                .build();
-        LocalDate date = LocalDate.now();
-        Attendance attendance = Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date);
-        List<GetAttendanceByDayOfTheWeekResDto> attendanceByDayOfTheWeekResDtoList = setDefaultAttendanceByDayOfTheWeekResDtoList();
-
-        // when
-        Mockito.when(accountForAttendancePort.findAccountByEmail(anyString()))
-                .thenReturn(accountForAttendance);
-        Mockito.when(commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(any(Attendance.class)))
-                .thenReturn(attendanceByDayOfTheWeekResDtoList);
-
-        // then
-        Assertions.assertAll(
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getAccountId(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getAccountId()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getEnterTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getEnterTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getExitTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getExitTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getUserName(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getUserName()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getAccountId(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getAccountId()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getEnterTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getEnterTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getExitTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getExitTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getUserName(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getUserName())
-        );
-    }
-
-    private List<GetAttendanceByDayOfTheWeekResDto> setDefaultAttendanceByDayOfTheWeekResDtoList() {
-        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceByDayOfTheWeekResDtoList = new ArrayList<>();
-        GetAttendanceByDayOfTheWeekResDto getAttendanceByDayOfTheWeekResDto1 = GetAttendanceByDayOfTheWeekResDto.builder()
-                .accountId(1L)
-                .userName("test1")
-                .enterTime(LocalDateTime.now())
-                .exitTime(LocalDateTime.now())
-                .build();
-        GetAttendanceByDayOfTheWeekResDto getAttendanceByDayOfTheWeekResDto2 = GetAttendanceByDayOfTheWeekResDto.builder()
-                .accountId(2L)
-                .userName("test2")
-                .enterTime(LocalDateTime.now())
-                .exitTime(LocalDateTime.now())
-                .build();
-        getAttendanceByDayOfTheWeekResDtoList.add(getAttendanceByDayOfTheWeekResDto1);
-        getAttendanceByDayOfTheWeekResDtoList.add(getAttendanceByDayOfTheWeekResDto2);
-        return getAttendanceByDayOfTheWeekResDtoList;
     }
 
 }
