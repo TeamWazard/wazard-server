@@ -51,6 +51,7 @@ class AttendanceServiceImpl implements AttendanceService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
@@ -65,7 +66,9 @@ class AttendanceServiceImpl implements AttendanceService {
     public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
         accountForAttendance.checkIsEmployee();
-        return commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date));
+        return commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(
+                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date)
+        );
     }
 
 }
