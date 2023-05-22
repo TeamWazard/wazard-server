@@ -8,6 +8,7 @@ import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.dto.GetPastWorkplaceResDto;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
@@ -26,7 +27,7 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
 
     @Override
     public AccountForMyPage findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountJpaForMyPageRepository.findByEmail(email)
+        AccountJpa accountJpa = accountJpaForMyPageRepository.findByEmailAndBaseStatusJpa(email, BaseEntity.BaseStatusJpa.ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForMyPageMapper.toAccountForAttendanceDomain(accountJpa);
     }
