@@ -22,10 +22,7 @@ public class WaitingInfo {
     }
 
     private boolean isAgreed() {
-        if (!this.waitingStatus.equals(WaitingStatus.AGREED)) {
-            return false;
-        }
-        return true;
+        return this.waitingStatus.equals(WaitingStatus.AGREED);
     }
 
 }

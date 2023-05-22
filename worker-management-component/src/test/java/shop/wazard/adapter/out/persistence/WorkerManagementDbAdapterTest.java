@@ -140,6 +140,52 @@ class WorkerManagementDbAdapterTest {
         );
     }
 
+    @Test
+    @DisplayName("고용주 - 추방을 위한 알바생 조회 - 성공")
+    void findWorkerForExile() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(rosterJpa);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(savedRosterJpa.getAccountJpa(), savedAccountJpa),
+                () -> Assertions.assertEquals(savedRosterJpa.getCompanyJpa(), savedCompanyJpa)
+        );
+    }
+
+    @Test
+    @DisplayName("고용주 - 알바생 추방(상태값 변경) - 성공")
+    void exileWorker() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(rosterJpa);
+        savedRosterJpa.updateRosterStateForExile();
+
+        // then
+        Assertions.assertEquals(savedRosterJpa.getBaseStatusJpa(), BaseEntity.BaseStatusJpa.INACTIVE);
+    }
+
+    private RosterJpa setDefaultRosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        return RosterJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build();
+    }
+
     private Long setDefaultWorkerList() {
         CompanyJpa companyJpa = setDefaultCompanyJpa();
         AccountJpa accountJpa1 = AccountJpa.builder()

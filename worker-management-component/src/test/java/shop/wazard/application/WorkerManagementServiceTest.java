@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.wazard.application.domain.AccountForWorkerManagement;
-import shop.wazard.application.domain.WaitingInfo;
-import shop.wazard.application.domain.WaitingStatus;
+import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.ExileWorkerReqDto;
+import shop.wazard.dto.ExileWorkerResDto;
 import shop.wazard.dto.PermitWorkerToJoinReqDto;
 import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
 import shop.wazard.exception.JoinWorkerDeniedException;
@@ -133,6 +133,39 @@ class WorkerManagementServiceTest {
 
         // then
         Assertions.assertThrows(NotAuthorizedException.class, () -> workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto));
+    }
+
+    @Test
+    @DisplayName("고용주 - 알바생 퇴출 - 성공")
+    void exileWorker() throws Exception {
+        // given
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+        ExileWorkerReqDto exileWorkerReqDto = ExileWorkerReqDto.builder()
+                .email("test@email.com")
+                .accountId(1L)
+                .companyId(2L)
+                .build();
+        RosterForWorkerManagement rosterForWorkerManagement = RosterForWorkerManagement.builder()
+                .accountId(1L)
+                .companyId(2L)
+                .baseStatus(BaseStatus.INACTIVE)
+                .build();
+        ExileWorkerResDto exileWorkerResDto = ExileWorkerResDto.builder()
+                .message("해당 근무자가 업장에서 퇴장되었습니다.")
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(rosterForWorkerManagementPort.findRoster(exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId()))
+                .thenReturn(rosterForWorkerManagement);
+        Mockito.doNothing().when(rosterForWorkerManagementPort).exileWorker(rosterForWorkerManagement);
+
+        // then
+        Assertions.assertEquals(workerManagementService.exileWorker(exileWorkerReqDto).getMessage(), exileWorkerResDto.getMessage());
     }
 
 }
