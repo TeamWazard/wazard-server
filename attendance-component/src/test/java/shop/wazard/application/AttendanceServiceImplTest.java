@@ -143,6 +143,42 @@ class AttendanceServiceImplTest {
         );
     }
 
+    @Test
+    @DisplayName("고용주 - 요일별 출근부 조회 - 성공")
+    void getAttendanceByDayOfTheWeekForEmployer() throws Exception {
+        // given
+        AccountForAttendance accountForAttendance = AccountForAttendance.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+        GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto = GetAttendanceByDayOfTheWeekReqDto.builder()
+                .email("test@email.com")
+                .companyId(2L)
+                .build();
+        LocalDate date = LocalDate.now();
+        Attendance attendance = Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date);
+        List<GetAttendanceByDayOfTheWeekResDto> attendanceByDayOfTheWeekResDtoList = setDefaultAttendanceByDayOfTheWeekResDtoList();
+
+        // when
+        Mockito.when(accountForAttendancePort.findAccountByEmail(anyString()))
+                .thenReturn(accountForAttendance);
+        Mockito.when(commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(any(Attendance.class)))
+                .thenReturn(attendanceByDayOfTheWeekResDtoList);
+        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getAccountId(), result.get(0).getAccountId()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getEnterTime(), result.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getExitTime(), result.get(0).getExitTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getUserName(), result.get(0).getUserName()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getAccountId(), result.get(1).getAccountId()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getExitTime(), result.get(1).getExitTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getUserName(), result.get(1).getUserName())
+        );
+    }
+
     private AccountForAttendance setDefaultEmployeeAccountForAttendance() {
         return AccountForAttendance.builder()
                 .id(1L)
@@ -165,6 +201,25 @@ class AttendanceServiceImplTest {
         GetAttendanceByDayOfTheWeekResDto getAttendanceByDayOfTheWeekResDto2 = GetAttendanceByDayOfTheWeekResDto.builder()
                 .accountId(1L)
                 .userName("test")
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        getAttendanceByDayOfTheWeekResDtoList.add(getAttendanceByDayOfTheWeekResDto1);
+        getAttendanceByDayOfTheWeekResDtoList.add(getAttendanceByDayOfTheWeekResDto2);
+        return getAttendanceByDayOfTheWeekResDtoList;
+    }
+
+    private List<GetAttendanceByDayOfTheWeekResDto> setDefaultAttendanceByDayOfTheWeekResDtoList() {
+        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceByDayOfTheWeekResDtoList = new ArrayList<>();
+        GetAttendanceByDayOfTheWeekResDto getAttendanceByDayOfTheWeekResDto1 = GetAttendanceByDayOfTheWeekResDto.builder()
+                .accountId(1L)
+                .userName("test1")
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        GetAttendanceByDayOfTheWeekResDto getAttendanceByDayOfTheWeekResDto2 = GetAttendanceByDayOfTheWeekResDto.builder()
+                .accountId(2L)
+                .userName("test2")
                 .enterTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
                 .build();
