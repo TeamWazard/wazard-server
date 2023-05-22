@@ -60,4 +60,12 @@ class AttendanceServiceImpl implements AttendanceService {
         );
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
+        accountForAttendance.checkIsEmployee();
+        return commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date));
+    }
+
 }

@@ -18,4 +18,7 @@ interface EnterRecordJpaForAttendanceRepository extends JpaRepository<EnterRecor
     @Query("select er from EnterRecordJpa er where er.companyJpa = :companyJpa and er.enterDate = :date and er.baseStatusJpa = 'ACTIVE' order by er.accountJpa.userName asc, er.enterTime asc")
     List<EnterRecordJpa> findAllByCompanyJpaAndEnterDateOrderByAccountJpaAsc(@Param("companyJpa") CompanyJpa companyJpa, @Param("date") LocalDate date);
 
+    @Query("select er from EnterRecordJpa er where er.companyJpa = :companyJpa and er.accountJpa.id = :accountId and er.enterDate = :date and er.baseStatusJpa = 'ACTIVE' order by er.enterTime asc")
+    List<EnterRecordJpa> getMyAttendanceByDayOfTheWeekJpa(@Param("companyJpa") CompanyJpa companyJpa, @Param("accountId") Long accountId, @Param("date") LocalDate date);
+
 }

@@ -12,6 +12,8 @@ public interface CommuteRecordForAttendancePort {
 
     void recordEnterTime(EnterRecord enterRecord);
 
+    List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(Attendance attendance);
+
     void recordExitTime(ExitRecord exitRecord, Long enterRecordId);
 
     Long findEnterRecord(RecordExitTimeReqDto recordExitTimeReqDto);

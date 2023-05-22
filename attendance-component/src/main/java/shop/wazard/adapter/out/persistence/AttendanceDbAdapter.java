@@ -90,4 +90,12 @@ class AttendanceDbAdapter implements AccountForAttendancePort, CommuteRecordForA
         List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForAttendanceRepository.findAllByCompanyJpaAndEnterDateOrderByAccountJpaAsc(companyJpa, attendance.getEnterDate());
         return attendanceMapper.getAllAttendances(enterRecordJpaList);
     }
+    @Override
+    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(Attendance attendance) {
+        CompanyJpa companyJpa = companyJpaForAttendanceRepository.findById(attendance.getCompanyId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForAttendanceRepository.getMyAttendanceByDayOfTheWeekJpa(companyJpa, attendance.getAccountId(), attendance.getEnterDate());
+        return attendanceMapper.getMyAttendanceByDayOfTheWeek(enterRecordJpaList);
+    }
+
 }

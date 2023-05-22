@@ -15,4 +15,6 @@ public interface AttendanceService {
 
     List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date);
 
+    List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date);
+
 }
