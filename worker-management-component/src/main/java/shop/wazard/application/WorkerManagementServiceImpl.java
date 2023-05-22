@@ -10,10 +10,7 @@ import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
-import shop.wazard.dto.PermitWorkerToJoinResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.dto.*;
 
 import java.util.List;
 
@@ -45,6 +42,18 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
+    }
+
+    @Override
+    public ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(exileWorkerReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        RosterForWorkerManagement rosterForWorkerManagement = rosterForWorkerManagementPort.findRoster(exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId());
+        rosterForWorkerManagement.updateRosterStateForExile();
+        rosterForWorkerManagementPort.exileWorker(rosterForWorkerManagement);
+        return ExileWorkerResDto.builder()
+                .message("해당 근무자가 업장에서 퇴장되었습니다.")
+                .build();
     }
 
 }

@@ -16,6 +16,7 @@ import shop.wazard.entity.company.RosterTypeJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.exception.RosterNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -73,4 +74,16 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
         return workerForManagementMapper.toWorkersBelongedToCompany(workersBelongedCompany);
     }
 
+    @Override
+    public RosterForWorkerManagement findRoster(Long accountId, Long companyId) {
+        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(accountId, companyId);
+        return workerForManagementMapper.toRosterDomain(rosterJpa);
+    }
+
+    @Override
+    public void exileWorker(RosterForWorkerManagement rosterForWorkerManagement) {
+        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findById(rosterForWorkerManagement.getRosterId())
+                .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
+        rosterJpa.updateRosterStateForExile();
+    }
 }

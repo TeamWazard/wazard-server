@@ -11,4 +11,8 @@ public interface RosterForWorkerManagementPort {
 
     List<WorkerBelongedToCompanyResDto> getWorkersBelongedToCompany(Long companyId);
 
+    RosterForWorkerManagement findRoster(Long accountId, Long companyId);
+
+    void exileWorker(RosterForWorkerManagement rosterForWorkerManagement);
+
 }
