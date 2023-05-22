@@ -3,10 +3,7 @@ package shop.wazard.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wazard.application.domain.AbsentForAttendance;
-import shop.wazard.application.domain.AccountForAttendance;
-import shop.wazard.application.domain.Attendance;
-import shop.wazard.application.domain.EnterRecord;
+import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.AttendanceService;
 import shop.wazard.application.port.out.AbsentForAttendancePort;
 import shop.wazard.application.port.out.AccountForAttendancePort;
@@ -14,6 +11,7 @@ import shop.wazard.application.port.out.CommuteRecordForAttendancePort;
 import shop.wazard.dto.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Transactional
 @Service
@@ -43,13 +41,23 @@ class AttendanceServiceImpl implements AttendanceService {
                 .build();
     }
 
+    @Override
+    public RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto) {
+        ExitRecord exitRecord = ExitRecord.createExitRecordForAttendance(recordExitTimeReqDto);
+        Long enterRecordId = commuteRecordForAttendancePort.findEnterRecord(recordExitTimeReqDto);
+        commuteRecordForAttendancePort.recordExitTime(exitRecord, enterRecordId);
+        return RecordExitTimeResDto.builder()
+                .message("퇴근 시간이 기록되었습니다.")
+                .build();
+    }
+
+
     @Transactional(readOnly = true)
     @Override
-    public GetAttendanceResDto getMyAttendance(GetAttendanceReqDto getAttendanceReqDto, LocalDate date) {
-        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceReqDto.getEmail());
+    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+        AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
         accountForAttendance.checkIsEmployee();
-        Attendance attendance = Attendance.createAttendance(getAttendanceReqDto, date);
-        return commuteRecordForAttendancePort.getMyAttendance(attendance);
+        return commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date));
     }
 
 }

@@ -3,6 +3,7 @@ package shop.wazard.application.port.in;
 import shop.wazard.dto.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface AttendanceService {
 
@@ -10,5 +11,8 @@ public interface AttendanceService {
 
     RecordEnterTimeResDto recordEnterTime(RecordEnterTimeReqDto recordEnterTimeReqDto);
 
-    GetAttendanceResDto getMyAttendance(GetAttendanceReqDto getAttendanceReqDto, LocalDate date);
+    RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto);
+
+    List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date);
+
 }

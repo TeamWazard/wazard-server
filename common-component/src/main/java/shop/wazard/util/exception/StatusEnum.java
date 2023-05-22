@@ -20,7 +20,8 @@ public enum StatusEnum {
     JOIN_WORKER_DENIED(410, "계약 정보에 동의하지 않은 근무자는 초대 수락이 불가능합니다."),
     WORKER_NOT_FOUND_IN_WAITING_LIST(411, "대기자 명단에 존재하지 않는 근무자입니다."),
     INVALID_TARDY_STATE(412, "퇴근 등록에는 지각처리가 불가합니다."),
-    FAIL_TO_UPLOAD_IMAGE(503, "이미지 업로드에 실패했습니다."),;
+    FAIL_TO_UPLOAD_IMAGE(503, "이미지 업로드에 실패했습니다."),
+    ENTER_RECORD_NOT_FOUND(413, "출근 기록이 존재하지 않습니다."),;
 
     private int statusCode;
     private String message;

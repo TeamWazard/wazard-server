@@ -1,8 +1,13 @@
 package shop.wazard.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
-public class GetAttendanceResDto {
+@Getter
+@Builder
+public class GetAttendanceByDayOfTheWeekResDto {
 
     private Long accountId;
     private String userName;
