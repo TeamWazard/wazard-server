@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.*;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
@@ -49,4 +50,7 @@ class WorkerManagementMapper {
                 .build();
     }
 
+    public void updateRosterStateForExile(RosterJpa rosterJpa, RosterForWorkerManagement rosterForWorkerManagement) {
+        rosterJpa.updateRosterStateForExile(BaseStatusJpa.valueOf(rosterForWorkerManagement.getBaseStatus().getStatus()));
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.domain.WaitingStatus;
 import shop.wazard.entity.account.AccountJpa;
@@ -172,7 +173,8 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
         RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
         RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(rosterJpa);
-        savedRosterJpa.updateRosterStateForExile();
+        RosterForWorkerManagement rosterDomain = workerManagementMapper.toRosterDomain(rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get());
+        workerManagementMapper.updateRosterStateForExile(savedRosterJpa, rosterDomain);
 
         // then
         Assertions.assertEquals(savedRosterJpa.getBaseStatusJpa(), BaseEntity.BaseStatusJpa.INACTIVE);

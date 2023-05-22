@@ -160,7 +160,7 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(rosterForWorkerManagementPort.findRoster(exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId()))
+        Mockito.when(rosterForWorkerManagementPort.findRoster(anyLong(), anyLong()))
                 .thenReturn(rosterForWorkerManagement);
         Mockito.doNothing().when(rosterForWorkerManagementPort).exileWorker(rosterForWorkerManagement);
 

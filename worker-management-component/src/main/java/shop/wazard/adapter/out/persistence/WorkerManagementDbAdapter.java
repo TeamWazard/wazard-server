@@ -76,7 +76,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     @Override
     public RosterForWorkerManagement findRoster(Long accountId, Long companyId) {
-        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(accountId, companyId);
+        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(accountId, companyId)
+                .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
         return workerForManagementMapper.toRosterDomain(rosterJpa);
     }
 
@@ -84,6 +85,6 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     public void exileWorker(RosterForWorkerManagement rosterForWorkerManagement) {
         RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findById(rosterForWorkerManagement.getRosterId())
                 .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
-        rosterJpa.updateRosterStateForExile();
+        workerForManagementMapper.updateRosterStateForExile(rosterJpa, rosterForWorkerManagement);
     }
 }

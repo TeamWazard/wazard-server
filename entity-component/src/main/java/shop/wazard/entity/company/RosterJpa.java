@@ -39,7 +39,7 @@ public class RosterJpa extends BaseEntity {
         this.rosterTypeJpa = rosterTypeJpa;
     }
 
-    public void updateRosterStateForExile() {
+    public void updateRosterStateForExile(BaseStatusJpa baseStatusJpa) {
         this.baseStatusJpa = BaseStatusJpa.INACTIVE;
     }
 
