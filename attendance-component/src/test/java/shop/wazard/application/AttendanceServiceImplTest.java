@@ -164,25 +164,18 @@ class AttendanceServiceImplTest {
                 .thenReturn(accountForAttendance);
         Mockito.when(commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(any(Attendance.class)))
                 .thenReturn(attendanceByDayOfTheWeekResDtoList);
+        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getAccountId(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getAccountId()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getEnterTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getEnterTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getExitTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getExitTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getUserName(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(0).getUserName()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getAccountId(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getAccountId()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getEnterTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getEnterTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getExitTime(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getExitTime()),
-                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getUserName(),
-                        attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date).get(1).getUserName())
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getAccountId(), result.get(0).getAccountId()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getEnterTime(), result.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getExitTime(), result.get(0).getExitTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(0).getUserName(), result.get(0).getUserName()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getAccountId(), result.get(1).getAccountId()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getExitTime(), result.get(1).getExitTime()),
+                () -> Assertions.assertEquals(attendanceByDayOfTheWeekResDtoList.get(1).getUserName(), result.get(1).getUserName())
         );
     }
 
