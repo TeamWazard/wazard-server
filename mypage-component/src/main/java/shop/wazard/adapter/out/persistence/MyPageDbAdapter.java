@@ -33,7 +33,7 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
 
     @Override
     public List<GetPastWorkplaceResDto> getPastWorkplaces(Long accountId) {
-        List<CompanyJpa> companyJpaList = companyJpaForMyPageRepository.findPastWorkplacesById(accountId);
+        List<CompanyJpa> companyJpaList = rosterJpaForMyPageRepository.findPastWorkplacesById(accountId);
         return myPageMapper.toCompanyInfoDomainList(companyJpaList);
     }
 

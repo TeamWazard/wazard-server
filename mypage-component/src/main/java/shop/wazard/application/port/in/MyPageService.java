@@ -6,6 +6,7 @@ import shop.wazard.dto.GetPastWorkplaceResDto;
 import java.util.List;
 
 public interface MyPageService {
+
     List<GetPastWorkplaceResDto> getPastWorkplaces(GetPastWorkplaceReqDto getPastWorkplaceReqDto);
 
 }

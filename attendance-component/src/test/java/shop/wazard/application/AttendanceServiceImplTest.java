@@ -51,7 +51,7 @@ class AttendanceServiceImplTest {
                 .build();
         AccountForAttendance accountForAttendance = AccountForAttendance.builder()
                 .id(3L)
-                .roles("EMPLOYER")
+                .roles("EMPLOYEE")
                 .build();
 
         // when
