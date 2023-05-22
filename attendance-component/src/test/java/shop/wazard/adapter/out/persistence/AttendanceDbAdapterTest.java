@@ -230,15 +230,16 @@ class AttendanceDbAdapterTest {
     public void getMyAttendanceByDayOfTheWeekSuccess() throws Exception {
         // given
         CompanyJpa companyJpa = setDefaultCompanyJpa();
-        List<AccountJpa> accountJpaList = setDefaultEqualAccountJpaList();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
 
         // when
         CompanyJpa savedCompanyJpa = companyJpaForAttendanceRepository.save(companyJpa);
-        List<EnterRecordJpa> enterRecordJpaList = setDefaultEnterRecordJpaListForEmployeeGetAttendanceByDayOfTheWeek(accountJpaList, savedCompanyJpa);
+        AccountJpa savedAccountJpa = accountJpaForAttendanceRepository.save(accountJpa);
+        List<EnterRecordJpa> enterRecordJpaList = setDefaultEnterRecordJpaListForEmployeeGetAttendanceByDayOfTheWeek(savedAccountJpa, savedCompanyJpa);
         List<ExitRecordJpa> exitRecordJpaList = setDefaultExitRecordJpaListForEmployeeGetAttendanceByDayOfTheWeek(enterRecordJpaList);
         em.flush();
         em.clear();
-        List<EnterRecordJpa> result = enterRecordJpaForAttendanceRepository.getMyAttendanceByDayOfTheWeekJpa(savedCompanyJpa, accountJpaList.get(0).getId(), enterRecordJpaList.get(0).getEnterDate());
+        List<EnterRecordJpa> result = enterRecordJpaForAttendanceRepository.getMyAttendanceByDayOfTheWeekJpa(savedCompanyJpa, savedAccountJpa.getId(), enterRecordJpaList.get(0).getEnterDate());
 
         // then
         Assertions.assertAll(
@@ -246,7 +247,7 @@ class AttendanceDbAdapterTest {
                 () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterTime(), result.get(0).getEnterTime()),
                 () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitDate(), result.get(0).getExitRecordJpa().getExitDate()),
                 () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitTime(), result.get(0).getExitRecordJpa().getExitTime()),
-                () -> Assertions.assertEquals(accountJpaList.get(0).getUserName(), result.get(0).getAccountJpa().getUserName())
+                () -> Assertions.assertEquals(accountJpa.getUserName(), result.get(0).getAccountJpa().getUserName())
         );
 
     }
@@ -352,44 +353,17 @@ class AttendanceDbAdapterTest {
         return exitRecordJpaList;
     }
 
-    private List<AccountJpa> setDefaultEqualAccountJpaList() {
-        List<AccountJpa> accountJpaList = new ArrayList<>();
-        AccountJpa accountJpa1 = AccountJpa.builder()
-                .email("testEmployee@email.com")
-                .password("testPwd")
-                .userName("testName2")
-                .phoneNumber("010-2222-2222")
-                .gender(GenderTypeJpa.MALE.getGender())
-                .birth(LocalDate.of(2023, 1, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
-                .roles("EMPLOYEE")
-                .build();
-        AccountJpa accountJpa2 = AccountJpa.builder()
-                .email("testEmployee@email.com")
-                .password("testPwd")
-                .userName("testName2")
-                .phoneNumber("010-2222-2222")
-                .gender(GenderTypeJpa.MALE.getGender())
-                .birth(LocalDate.of(2023, 1, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
-                .roles("EMPLOYEE")
-                .build();
-        accountJpaList.add(accountJpaForAttendanceRepository.save(accountJpa1));
-        accountJpaList.add(accountJpaForAttendanceRepository.save(accountJpa2));
-        return accountJpaList;
-    }
-
-    private List<EnterRecordJpa> setDefaultEnterRecordJpaListForEmployeeGetAttendanceByDayOfTheWeek(List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
+    private List<EnterRecordJpa> setDefaultEnterRecordJpaListForEmployeeGetAttendanceByDayOfTheWeek(AccountJpa accountJpa, CompanyJpa companyJpa) {
         List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
         EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
-                .accountJpa(accountJpaList.get(0))
+                .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .tardy(false)
                 .enterTime(LocalDateTime.of(2023,1,1,12,0,0))
                 .enterDate(LocalDate.of(2023,1,1))
                 .build();
         EnterRecordJpa enterRecordJpa2 = EnterRecordJpa.builder()
-                .accountJpa(accountJpaList.get(1))
+                .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
                 .tardy(false)
                 .enterTime(LocalDateTime.of(2023,1,1,20,0,0))
