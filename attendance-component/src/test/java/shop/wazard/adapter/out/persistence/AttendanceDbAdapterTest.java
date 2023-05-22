@@ -247,7 +247,12 @@ class AttendanceDbAdapterTest {
                 () -> Assertions.assertEquals(enterRecordJpaList.get(0).getEnterTime(), result.get(0).getEnterTime()),
                 () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitDate(), result.get(0).getExitRecordJpa().getExitDate()),
                 () -> Assertions.assertEquals(exitRecordJpaList.get(0).getExitTime(), result.get(0).getExitRecordJpa().getExitTime()),
-                () -> Assertions.assertEquals(accountJpa.getUserName(), result.get(0).getAccountJpa().getUserName())
+                () -> Assertions.assertEquals(accountJpa.getUserName(), result.get(0).getAccountJpa().getUserName()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterDate(), result.get(1).getEnterDate()),
+                () -> Assertions.assertEquals(enterRecordJpaList.get(1).getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitDate(), result.get(1).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(exitRecordJpaList.get(1).getExitTime(), result.get(1).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(accountJpa.getUserName(), result.get(1).getAccountJpa().getUserName())
         );
 
     }
