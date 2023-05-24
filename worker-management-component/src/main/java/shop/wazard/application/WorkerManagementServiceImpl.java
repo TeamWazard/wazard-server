@@ -61,6 +61,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return waitingListForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
+        return rosterForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
     }
 
 }

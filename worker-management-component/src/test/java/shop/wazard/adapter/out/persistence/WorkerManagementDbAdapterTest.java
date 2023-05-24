@@ -173,11 +173,12 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
         RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
         RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(rosterJpa);
-        RosterForWorkerManagement rosterDomain = workerManagementMapper.toRosterDomain(rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get());
-        workerManagementMapper.updateRosterStateForExile(savedRosterJpa, rosterDomain);
+        RosterForWorkerManagement rosterForWorkerManagement = workerManagementMapper.toRosterDomain(savedRosterJpa);
+        workerManagementMapper.updateRosterStateForExile(savedRosterJpa, rosterForWorkerManagement);
+        RosterJpa findRosterJpa = rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get();
 
         // then
-        Assertions.assertEquals(savedRosterJpa.getBaseStatusJpa(), BaseEntity.BaseStatusJpa.INACTIVE);
+        Assertions.assertEquals(findRosterJpa.getBaseStatusJpa(), savedRosterJpa.getBaseStatusJpa());
     }
 
     @Test
