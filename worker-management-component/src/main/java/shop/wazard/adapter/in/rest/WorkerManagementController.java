@@ -38,4 +38,11 @@ class WorkerManagementController {
         return ResponseEntity.ok(exileWorkerResDto);
     }
 
+    @Certification
+    @GetMapping("/workers/waiting/{accountId}")
+    public ResponseEntity<List<WaitingWorkerResDto>> getWaitingWorkers(@PathVariable Long accountId, @Valid @RequestBody WaitingWorkerReqDto waitingWorkerReqDto) {
+        List<WaitingWorkerResDto> waitingWorkerList = workerManagementService.getWaitingWorkers(waitingWorkerReqDto);
+        return ResponseEntity.ok(waitingWorkerList);
+    }
+
 }
