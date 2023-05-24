@@ -55,8 +55,8 @@ class MyPageServiceImplTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.get(0).getCompanyName(), getPastWorkplaceResDtoList.get(0).getCompanyName()),
-                () -> Assertions.assertEquals(result.get(1).getCompanyName(), getPastWorkplaceResDtoList.get(1).getCompanyName())
+                () -> Assertions.assertEquals(getPastWorkplaceResDtoList.get(0).getCompanyName(), result.get(0).getCompanyName()),
+                () -> Assertions.assertEquals(getPastWorkplaceResDtoList.get(1).getCompanyName(), result.get(1).getCompanyName())
         );
     }
 
