@@ -56,4 +56,9 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
                 .build();
     }
 
+    @Override
+    public List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto) {
+        return null;
+    }
+
 }

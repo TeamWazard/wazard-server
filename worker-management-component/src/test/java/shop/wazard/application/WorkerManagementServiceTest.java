@@ -14,12 +14,12 @@ import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.ExileWorkerReqDto;
-import shop.wazard.dto.ExileWorkerResDto;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
-import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
+import shop.wazard.dto.*;
 import shop.wazard.exception.JoinWorkerDeniedException;
 import shop.wazard.exception.NotAuthorizedException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -166,6 +166,62 @@ class WorkerManagementServiceTest {
 
         // then
         Assertions.assertEquals(workerManagementService.exileWorker(exileWorkerReqDto).getMessage(), exileWorkerResDto.getMessage());
+    }
+
+    @Test
+    @DisplayName("고용주 - 초대 대기자 목록 조회 - 성공")
+    public void getWaitingWorkersSuccess() throws Exception {
+        // given
+        WaitingWorkerReqDto waitingWorkerReqDto = WaitingWorkerReqDto.builder()
+                .companyId(10L)
+                .email("employer@email.com")
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+        List<WaitingWorkerResDto> waitingWorkerResDtoList = setWaitingWorkerResDtoList();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(rosterForWorkerManagementPort.getWaitingWorker(anyLong()))
+                .thenReturn(waitingWorkerResDtoList);
+
+        List<WaitingWorkerResDto> result = workerManagementService.getWaitingWorkers(waitingWorkerReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getAccountId(), result.get(0).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getWaitingStatus(), result.get(0).getWaitingStatus()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getAccountId(), result.get(1).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getWaitingStatus(), result.get(1).getWaitingStatus()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getAccountId(), result.get(2).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getWaitingStatus(), result.get(2).getWaitingStatus())
+        );
+    }
+
+    private List<WaitingWorkerResDto> setWaitingWorkerResDtoList() {
+        List<WaitingWorkerResDto> waitingWorkerResDtoList = new ArrayList<>();
+        waitingWorkerResDtoList.add(WaitingWorkerResDto.builder()
+                .accountId(1L)
+                .userName("testName1")
+                .waitingStatus(WaitingStatus.AGREED)
+                .email("test1@email.com")
+                .build());
+        waitingWorkerResDtoList.add(WaitingWorkerResDto.builder()
+                .accountId(2L)
+                .userName("testName2")
+                .waitingStatus(WaitingStatus.DISAGREED)
+                .email("test2@email.com")
+                .build());
+        waitingWorkerResDtoList.add(WaitingWorkerResDto.builder()
+                .accountId(4L)
+                .userName("testName4")
+                .waitingStatus(WaitingStatus.INVITED)
+                .email("test4@email.com")
+                .build());
+        return waitingWorkerResDtoList;
     }
 
 }

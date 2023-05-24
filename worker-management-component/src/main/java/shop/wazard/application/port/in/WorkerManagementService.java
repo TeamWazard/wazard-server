@@ -12,6 +12,6 @@ public interface WorkerManagementService {
 
     ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto);
 
-    List<WaitingWorkerResDto> getWaitingWorker(WaitingWorkerReqDto waitingWorkerReqDto);
+    List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto);
 
 }
