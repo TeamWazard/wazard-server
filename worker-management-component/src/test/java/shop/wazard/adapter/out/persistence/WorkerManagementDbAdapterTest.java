@@ -213,7 +213,6 @@ class WorkerManagementDbAdapterTest {
                 () -> Assertions.assertEquals(savedWaitingListJpaList.get(2).getAccountJpa().getUserName(), result.get(2).getAccountJpa().getUserName()),
                 () -> Assertions.assertEquals(savedWaitingListJpaList.get(2).getWaitingStatusJpa(), result.get(2).getWaitingStatusJpa())
         );
-
     }
 
     private List<WaitingListJpa> saveWaitingListJpa(List<AccountJpa> savedAccountJpaList, CompanyJpa savedCompanyJpa) {
