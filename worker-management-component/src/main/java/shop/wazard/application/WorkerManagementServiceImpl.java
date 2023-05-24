@@ -58,7 +58,9 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Override
     public List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto) {
-        return null;
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        return rosterForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
     }
 
 }

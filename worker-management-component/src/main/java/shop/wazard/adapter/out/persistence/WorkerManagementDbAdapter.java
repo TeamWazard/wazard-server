@@ -8,6 +8,7 @@ import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
@@ -87,4 +88,10 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
                 .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
         workerForManagementMapper.updateRosterStateForExile(rosterJpa, rosterForWorkerManagement);
     }
+
+    @Override
+    public List<WaitingWorkerResDto> getWaitingWorker(Long companyId) {
+        return null;
+    }
+
 }
