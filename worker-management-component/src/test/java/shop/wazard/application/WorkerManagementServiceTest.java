@@ -193,10 +193,18 @@ class WorkerManagementServiceTest {
         // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getAccountId(), result.get(0).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getUserName(), result.get(0).getUserName()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getEmail(), result.get(0).getEmail()),
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(0).getWaitingStatus(), result.get(0).getWaitingStatus()),
+
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getAccountId(), result.get(1).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getUserName(), result.get(1).getUserName()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getEmail(), result.get(1).getEmail()),
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(1).getWaitingStatus(), result.get(1).getWaitingStatus()),
+
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getAccountId(), result.get(2).getAccountId()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getUserName(), result.get(2).getUserName()),
+                () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getEmail(), result.get(2).getEmail()),
                 () -> Assertions.assertEquals(waitingWorkerResDtoList.get(2).getWaitingStatus(), result.get(2).getWaitingStatus())
         );
     }
