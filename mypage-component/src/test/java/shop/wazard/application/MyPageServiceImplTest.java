@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,13 +19,14 @@ import shop.wazard.dto.GetPastWorkplaceResDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MyPageServiceImpl.class})
 class MyPageServiceImplTest {
 
-    @Autowired
+    @MockBean
     private MyPageService myPageService;
     @MockBean
     private AccountForMyPagePort accountForMyPagePort;
@@ -51,7 +51,7 @@ class MyPageServiceImplTest {
         // when
         Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
                 .thenReturn(accountForAttendance);
-        Mockito.when(myPageService.getPastWorkplaces(getPastWorkplaceReqDto))
+        Mockito.when(myPageService.getPastWorkplaces(any(GetPastWorkplaceReqDto.class)))
                 .thenReturn(getPastWorkplaceResDtoList);
         List<GetPastWorkplaceResDto> result = myPageService.getPastWorkplaces(getPastWorkplaceReqDto);
 

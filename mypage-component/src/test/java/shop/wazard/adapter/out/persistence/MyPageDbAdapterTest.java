@@ -54,7 +54,7 @@ class MyPageDbAdapterTest {
 
 
     @Test
-    @DisplayName("근무자 - 과거 근무지 조회 - 성공")
+    @DisplayName("근무자 - 과거 근무지 조회 - CompanyJpa 엔티티 조회")
     void getPastWorkplaces() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
