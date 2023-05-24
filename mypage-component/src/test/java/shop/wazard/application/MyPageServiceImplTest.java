@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -19,14 +20,14 @@ import shop.wazard.dto.GetPastWorkplaceResDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {MyPageServiceImpl.class})
 class MyPageServiceImplTest {
 
-    @MockBean
+    @Autowired
     private MyPageService myPageService;
     @MockBean
     private AccountForMyPagePort accountForMyPagePort;
@@ -42,24 +43,19 @@ class MyPageServiceImplTest {
         GetPastWorkplaceReqDto getPastWorkplaceReqDto = GetPastWorkplaceReqDto.builder()
                 .email("test@email.com")
                 .build();
-        AccountForMyPage accountForAttendance = AccountForMyPage.builder()
-                .id(1L)
-                .roles("EMPLOYEE")
-                .build();
+        AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
         List<GetPastWorkplaceResDto> getPastWorkplaceResDtoList = setDefaultPastWorkPlaceList();
 
         // when
         Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
                 .thenReturn(accountForAttendance);
-        Mockito.when(myPageService.getPastWorkplaces(any(GetPastWorkplaceReqDto.class)))
+        Mockito.when(companyForMyPagePort.getPastWorkplaces(anyLong()))
                 .thenReturn(getPastWorkplaceResDtoList);
         List<GetPastWorkplaceResDto> result = myPageService.getPastWorkplaces(getPastWorkplaceReqDto);
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.get(0).getCompanyId(), getPastWorkplaceResDtoList.get(0).getCompanyId()),
                 () -> Assertions.assertEquals(result.get(0).getCompanyName(), getPastWorkplaceResDtoList.get(0).getCompanyName()),
-                () -> Assertions.assertEquals(result.get(1).getCompanyId(), getPastWorkplaceResDtoList.get(1).getCompanyId()),
                 () -> Assertions.assertEquals(result.get(1).getCompanyName(), getPastWorkplaceResDtoList.get(1).getCompanyName())
         );
     }
@@ -83,6 +79,13 @@ class MyPageServiceImplTest {
         getPastWorkplaceResDtoList.add(getPastWorkplaceResDto1);
         getPastWorkplaceResDtoList.add(getPastWorkplaceResDto2);
         return getPastWorkplaceResDtoList;
+    }
+
+    private AccountForMyPage setDefaultEmployeeAccountForManagement() {
+        return AccountForMyPage.builder()
+                .id(1L)
+                .roles("EMPLOYEE")
+                .build();
     }
 
 }
