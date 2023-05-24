@@ -185,7 +185,7 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(rosterForWorkerManagementPort.getWaitingWorker(anyLong()))
+        Mockito.when(waitingListForWorkerManagementPort.getWaitingWorker(anyLong()))
                 .thenReturn(waitingWorkerResDtoList);
 
         List<WaitingWorkerResDto> result = workerManagementService.getWaitingWorkers(waitingWorkerReqDto);

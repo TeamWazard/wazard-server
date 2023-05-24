@@ -91,7 +91,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     @Override
     public List<WaitingWorkerResDto> getWaitingWorker(Long companyId) {
-        return null;
+        List<WaitingListJpa> waitingWorkerJpaList = waitingListJpaForWorkerManagementRepository.findWaitingWorkers(companyId);
+        return workerForManagementMapper.toWaitingWorkerList(waitingWorkerJpaList);
     }
 
 }

@@ -3,6 +3,7 @@ package shop.wazard.adapter.out.persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.*;
+import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
@@ -53,4 +54,16 @@ class WorkerManagementMapper {
     public void updateRosterStateForExile(RosterJpa rosterJpa, RosterForWorkerManagement rosterForWorkerManagement) {
         rosterJpa.updateRosterStateForExile(BaseStatusJpa.valueOf(rosterForWorkerManagement.getBaseStatus().getStatus()));
     }
+
+    public List<WaitingWorkerResDto> toWaitingWorkerList(List<WaitingListJpa> waitingWorkerJpaList) {
+        return waitingWorkerJpaList.stream()
+                .map(waitingListJpa -> WaitingWorkerResDto.builder()
+                        .accountId(waitingListJpa.getAccountJpa().getId())
+                        .email(waitingListJpa.getAccountJpa().getEmail())
+                        .userName(waitingListJpa.getAccountJpa().getUserName())
+                        .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
