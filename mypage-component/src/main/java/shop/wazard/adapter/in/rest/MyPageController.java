@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.MyPageService;
+import shop.wazard.dto.GetMyPastWorkRecordReqDto;
+import shop.wazard.dto.GetMyPastWorkRecordResDto;
 import shop.wazard.dto.GetPastWorkplaceReqDto;
 import shop.wazard.dto.GetPastWorkplaceResDto;
 import shop.wazard.util.aop.Certification;
@@ -25,4 +27,10 @@ class MyPageController {
         return ResponseEntity.ok(getPastWorkplaceResDtoList);
     }
 
+    @Certification
+    @GetMapping("/past-work-record/{accountId}")
+    public ResponseEntity<GetMyPastWorkRecordResDto> getMyPastWorkRecord(@PathVariable Long accountId, @Valid @RequestBody GetMyPastWorkRecordReqDto getMyPastWorkRecordReqDto) {
+        GetMyPastWorkRecordResDto getMyPastWorkRecordResDto = myPageService.getMyPastWorkRecord(getMyPastWorkRecordReqDto);
+        return ResponseEntity.ok(getMyPastWorkRecordResDto);
+    }
 }

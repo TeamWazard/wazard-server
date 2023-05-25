@@ -8,6 +8,8 @@ import shop.wazard.application.port.in.MyPageService;
 import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
+import shop.wazard.dto.GetMyPastWorkRecordReqDto;
+import shop.wazard.dto.GetMyPastWorkRecordResDto;
 import shop.wazard.dto.GetPastWorkplaceReqDto;
 import shop.wazard.dto.GetPastWorkplaceResDto;
 
@@ -30,4 +32,11 @@ class MyPageServiceImpl implements MyPageService {
         return companyForMyPagePort.getPastWorkplaces(accountForMyPage.getId());
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public GetMyPastWorkRecordResDto getMyPastWorkRecord(GetMyPastWorkRecordReqDto getMyPastWorkRecordReqDto) {
+        AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyPastWorkRecordReqDto.getEmail());
+        accountForMyPage.checkIsEmployee();
+        return null;
+    }
 }
