@@ -1,9 +1,6 @@
 package shop.wazard.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -11,8 +8,8 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PermitWorkerToJoinReqDto {
 
     @Positive

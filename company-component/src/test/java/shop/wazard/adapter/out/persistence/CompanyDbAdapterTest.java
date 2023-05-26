@@ -50,6 +50,7 @@ class CompanyDbAdapterTest {
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
         // given
+        AccountJpa accountJpa = setDefaultEmployerAccountJpa();
         AccountForCompany accountForCompany = AccountForCompany.builder()
                 .id(1L)
                 .roles("EMPLOYER")
@@ -69,7 +70,8 @@ class CompanyDbAdapterTest {
                 .build();
 
         // when
-        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(accountForCompany.getEmail());
+        AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
+        AccountJpa findAccountJpa = accountJpaForCompanyRepository.findByEmail(accountForCompany.getEmail()).get();
         CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
         em.flush();
 

@@ -13,6 +13,7 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
+import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -30,14 +31,16 @@ class CompanyDbAdapter implements CompanyPort, AccountForCompanyPort, RosterForC
 
     @Override
     public AccountForCompany findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(email);
+        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForCompanyMapper.toAccount(accountJpa);
     }
 
     @Override
     public void saveCompany(String email, Company company) {
         CompanyJpa companyJpa = companyMapper.toCompanyJpa(company);
-        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(email);
+        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         RosterJpa rosterJpa = companyMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
         companyJpaRepository.save(companyJpa);
         rosterJpaForCompanyRepository.save(rosterJpa);

@@ -103,7 +103,7 @@ class MyPageDbAdapterTest {
         AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
         RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
-        CompanyJpa findCompanyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId());
+        CompanyJpa findCompanyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get();
         CompanyInfoForMyPage companyInfoForMyPage = myPageMapper.createCompanyInfoForMyPage(findCompanyJpa);
 
         // then

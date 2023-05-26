@@ -31,4 +31,14 @@ public class CompanyExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleAccountNotFoundException(AccountNotFoundException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.ACCOUNT_NOT_FOUND.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }

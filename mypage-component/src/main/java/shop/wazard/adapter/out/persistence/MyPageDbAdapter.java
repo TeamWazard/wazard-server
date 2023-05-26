@@ -60,7 +60,8 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
 
     @Override
     public CompanyInfoForMyPage findCompanyByAccountIdAndCompanyId(Long accountId, Long companyId) {
-        CompanyJpa companyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(accountId, companyId);
+        CompanyJpa companyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(accountId, companyId)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         return myPageMapper.createCompanyInfoForMyPage(companyJpa);
     }
 

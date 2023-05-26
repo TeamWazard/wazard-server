@@ -1,7 +1,6 @@
 package shop.wazard.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -9,6 +8,8 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExileWorkerReqDto {
 
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
