@@ -10,11 +10,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.wazard.application.domain.CompanyInfoForMyPage;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
-import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
+import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
@@ -37,6 +39,7 @@ import java.util.List;
         CompanyJpaForMyPageRepository.class,
         RosterJpaForMyPageRepository.class,
         EnterRecordJpaForMyPageRepository.class,
+        ExitRecordJpaForMyPageRepository.class,
         AbsentJpaForMyPageRepository.class,
         EntityManager.class})
 class MyPageDbAdapterTest {
@@ -56,6 +59,8 @@ class MyPageDbAdapterTest {
     @Autowired
     private EnterRecordJpaForMyPageRepository enterRecordJpaForMyPageRepository;
     @Autowired
+    private ExitRecordJpaForMyPageRepository exitRecordJpaForMyPageRepository;
+    @Autowired
     private AbsentJpaForMyPageRepository absentJpaForMyPageRepository;
     @Autowired
     private EntityManager em;
@@ -72,8 +77,8 @@ class MyPageDbAdapterTest {
         AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
         List<RosterJpa> rosterJpaList = setDefaultRosterJpaListForGetPastWorkplaces(savedAccountJpa, companyJpaList);
         // 상태 변경을 위한 단순 참조 (따로 메서드 안빼기 위해서 재사용한 )
-        rosterJpaList.get(0).updateRosterStateForExile(BaseEntity.BaseStatusJpa.INACTIVE);
-        rosterJpaList.get(1).updateRosterStateForExile(BaseEntity.BaseStatusJpa.INACTIVE);
+        rosterJpaList.get(0).updateRosterStateForExile(BaseStatusJpa.INACTIVE);
+        rosterJpaList.get(1).updateRosterStateForExile(BaseStatusJpa.INACTIVE);
         em.flush();
         em.clear();
         List<CompanyJpa> result = rosterJpaForMyPageRepository.findPastWorkplacesById(savedAccountJpa.getId());
@@ -91,13 +96,22 @@ class MyPageDbAdapterTest {
     @DisplayName("근로자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
     void getCompanyForGetMyPastWorkRecordAPI() throws Exception {
         // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        CompanyJpa findCompanyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId());
+        CompanyInfoForMyPage companyInfoForMyPage = myPageMapper.createCompanyInfoForMyPage(findCompanyJpa);
 
         // then
-
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(savedAccountJpa.getUserName(), rosterJpa.getAccountJpa().getUserName()),
+                () -> Assertions.assertEquals(savedCompanyJpa.getCompanyName(), rosterJpa.getCompanyJpa().getCompanyName()),
+                () -> Assertions.assertEquals(companyInfoForMyPage.getCompanyName(), findCompanyJpa.getCompanyName())
+        );
     }
 
     @Test
@@ -134,6 +148,78 @@ class MyPageDbAdapterTest {
         Assertions.assertEquals(result, 2);
     }
 
+    @Test
+    @DisplayName("근로자 - 처음 근무 시작한 날 조회 - EnterRecordJpa 조회")
+    void getStartWorkDate() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        List<EnterRecordJpa> enterRecordJpa = setDefaultEnterRecordJpa(savedAccountJpa, savedCompanyJpa);
+        EnterRecordJpa startWorkDate = enterRecordJpaForMyPageRepository.findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdAsc(savedAccountJpa, savedCompanyJpa, BaseStatusJpa.ACTIVE);
+
+        // then
+        Assertions.assertEquals(startWorkDate.getEnterDate(), enterRecordJpa.get(0).getEnterDate());
+    }
+
+    @Test
+    @DisplayName("근로자 - 근무 계약 끝난 날짜 조회 - ExitRecordJpa 조회")
+    void getEndWorkDate() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        List<EnterRecordJpa> enterRecordJpaList = setDefaultEnterRecordJpa(savedAccountJpa, savedCompanyJpa);
+        List<ExitRecordJpa> exitRecordJpaList = setDefaultExitRecordJpa(enterRecordJpaList);
+        EnterRecordJpa enterRecordJpa = enterRecordJpaForMyPageRepository.findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdDesc(savedAccountJpa, savedCompanyJpa, BaseStatusJpa.ACTIVE);
+        ExitRecordJpa exitRecordJpa = exitRecordJpaForMyPageRepository.findTopByEnterRecordJpaAndBaseStatusJpaOrderByIdDesc(enterRecordJpa, BaseStatusJpa.ACTIVE);
+
+        // then
+        Assertions.assertEquals(enterRecordJpaList.get(2).getId(), enterRecordJpa.getId());
+        Assertions.assertEquals(exitRecordJpaList.get(2).getExitDate(), exitRecordJpa.getExitDate());
+    }
+
+    private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
+        List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
+        ExitRecordJpa exitRecordJpa1 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(0))
+                .exitDate(LocalDate.of(2023, 10, 1))
+                .build();
+        ExitRecordJpa exitRecordJpa2 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(1))
+                .exitDate(LocalDate.of(2023, 10, 3))
+                .build();
+        ExitRecordJpa exitRecordJpa3 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(2))
+                .exitDate(LocalDate.of(2023, 10, 5))
+                .build();
+        ExitRecordJpa savedExitRecordJpa1 = exitRecordJpaForMyPageRepository.save(exitRecordJpa1);
+        ExitRecordJpa savedExitRecordJpa2 = exitRecordJpaForMyPageRepository.save(exitRecordJpa2);
+        ExitRecordJpa savedExitRecordJpa3 = exitRecordJpaForMyPageRepository.save(exitRecordJpa3);
+        exitRecordJpaList.add(savedExitRecordJpa1);
+        exitRecordJpaList.add(savedExitRecordJpa2);
+        exitRecordJpaList.add(savedExitRecordJpa3);
+        return exitRecordJpaList;
+    }
+
+    private RosterJpa setDefaultRosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        RosterJpa rosterJpa = RosterJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build();
+        RosterJpa savedRosterJpa = rosterJpaForMyPageRepository.save(rosterJpa);
+        return savedRosterJpa;
+    }
+
     private List<AbsentJpa> setDefaultAbsentJpaList(AccountJpa accountJpa, CompanyJpa companyJpa) {
         List<AbsentJpa> absentJpaList = new ArrayList<>();
         AbsentJpa absentJpa1 = AbsentJpa.builder()
@@ -162,7 +248,7 @@ class MyPageDbAdapterTest {
                 .phoneNumber("010-1111-1111")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .baseStatusJpa(BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
         AccountJpa accountJpa2 = AccountJpa.builder()
@@ -172,7 +258,7 @@ class MyPageDbAdapterTest {
                 .phoneNumber("010-2222-2222")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 2, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .baseStatusJpa(BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
         AccountJpa accountJpa3 = AccountJpa.builder()
@@ -182,7 +268,7 @@ class MyPageDbAdapterTest {
                 .phoneNumber("010-3333-3333")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 3, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .baseStatusJpa(BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
         AccountJpa savedAccountJpa1 = accountJpaForMyPageRepository.save(accountJpa1);
@@ -261,7 +347,7 @@ class MyPageDbAdapterTest {
                 .phoneNumber("010-2222-2222")
                 .gender(GenderTypeJpa.MALE.getGender())
                 .birth(LocalDate.of(2023, 1, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .baseStatusJpa(BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
     }

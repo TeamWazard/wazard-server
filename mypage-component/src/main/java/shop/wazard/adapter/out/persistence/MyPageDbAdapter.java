@@ -11,9 +11,11 @@ import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
 import shop.wazard.dto.GetPastWorkplaceResDto;
 import shop.wazard.entity.account.AccountJpa;
-import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.exception.AccountNotFoundException;
+import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 import java.time.LocalDate;
@@ -27,13 +29,14 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
     private final RosterJpaForMyPageRepository rosterJpaForMyPageRepository;
     private final CompanyJpaForMyPageRepository companyJpaForMyPageRepository;
     private final EnterRecordJpaForMyPageRepository enterRecordJpaForMyPageRepository;
+    private final ExitRecordJpaForMyPageRepository exitRecordJpaForMyPageRepository;
     private final AbsentJpaForMyPageRepository absentJpaForMyPageRepository;
     private final AccountForMyPageMapper accountForMyPageMapper;
     private final MyPageMapper myPageMapper;
 
     @Override
     public AccountForMyPage findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountJpaForMyPageRepository.findByEmailAndBaseStatusJpa(email, BaseEntity.BaseStatusJpa.ACTIVE)
+        AccountJpa accountJpa = accountJpaForMyPageRepository.findByEmailAndBaseStatusJpa(email, BaseStatusJpa.ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForMyPageMapper.toAccountForAttendanceDomain(accountJpa);
     }
@@ -46,28 +49,45 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
 
     @Override
     public WorkRecordForMyPage getMyPastWorkRecord(Long accountId, Long companyId) {
-        return null;
+        return WorkRecordForMyPage.builder()
+                .tardyCount(getTardyCount(accountId, companyId))
+                .absentCount(getAbsentCount(accountId, companyId))
+                .startWorkDate(getStartWorkDate(accountId, companyId))
+                .endWorkDate(getEndWorkDate(accountId, companyId))
+                .build();
     }
 
     @Override
     public CompanyInfoForMyPage findCompanyByAccountIdAndCompanyId(Long accountId, Long companyId) {
-        return null;
+        CompanyJpa companyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(accountId, companyId);
+        return myPageMapper.createCompanyInfoForMyPage(companyJpa);
     }
 
     private int getTardyCount(Long accountId, Long companyId) {
-        return 0;
+        return enterRecordJpaForMyPageRepository.countTardyByAccountIdAndCompanyId(accountId, companyId);
     }
 
     private int getAbsentCount(Long accountId, Long companyId) {
-        return 0;
+        return absentJpaForMyPageRepository.countAbsentByAccountIdAndCompanyId(accountId, companyId);
     }
 
     private LocalDate getStartWorkDate(Long accountId, Long companyId) {
-        return null;
+        AccountJpa accountJpa = accountJpaForMyPageRepository.findByIdAndBaseStatusJpa(accountId, BaseStatusJpa.ACTIVE)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa = companyJpaForMyPageRepository.findByIdAndBaseStatusJpa(companyId, BaseStatusJpa.ACTIVE)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        return enterRecordJpaForMyPageRepository.findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdAsc(accountJpa, companyJpa, BaseStatusJpa.ACTIVE)
+                .getEnterDate();
     }
 
     private LocalDate getEndWorkDate(Long accountId, Long companyId) {
-        return null;
+        AccountJpa accountJpa = accountJpaForMyPageRepository.findByIdAndBaseStatusJpa(accountId, BaseStatusJpa.ACTIVE)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa = companyJpaForMyPageRepository.findByIdAndBaseStatusJpa(companyId, BaseStatusJpa.ACTIVE)
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        EnterRecordJpa enterRecordJpa = enterRecordJpaForMyPageRepository.findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdDesc(accountJpa, companyJpa, BaseStatusJpa.ACTIVE);
+        return exitRecordJpaForMyPageRepository.findTopByEnterRecordJpaAndBaseStatusJpaOrderByIdDesc(enterRecordJpa, BaseStatusJpa.ACTIVE)
+                .getExitDate();
     }
 
 }

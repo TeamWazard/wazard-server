@@ -10,4 +10,6 @@ interface AccountJpaForMyPageRepository extends JpaRepository<AccountJpa, Long> 
 
     Optional<AccountJpa> findByEmailAndBaseStatusJpa(String email, BaseStatusJpa baseStatusJpa);
 
+    Optional<AccountJpa> findByIdAndBaseStatusJpa(Long accountId, BaseStatusJpa active);
+
 }
