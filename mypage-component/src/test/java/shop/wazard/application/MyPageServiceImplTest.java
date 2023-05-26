@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForMyPage;
 import shop.wazard.application.domain.CompanyInfoForMyPage;
+import shop.wazard.application.domain.WorkRecordForMyPage;
 import shop.wazard.application.port.in.MyPageService;
 import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
@@ -83,6 +84,13 @@ class MyPageServiceImplTest {
                 .companyContact("02-111-1234")
                 .logoImageUrl("testLogoImage")
                 .build();
+        WorkRecordForMyPage workRecordForMyPage = WorkRecordForMyPage.builder()
+                .absentCount(2)
+                .tardyCount(1)
+                .startWorkDate(LocalDate.of(2023, 5, 20))
+                .endWorkDate(LocalDate.of(2023, 5, 23))
+                .workScore(10)
+                .build();
         GetMyPastWorkRecordResDto getMyPastWorkRecordResDto = GetMyPastWorkRecordResDto.builder()
                 .companyName("testName")
                 .companyAddress("testAddress")
@@ -100,15 +108,17 @@ class MyPageServiceImplTest {
                 .thenReturn(accountForAttendance);
         Mockito.when(companyForMyPagePort.findCompanyByAccountIdAndCompanyId(anyLong(), anyLong()))
                 .thenReturn(companyInfoForMyPage);
-//        GetMyPastWorkRecordResDto result = myPageService.getMyPastWorkRecord(getMyPastWorkRecordReqDto);
+        Mockito.when(workRecordForMyPagePort.getMyPastWorkRecord(anyLong(), anyLong()))
+                .thenReturn(workRecordForMyPage);
+        GetMyPastWorkRecordResDto result = myPageService.getMyPastWorkRecord(getMyPastWorkRecordReqDto);
 
         // then
-//        Assertions.assertAll(
-//                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyName(), result.getCompanyName()),
-//                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getAbsentCount(), result.getAbsentCount()),
-//                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getTardyCount(), result.getTardyCount()),
-//                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getWorkScore(), result.getWorkScore())
-//        );
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyName(), result.getCompanyName()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getAbsentCount(), result.getAbsentCount()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getTardyCount(), result.getTardyCount()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getWorkScore(), result.getWorkScore())
+        );
     }
 
     private List<GetPastWorkplaceResDto> setDefaultPastWorkPlaceList() {
