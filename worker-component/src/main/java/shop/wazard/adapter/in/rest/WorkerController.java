@@ -1,9 +1,14 @@
 package shop.wazard.adapter.in.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerService;
+import shop.wazard.dto.RegisterReplaceReqDto;
+import shop.wazard.dto.RegisterReplaceResDto;
+import shop.wazard.util.aop.Certification;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -11,5 +16,12 @@ import shop.wazard.application.port.in.WorkerService;
 class WorkerController {
 
     private final WorkerService workerService;
+
+    @Certification
+    @PostMapping("/replace/register/{accountId}")
+    public ResponseEntity<RegisterReplaceResDto> registerReplace(@PathVariable Long accountId, @Valid @RequestBody RegisterReplaceReqDto registerReplaceReqDto) {
+        RegisterReplaceResDto registerReplaceResDto = workerService.registerReplace(registerReplaceReqDto);
+        return ResponseEntity.ok(registerReplaceResDto);
+    }
 
 }
