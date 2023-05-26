@@ -16,5 +16,7 @@ public interface EnterRecordJpaForMyPageRepository extends JpaRepository<EnterRe
     EnterRecordJpa findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdAsc(AccountJpa accountJpa, CompanyJpa companyJpa, BaseStatusJpa baseStatusJpa);
 
     EnterRecordJpa findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdDesc(AccountJpa savedAccountJpa, CompanyJpa savedCompanyJpa, BaseStatusJpa active);
-    
+
+    @Query("select count (distinct e.id) from EnterRecordJpa e")
+    int countTotalWorkDayByAccountIdAndCompanyId(Long accountId, Long companyId);
 }

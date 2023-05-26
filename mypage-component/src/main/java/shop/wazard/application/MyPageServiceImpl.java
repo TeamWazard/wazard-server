@@ -15,6 +15,7 @@ import shop.wazard.dto.GetMyPastWorkRecordReqDto;
 import shop.wazard.dto.GetMyPastWorkRecordResDto;
 import shop.wazard.dto.GetPastWorkplaceReqDto;
 import shop.wazard.dto.GetPastWorkplaceResDto;
+import shop.wazard.util.calculator.Calculator;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ class MyPageServiceImpl implements MyPageService {
         accountForMyPage.checkIsEmployee();
         CompanyInfoForMyPage companyInfoForMyPage = companyForMyPagePort.findCompanyByAccountIdAndCompanyId(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
         WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
+        double workScore = Calculator.calculateAttitudeScore(workRecordForMyPage.getTardyCount(), workRecordForMyPage.getAbsentCount(), workRecordForMyPage.getWorkDayCount());
         return GetMyPastWorkRecordResDto.builder()
                 .companyName(companyInfoForMyPage.getCompanyName())
                 .companyAddress(companyInfoForMyPage.getCompanyAddress())
@@ -50,7 +52,7 @@ class MyPageServiceImpl implements MyPageService {
                 .companyLogoImage(companyInfoForMyPage.getLogoImageUrl())
                 .tardyCount(workRecordForMyPage.getTardyCount())
                 .absentCount(workRecordForMyPage.getAbsentCount())
-                .workScore(workRecordForMyPage.getWorkScore())
+                .workScore(workScore)
                 .startWorkDate(workRecordForMyPage.getStartWorkDate())
                 .endWorkDate(workRecordForMyPage.getEndWorkDate())
                 .build();

@@ -11,7 +11,7 @@ public class WorkRecordForMyPage {
 
     private int tardyCount;
     private int absentCount;
-    private double workScore;
+    private int workDayCount;
     private LocalDate startWorkDate;
     private LocalDate endWorkDate;
 

@@ -52,6 +52,7 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
         return WorkRecordForMyPage.builder()
                 .tardyCount(getTardyCount(accountId, companyId))
                 .absentCount(getAbsentCount(accountId, companyId))
+                .workDayCount(getWorkDayCount(accountId, companyId))
                 .startWorkDate(getStartWorkDate(accountId, companyId))
                 .endWorkDate(getEndWorkDate(accountId, companyId))
                 .build();
@@ -61,6 +62,10 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
     public CompanyInfoForMyPage findCompanyByAccountIdAndCompanyId(Long accountId, Long companyId) {
         CompanyJpa companyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(accountId, companyId);
         return myPageMapper.createCompanyInfoForMyPage(companyJpa);
+    }
+
+    private int getWorkDayCount(Long accountId, Long companyId) {
+        return enterRecordJpaForMyPageRepository.countTotalWorkDayByAccountIdAndCompanyId(accountId, companyId);
     }
 
     private int getTardyCount(Long accountId, Long companyId) {
