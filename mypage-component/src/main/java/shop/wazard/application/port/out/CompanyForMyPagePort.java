@@ -9,6 +9,6 @@ public interface CompanyForMyPagePort {
 
     List<GetPastWorkplaceResDto> getPastWorkplaces(Long accountId);
 
-    CompanyInfoForMyPage findCompanyByAccountIdAndCompanyId(Long accountId, Long companyId);
+    CompanyInfoForMyPage findPastCompanyInfoByAccountIdAndCompanyId(Long accountId, Long companyId);
 
 }

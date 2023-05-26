@@ -42,7 +42,7 @@ class MyPageServiceImpl implements MyPageService {
     public GetMyPastWorkRecordResDto getMyPastWorkRecord(GetMyPastWorkRecordReqDto getMyPastWorkRecordReqDto) {
         AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyPastWorkRecordReqDto.getEmail());
         accountForMyPage.checkIsEmployee();
-        CompanyInfoForMyPage companyInfoForMyPage = companyForMyPagePort.findCompanyByAccountIdAndCompanyId(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
+        CompanyInfoForMyPage companyInfoForMyPage = companyForMyPagePort.findPastCompanyInfoByAccountIdAndCompanyId(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
         WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
         double workScore = Calculator.calculateAttitudeScore(workRecordForMyPage.getTardyCount(), workRecordForMyPage.getAbsentCount(), workRecordForMyPage.getWorkDayCount());
         return GetMyPastWorkRecordResDto.builder()

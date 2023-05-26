@@ -103,7 +103,8 @@ class MyPageDbAdapterTest {
         AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
         RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
-        CompanyJpa findCompanyJpa = companyJpaForMyPageRepository.findCompanyJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get();
+        rosterJpa.updateRosterStateForExile(BaseStatusJpa.INACTIVE);
+        CompanyJpa findCompanyJpa = companyJpaForMyPageRepository.findPastCompanyJpaByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId()).get();
         CompanyInfoForMyPage companyInfoForMyPage = myPageMapper.createCompanyInfoForMyPage(findCompanyJpa);
 
         // then
@@ -185,6 +186,25 @@ class MyPageDbAdapterTest {
         // then
         Assertions.assertEquals(enterRecordJpaList.get(2).getId(), enterRecordJpa.getId());
         Assertions.assertEquals(exitRecordJpaList.get(2).getExitDate(), exitRecordJpa.getExitDate());
+    }
+
+    @Test
+    @DisplayName("근로자 - 총 근무한 일수 조회 - EnterRecordJpa 조회")
+    void getWorkDayCount() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        RosterJpa rosterJpa = setDefaultRosterJpa(savedAccountJpa, savedCompanyJpa);
+        List<EnterRecordJpa> enterRecordJpaList = setDefaultEnterRecordJpaForGettingTotalWorkDay(savedAccountJpa, savedCompanyJpa);
+        EnterRecordJpa enterRecordJpa = enterRecordJpaForMyPageRepository.findTopByAccountJpaAndCompanyJpaAndBaseStatusJpaOrderByIdDesc(savedAccountJpa, savedCompanyJpa, BaseStatusJpa.ACTIVE);
+        int result = enterRecordJpaForMyPageRepository.countTotalWorkDayByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId());
+
+        // then
+        Assertions.assertEquals(result, 3);
     }
 
     private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
@@ -306,6 +326,51 @@ class MyPageDbAdapterTest {
         enterRecordJpaList.add(savedEnterRecordJpa1);
         enterRecordJpaList.add(savedEnterRecordJpa2);
         enterRecordJpaList.add(savedEnterRecordJpa3);
+        return enterRecordJpaList;
+    }
+
+    private List<EnterRecordJpa> setDefaultEnterRecordJpaForGettingTotalWorkDay(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(true)
+                .enterDate(LocalDate.of(2023, 2, 20))
+                .build();
+        EnterRecordJpa enterRecordJpa2 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(true)
+                .enterDate(LocalDate.of(2023, 2, 20))
+                .build();
+        EnterRecordJpa enterRecordJpa3 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(true)
+                .enterDate(LocalDate.of(2023, 3, 2))
+                .build();
+        EnterRecordJpa enterRecordJpa4 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 5))
+                .build();
+        EnterRecordJpa enterRecordJpa5 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 5))
+                .build();
+        EnterRecordJpa savedEnterRecordJpa1 = enterRecordJpaForMyPageRepository.save(enterRecordJpa1);
+        EnterRecordJpa savedEnterRecordJpa2 = enterRecordJpaForMyPageRepository.save(enterRecordJpa2);
+        EnterRecordJpa savedEnterRecordJpa3 = enterRecordJpaForMyPageRepository.save(enterRecordJpa3);
+        EnterRecordJpa savedEnterRecordJpa4 = enterRecordJpaForMyPageRepository.save(enterRecordJpa4);
+        EnterRecordJpa savedEnterRecordJpa5 = enterRecordJpaForMyPageRepository.save(enterRecordJpa5);
+        enterRecordJpaList.add(savedEnterRecordJpa1);
+        enterRecordJpaList.add(savedEnterRecordJpa2);
+        enterRecordJpaList.add(savedEnterRecordJpa3);
+        enterRecordJpaList.add(savedEnterRecordJpa4);
+        enterRecordJpaList.add(savedEnterRecordJpa5);
         return enterRecordJpaList;
     }
 

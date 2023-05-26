@@ -84,8 +84,8 @@ class MyPageServiceImplTest {
                 .logoImageUrl("testLogoImage")
                 .build();
         WorkRecordForMyPage workRecordForMyPage = WorkRecordForMyPage.builder()
-                .absentCount(0)
-                .tardyCount(0)
+                .absentCount(1)
+                .tardyCount(1)
                 .startWorkDate(LocalDate.of(2023, 5, 20))
                 .endWorkDate(LocalDate.of(2023, 5, 23))
                 .workDayCount(10)
@@ -95,9 +95,9 @@ class MyPageServiceImplTest {
                 .companyAddress("testAddress")
                 .companyContact("02-111-1234")
                 .companyLogoImage("testLogoImage")
-                .tardyCount(0)
-                .absentCount(0)
-                .workScore(10)
+                .tardyCount(1)
+                .absentCount(1)
+                .workScore(4)
                 .startWorkDate(LocalDate.of(2023, 5, 20))
                 .endWorkDate(LocalDate.of(2023, 5, 23))
                 .build();
@@ -105,7 +105,7 @@ class MyPageServiceImplTest {
         // when
         Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
                 .thenReturn(accountForAttendance);
-        Mockito.when(companyForMyPagePort.findCompanyByAccountIdAndCompanyId(anyLong(), anyLong()))
+        Mockito.when(companyForMyPagePort.findPastCompanyInfoByAccountIdAndCompanyId(anyLong(), anyLong()))
                 .thenReturn(companyInfoForMyPage);
         Mockito.when(workRecordForMyPagePort.getMyPastWorkRecord(anyLong(), anyLong()))
                 .thenReturn(workRecordForMyPage);
