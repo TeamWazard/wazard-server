@@ -8,7 +8,6 @@ import lombok.Getter;
 public class GetMyPastWorkRecordReqDto {
 
     private String email;
-    private Long accountId;
     private Long companyId;
 
 }

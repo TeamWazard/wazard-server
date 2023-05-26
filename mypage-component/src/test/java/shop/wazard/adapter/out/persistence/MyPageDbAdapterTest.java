@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.commuteRecord.AbsentJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
@@ -34,6 +36,8 @@ import java.util.List;
         AccountJpaForMyPageRepository.class,
         CompanyJpaForMyPageRepository.class,
         RosterJpaForMyPageRepository.class,
+        EnterRecordJpaForMyPageRepository.class,
+        AbsentJpaForMyPageRepository.class,
         EntityManager.class})
 class MyPageDbAdapterTest {
 
@@ -49,6 +53,10 @@ class MyPageDbAdapterTest {
     private CompanyJpaForMyPageRepository companyJpaForMyPageRepository;
     @Autowired
     private RosterJpaForMyPageRepository rosterJpaForMyPageRepository;
+    @Autowired
+    private EnterRecordJpaForMyPageRepository enterRecordJpaForMyPageRepository;
+    @Autowired
+    private AbsentJpaForMyPageRepository absentJpaForMyPageRepository;
     @Autowired
     private EntityManager em;
 
@@ -77,6 +85,153 @@ class MyPageDbAdapterTest {
                 () -> Assertions.assertEquals(result.get(1).getId(), rosterJpaList.get(1).getCompanyJpa().getId()),
                 () -> Assertions.assertEquals(result.get(1).getCompanyName(), rosterJpaList.get(1).getCompanyJpa().getCompanyName())
         );
+    }
+
+    @Test
+    @DisplayName("근로자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
+    void getCompanyForGetMyPastWorkRecordAPI() throws Exception {
+        // given
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName("근로자 - 총 지각 횟수 조회 - EnterRecordJpa 조회")
+    void getTardyCount() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        List<EnterRecordJpa> savedEnterRecordJpa = setDefaultEnterRecordJpa(accountJpa, savedCompanyJpa);
+        int result = enterRecordJpaForMyPageRepository.countTardyByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId());
+
+        // then
+        Assertions.assertEquals(result, 2);
+    }
+
+    @Test
+    @DisplayName("근로자 - 총 결석 횟수 조회 - AbsentJpa 조회")
+    void getAbsentCount() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForMyPageRepository.save(companyJpa);
+        List<AbsentJpa> absentJpaList = setDefaultAbsentJpaList(savedAccountJpa, savedCompanyJpa);
+        int result = absentJpaForMyPageRepository.countAbsentByAccountIdAndCompanyId(savedAccountJpa.getId(), savedCompanyJpa.getId());
+
+        // then
+        Assertions.assertEquals(result, 2);
+    }
+
+    private List<AbsentJpa> setDefaultAbsentJpaList(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<AbsentJpa> absentJpaList = new ArrayList<>();
+        AbsentJpa absentJpa1 = AbsentJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .absentDate(LocalDate.of(2023,2,10))
+                .build();
+        AbsentJpa absentJpa2 = AbsentJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .absentDate(LocalDate.of(2023,3,10))
+                .build();
+        AbsentJpa savedAbsent1 = absentJpaForMyPageRepository.save(absentJpa1);
+        AbsentJpa savedAbsent2 = absentJpaForMyPageRepository.save(absentJpa2);
+        absentJpaList.add(savedAbsent1);
+        absentJpaList.add(savedAbsent2);
+        return absentJpaList;
+    }
+
+    private List<AccountJpa> setDefaultEmployeeAccountJpaList() {
+        List<AccountJpa> accountJpaList = new ArrayList<>();
+        AccountJpa accountJpa1 = AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName1")
+                .phoneNumber("010-1111-1111")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa accountJpa2 = AccountJpa.builder()
+                .email("testEmployee2@email.com")
+                .password("testPwd2")
+                .userName("testName2")
+                .phoneNumber("010-2222-2222")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 2, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa accountJpa3 = AccountJpa.builder()
+                .email("testEmployee3@email.com")
+                .password("testPwd3")
+                .userName("testName3")
+                .phoneNumber("010-3333-3333")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 3, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+        AccountJpa savedAccountJpa1 = accountJpaForMyPageRepository.save(accountJpa1);
+        AccountJpa savedAccountJpa2 = accountJpaForMyPageRepository.save(accountJpa2);
+        AccountJpa savedAccountJpa3 = accountJpaForMyPageRepository.save(accountJpa3);
+        accountJpaList.add(savedAccountJpa1);
+        accountJpaList.add(savedAccountJpa2);
+        accountJpaList.add(savedAccountJpa3);
+        return accountJpaList;
+    }
+
+    private List<EnterRecordJpa> setDefaultEnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(true)
+                .enterDate(LocalDate.of(2023, 2, 20))
+                .build();
+        EnterRecordJpa enterRecordJpa2 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(true)
+                .enterDate(LocalDate.of(2023, 3, 2))
+                .build();
+        EnterRecordJpa enterRecordJpa3 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 5))
+                .build();
+        EnterRecordJpa savedEnterRecordJpa1 = enterRecordJpaForMyPageRepository.save(enterRecordJpa1);
+        EnterRecordJpa savedEnterRecordJpa2 = enterRecordJpaForMyPageRepository.save(enterRecordJpa2);
+        EnterRecordJpa savedEnterRecordJpa3 = enterRecordJpaForMyPageRepository.save(enterRecordJpa3);
+        enterRecordJpaList.add(savedEnterRecordJpa1);
+        enterRecordJpaList.add(savedEnterRecordJpa2);
+        enterRecordJpaList.add(savedEnterRecordJpa3);
+        return enterRecordJpaList;
+    }
+
+    private CompanyJpa setDefaultCompanyJpa() {
+        CompanyJpa companyJpa = CompanyJpa.builder()
+                .companyName("companyName1")
+                .companyAddress("companyAddress1")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test1.com")
+                .build();
+        return companyJpa;
     }
 
     private List<RosterJpa> setDefaultRosterJpaListForGetPastWorkplaces(AccountJpa accountJpa, List<CompanyJpa> companyJpaList) {

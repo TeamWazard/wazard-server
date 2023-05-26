@@ -26,6 +26,8 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
     private final AccountJpaForMyPageRepository accountJpaForMyPageRepository;
     private final RosterJpaForMyPageRepository rosterJpaForMyPageRepository;
     private final CompanyJpaForMyPageRepository companyJpaForMyPageRepository;
+    private final EnterRecordJpaForMyPageRepository enterRecordJpaForMyPageRepository;
+    private final AbsentJpaForMyPageRepository absentJpaForMyPageRepository;
     private final AccountForMyPageMapper accountForMyPageMapper;
     private final MyPageMapper myPageMapper;
 

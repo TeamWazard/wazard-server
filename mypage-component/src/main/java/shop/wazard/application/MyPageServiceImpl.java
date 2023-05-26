@@ -41,8 +41,8 @@ class MyPageServiceImpl implements MyPageService {
     public GetMyPastWorkRecordResDto getMyPastWorkRecord(GetMyPastWorkRecordReqDto getMyPastWorkRecordReqDto) {
         AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyPastWorkRecordReqDto.getEmail());
         accountForMyPage.checkIsEmployee();
-        CompanyInfoForMyPage companyInfoForMyPage = companyForMyPagePort.findCompanyByAccountIdAndCompanyId(getMyPastWorkRecordReqDto.getAccountId(), getMyPastWorkRecordReqDto.getCompanyId());
-        WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(getMyPastWorkRecordReqDto.getAccountId(), getMyPastWorkRecordReqDto.getCompanyId());
+        CompanyInfoForMyPage companyInfoForMyPage = companyForMyPagePort.findCompanyByAccountIdAndCompanyId(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
+        WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(accountForMyPage.getId(), getMyPastWorkRecordReqDto.getCompanyId());
         return GetMyPastWorkRecordResDto.builder()
                 .companyName(companyInfoForMyPage.getCompanyName())
                 .companyAddress(companyInfoForMyPage.getCompanyAddress())

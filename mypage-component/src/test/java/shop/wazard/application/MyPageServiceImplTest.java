@@ -73,7 +73,6 @@ class MyPageServiceImplTest {
         // given
         GetMyPastWorkRecordReqDto getMyPastWorkRecordReqDto = GetMyPastWorkRecordReqDto.builder()
                 .email("test@email.com")
-                .accountId(1L)
                 .companyId(2L)
                 .build();
         AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
