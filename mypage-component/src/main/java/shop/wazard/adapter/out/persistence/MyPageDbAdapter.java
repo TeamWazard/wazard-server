@@ -53,8 +53,8 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
                 .tardyCount(getTardyCount(accountId, companyId))
                 .absentCount(getAbsentCount(accountId, companyId))
                 .workDayCount(getWorkDayCount(accountId, companyId))
-                .startWorkDate(getStartWorkDate(accountId, companyId))
-                .endWorkDate(getEndWorkDate(accountId, companyId))
+                .startWorkingDate(getStartWorkingDate(accountId, companyId))
+                .endWorkingDate(getEndWorkingDate(accountId, companyId))
                 .build();
     }
 
@@ -77,7 +77,7 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
         return absentJpaForMyPageRepository.countAbsentByAccountIdAndCompanyId(accountId, companyId);
     }
 
-    private LocalDate getStartWorkDate(Long accountId, Long companyId) {
+    private LocalDate getStartWorkingDate(Long accountId, Long companyId) {
         AccountJpa accountJpa = accountJpaForMyPageRepository.findByIdAndBaseStatusJpa(accountId, BaseStatusJpa.ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         CompanyJpa companyJpa = companyJpaForMyPageRepository.findByIdAndBaseStatusJpa(companyId, BaseStatusJpa.ACTIVE)
@@ -86,7 +86,7 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
                 .getEnterDate();
     }
 
-    private LocalDate getEndWorkDate(Long accountId, Long companyId) {
+    private LocalDate getEndWorkingDate(Long accountId, Long companyId) {
         AccountJpa accountJpa = accountJpaForMyPageRepository.findByIdAndBaseStatusJpa(accountId, BaseStatusJpa.ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         CompanyJpa companyJpa = companyJpaForMyPageRepository.findByIdAndBaseStatusJpa(companyId, BaseStatusJpa.ACTIVE)

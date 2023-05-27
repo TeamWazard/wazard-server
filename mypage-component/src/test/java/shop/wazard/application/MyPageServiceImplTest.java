@@ -86,8 +86,8 @@ class MyPageServiceImplTest {
         WorkRecordForMyPage workRecordForMyPage = WorkRecordForMyPage.builder()
                 .absentCount(1)
                 .tardyCount(1)
-                .startWorkDate(LocalDate.of(2023, 5, 20))
-                .endWorkDate(LocalDate.of(2023, 5, 23))
+                .startWorkingDate(LocalDate.of(2023, 5, 20))
+                .endWorkingDate(LocalDate.of(2023, 5, 23))
                 .workDayCount(10)
                 .build();
         GetMyPastWorkRecordResDto getMyPastWorkRecordResDto = GetMyPastWorkRecordResDto.builder()
@@ -98,8 +98,8 @@ class MyPageServiceImplTest {
                 .tardyCount(1)
                 .absentCount(1)
                 .workScore(4)
-                .startWorkDate(LocalDate.of(2023, 5, 20))
-                .endWorkDate(LocalDate.of(2023, 5, 23))
+                .startWorkingDate(LocalDate.of(2023, 5, 20))
+                .endWorkingDate(LocalDate.of(2023, 5, 23))
                 .build();
 
         // when
@@ -114,6 +114,11 @@ class MyPageServiceImplTest {
         // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyName(), result.getCompanyName()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyAddress(), result.getCompanyAddress()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyContact(), result.getCompanyContact()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getCompanyLogoImage(), result.getCompanyLogoImage()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getStartWorkingDate(), result.getStartWorkingDate()),
+                () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getEndWorkingDate(), result.getEndWorkingDate()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getAbsentCount(), result.getAbsentCount()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getTardyCount(), result.getTardyCount()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getWorkScore(), result.getWorkScore())

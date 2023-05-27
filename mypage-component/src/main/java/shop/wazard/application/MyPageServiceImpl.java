@@ -53,8 +53,8 @@ class MyPageServiceImpl implements MyPageService {
                 .tardyCount(workRecordForMyPage.getTardyCount())
                 .absentCount(workRecordForMyPage.getAbsentCount())
                 .workScore(workScore)
-                .startWorkDate(workRecordForMyPage.getStartWorkDate())
-                .endWorkDate(workRecordForMyPage.getEndWorkDate())
+                .startWorkingDate(workRecordForMyPage.getStartWorkingDate())
+                .endWorkingDate(workRecordForMyPage.getEndWorkingDate())
                 .build();
     }
 }

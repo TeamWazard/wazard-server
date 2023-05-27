@@ -16,7 +16,7 @@ public class GetMyPastWorkRecordResDto {
     private int tardyCount;
     private int absentCount;
     private double workScore;
-    private LocalDate startWorkDate;
-    private LocalDate endWorkDate;
+    private LocalDate startWorkingDate;
+    private LocalDate endWorkingDate;
 
 }
