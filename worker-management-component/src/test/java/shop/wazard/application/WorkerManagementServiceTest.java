@@ -255,18 +255,22 @@ class WorkerManagementServiceTest {
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getCommuteDate(), result.getCommuteRecordResDtoList().get(0).getCommuteDate()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getEnterTime(), result.getCommuteRecordResDtoList().get(0).getEnterTime()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getExitTime(), result.getCommuteRecordResDtoList().get(0).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).isTardy(), result.getCommuteRecordResDtoList().get(0).isTardy()),
 
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getCommuteDate(), result.getCommuteRecordResDtoList().get(1).getCommuteDate()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getEnterTime(), result.getCommuteRecordResDtoList().get(1).getEnterTime()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getExitTime(), result.getCommuteRecordResDtoList().get(1).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).isTardy(), result.getCommuteRecordResDtoList().get(1).isTardy()),
 
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getCommuteDate(), result.getCommuteRecordResDtoList().get(2).getCommuteDate()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getEnterTime(), result.getCommuteRecordResDtoList().get(2).getEnterTime()),
                 () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getExitTime(), result.getCommuteRecordResDtoList().get(2).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).isTardy(), result.getCommuteRecordResDtoList().get(2).isTardy()),
 
                 () -> Assertions.assertEquals(absentRecordDtoList.get(0).getAbsentDate(), result.getAbsentRecordResDtoList().get(0).getAbsentDate()),
                 () -> Assertions.assertEquals(absentRecordDtoList.get(1).getAbsentDate(), result.getAbsentRecordResDtoList().get(1).getAbsentDate())
         );
+
     }
 
     private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {
@@ -275,14 +279,20 @@ class WorkerManagementServiceTest {
         CommuteRecordDto commuteRecordDto1 = CommuteRecordDto.builder()
                 .commuteDate(LocalDate.of(2023, 1, 2))
                 .enterTime(LocalDateTime.of(2023, 1, 1, 10, 20))
+                .exitTime(LocalDateTime.of(2023, 1, 1, 13, 0))
+                .tardy(true)
                 .build();
         CommuteRecordDto commuteRecordDto2 = CommuteRecordDto.builder()
                 .commuteDate(LocalDate.of(2023, 1, 5))
                 .enterTime(LocalDateTime.of(2023, 1, 5, 17, 50))
+                .exitTime(LocalDateTime.of(2023, 1, 5, 19, 30))
+                .tardy(false)
                 .build();
         CommuteRecordDto commuteRecordDto3 = CommuteRecordDto.builder()
                 .commuteDate(LocalDate.of(2023, 1, 14))
                 .enterTime(LocalDateTime.of(2023, 1, 14, 20, 20))
+                .exitTime(LocalDateTime.of(2023, 1, 14, 21, 0))
+                .tardy(false)
                 .build();
 
         commuteRecordDtoList.add(commuteRecordDto1);
