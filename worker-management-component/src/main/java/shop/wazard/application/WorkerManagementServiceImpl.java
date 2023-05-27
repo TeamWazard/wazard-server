@@ -13,7 +13,6 @@ import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Transactional
@@ -69,10 +68,10 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, LocalDate date) {
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendacneRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, date);
+        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, year, month);
     }
 
 }

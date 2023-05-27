@@ -2,7 +2,6 @@ package shop.wazard.application.port.in;
 
 import shop.wazard.dto.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface WorkerManagementService {
@@ -15,6 +14,6 @@ public interface WorkerManagementService {
 
     List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto);
 
-    GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, LocalDate date);
+    GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month);
 
 }
