@@ -270,7 +270,6 @@ class WorkerManagementServiceTest {
                 () -> Assertions.assertEquals(absentRecordDtoList.get(0).getAbsentDate(), result.getAbsentRecordResDtoList().get(0).getAbsentDate()),
                 () -> Assertions.assertEquals(absentRecordDtoList.get(1).getAbsentDate(), result.getAbsentRecordResDtoList().get(1).getAbsentDate())
         );
-
     }
 
     private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {
