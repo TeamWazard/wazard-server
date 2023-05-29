@@ -37,6 +37,7 @@ class WorkerServiceImplTest {
         // given
         RegisterReplaceReqDto registerReplaceReqDto = RegisterReplaceReqDto.builder()
                 .companyId(1L)
+                .email("test@email.com")
                 .replaceWorkerName("test1")
                 .replaceDate(LocalDate.now())
                 .enterTime(LocalDateTime.now())

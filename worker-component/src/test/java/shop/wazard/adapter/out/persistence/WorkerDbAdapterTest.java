@@ -10,13 +10,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import shop.wazard.application.domain.AccountForWorker;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.account.GenderTypeJpa;
+import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
-import shop.wazard.exception.CompanyNotFoundException;
-import shop.wazard.util.exception.StatusEnum;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ import java.time.LocalDateTime;
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
-@ContextConfiguration(classes = {EntityManager.class, WorkerDbAdapter.class, WorkerMapper.class, AccountForWorkerMapper.class, AccountForWorker.class, AccountJpaForWorkerRepository.class, CompanyJpaForWorkerRepository.class, ReplaceJpaForWorkerRepository.class})
+@ContextConfiguration(classes = {EntityManager.class, WorkerDbAdapter.class, WorkerMapper.class, AccountForWorkerMapper.class, AccountJpaForWorkerRepository.class, CompanyJpaForWorkerRepository.class, ReplaceJpaForWorkerRepository.class})
 class WorkerDbAdapterTest {
 
     @Autowired
@@ -46,36 +45,55 @@ class WorkerDbAdapterTest {
     @DisplayName("근무자 - 대타 등록 - 성공")
     public void registerReplaceSuccess() throws Exception {
         // given
-        AccountForWorker accountForWorker = AccountForWorker.builder()
-                .id(1L)
-                .roles("EMPLOYEE")
-                .email("test@email.com")
-                .userName("test")
-                .build();
+
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerRepository.save(companyJpa);
         ReplaceInfo replaceInfo = ReplaceInfo.builder()
-                .companyId(1L)
+                .companyId(savedCompanyJpa.getId())
                 .replaceWorkerName("test1")
                 .replaceDate(LocalDate.now())
                 .enterTime(LocalDateTime.now())
                 .exitTime(LocalDateTime.now())
                 .build();
-
-        // when
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(accountForWorker.getEmail());
-        CompanyJpa companyJpa = companyJpaForWorkerRepository.findById(replaceInfo.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        ReplaceWorkerJpa result = replaceJpaForWorkerRepository.save(workerMapper.saveReplaceInfo(accountJpa, companyJpa, replaceInfo));
+        ReplaceWorkerJpa result = replaceJpaForWorkerRepository.save(workerMapper.saveReplaceInfo(savedAccountJpa, savedCompanyJpa, replaceInfo));
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(accountJpa.getId(), result.getAccountJpa().getId()),
-                () -> Assertions.assertEquals(companyJpa.getId(), result.getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(savedAccountJpa.getId(), result.getAccountJpa().getId()),
+                () -> Assertions.assertEquals(savedCompanyJpa.getId(), result.getCompanyJpa().getId()),
                 () -> Assertions.assertEquals(replaceInfo.getReplaceWorkerName(), result.getReplaceWorkerName()),
                 () -> Assertions.assertEquals(replaceInfo.getReplaceDate(), result.getReplaceDate()),
                 () -> Assertions.assertEquals(replaceInfo.getEnterTime(), result.getEnterTime()),
                 () -> Assertions.assertEquals(replaceInfo.getExitTime(), result.getExitTime())
         );
+    }
+
+    private AccountJpa setDefaultEmployeeAccountJpa() {
+        return AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName2")
+                .phoneNumber("010-2222-2222")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+    }
+
+    private CompanyJpa setDefaultCompanyJpa() {
+        return CompanyJpa.builder()
+                .companyName("companyName")
+                .companyAddress("companyAddress")
+                .companyContact("02-111-1111")
+                .salaryDate(1)
+                .logoImageUrl("www.test.com")
+                .build();
     }
 
 }
