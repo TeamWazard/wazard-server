@@ -12,12 +12,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.*;
 import shop.wazard.exception.JoinWorkerDeniedException;
 import shop.wazard.exception.NotAuthorizedException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,8 @@ class WorkerManagementServiceTest {
     private RosterForWorkerManagementPort rosterForWorkerManagementPort;
     @MockBean
     private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    @MockBean
+    private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
 
     @Test
     @DisplayName("고용주 - 근무자 가입 수락 - 성공")
@@ -209,6 +214,32 @@ class WorkerManagementServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("고용주 - 전체대타 기록 조회- 성공")
+    public void getAllReplaceSuccess() throws Exception {
+        // given
+        GetAllReplaceReqDto getAllReplaceReqDto = GetAllReplaceReqDto.builder()
+                .email("test@email.com")
+                .companyId(1L)
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = setDefaultEmployerAccountForWorkerManagement();
+        List<GetAllReplaceResDto> getAllReplaceResDtoList = setDefaultReplaceList();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(replaceForWorkerManagementPort.getAllReplace(getAllReplaceReqDto))
+                .thenReturn(getAllReplaceResDtoList);
+        List<GetAllReplaceResDto> result = workerManagementService.getAllReplace(getAllReplaceReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getAllReplaceResDtoList.get(0).getUserName(), result.get(0).getUserName()),
+                () -> Assertions.assertEquals(getAllReplaceResDtoList.get(1).getUserName(), result.get(1).getUserName()),
+                () -> Assertions.assertEquals(getAllReplaceResDtoList.get(2).getUserName(), result.get(2).getUserName())
+        );
+    }
+
     private List<WaitingWorkerResDto> setWaitingWorkerResDtoList() {
         List<WaitingWorkerResDto> waitingWorkerResDtoList = new ArrayList<>();
         waitingWorkerResDtoList.add(WaitingWorkerResDto.builder()
@@ -230,6 +261,42 @@ class WorkerManagementServiceTest {
                 .email("test4@email.com")
                 .build());
         return waitingWorkerResDtoList;
+    }
+
+    private AccountForWorkerManagement setDefaultEmployerAccountForWorkerManagement() {
+        return AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+    }
+
+    private List<GetAllReplaceResDto> setDefaultReplaceList() {
+        List<GetAllReplaceResDto> getAllReplaceResDtoList = new ArrayList<>();
+        GetAllReplaceResDto getAllReplaceResDto1 = GetAllReplaceResDto.builder()
+                .userName("test1")
+                .replaceWorkerName("test2")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        GetAllReplaceResDto getAllReplaceResDto2 = GetAllReplaceResDto.builder()
+                .userName("test2")
+                .replaceWorkerName("test3")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        GetAllReplaceResDto getAllReplaceResDto3 = GetAllReplaceResDto.builder()
+                .userName("test3")
+                .replaceWorkerName("test1")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        getAllReplaceResDtoList.add(getAllReplaceResDto1);
+        getAllReplaceResDtoList.add(getAllReplaceResDto2);
+        getAllReplaceResDtoList.add(getAllReplaceResDto3);
+        return getAllReplaceResDtoList;
     }
 
 }

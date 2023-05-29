@@ -6,8 +6,11 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.GetAllReplaceReqDto;
+import shop.wazard.dto.GetAllReplaceResDto;
 import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
@@ -25,7 +28,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort {
+class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, ReplaceForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -95,4 +98,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
         return workerForManagementMapper.toWaitingWorkerList(waitingWorkerJpaList);
     }
 
+    @Override
+    public List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto) {
+        return null;
+    }
 }

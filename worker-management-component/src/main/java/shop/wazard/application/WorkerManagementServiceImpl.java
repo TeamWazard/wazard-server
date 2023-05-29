@@ -8,6 +8,7 @@ import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.*;
@@ -22,6 +23,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final AccountForWorkerManagementPort accountForWorkerManagementPort;
     private final RosterForWorkerManagementPort rosterForWorkerManagementPort;
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    private final ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
 
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
@@ -61,6 +63,13 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return waitingListForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
+    }
+
+    @Override
+    public List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getAllReplaceReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        return replaceForWorkerManagementPort.getAllReplace(getAllReplaceReqDto);
     }
 
 }

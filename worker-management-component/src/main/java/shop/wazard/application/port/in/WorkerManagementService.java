@@ -14,4 +14,6 @@ public interface WorkerManagementService {
 
     List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto);
 
+    List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto);
+
 }
