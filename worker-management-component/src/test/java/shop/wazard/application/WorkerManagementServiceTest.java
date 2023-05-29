@@ -24,8 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerManagementServiceImpl.class})
@@ -240,7 +239,7 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, 2023, 1))
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendacneRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(getWorkerAttendanceRecordResDto);
 
         GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, 2023, 1);

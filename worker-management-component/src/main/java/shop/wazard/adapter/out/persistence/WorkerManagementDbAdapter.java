@@ -105,11 +105,9 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     }
 
     @Override
-    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, LocalDate startDate, LocalDate endDate) {
         AccountJpa accountJpa = accountJpaForWorkerManagementRepository.findById(getWorkerAttendacneRecordReqDto.getAccountId())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = LocalDate.of(year, month + 1, 1);
         List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForWorkerManagementRepository.findAllRecordOfWorker(getWorkerAttendacneRecordReqDto.getAccountId(), getWorkerAttendacneRecordReqDto.getCompanyId(), startDate, endDate);
         List<AbsentJpa> absentJpaList = absentRecordJpaForWorkerManagementRepository.findAllAbsentRecordOfWorker(getWorkerAttendacneRecordReqDto.getAccountId(), getWorkerAttendacneRecordReqDto.getCompanyId(), startDate, endDate);
         return workerForManagementMapper.toWorkerAttendaceRecord(accountJpa, enterRecordJpaList, absentJpaList);

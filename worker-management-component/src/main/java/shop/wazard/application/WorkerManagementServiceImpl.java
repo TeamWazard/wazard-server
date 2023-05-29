@@ -12,7 +12,9 @@ import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
 import shop.wazard.dto.*;
+import shop.wazard.util.exception.StatusEnum;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional
@@ -71,7 +73,48 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendacneRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, year, month);
+        if (isInvalidDate(year, month)) {
+            throw new IllegalArgumentException(StatusEnum.UNSUPPORTED_DATE.getMessage());
+        }
+        LocalDate startDate = getDate(year, month);
+        LocalDate endDate = getEndDate(year, month);
+        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, startDate, endDate);
+    }
+
+    private boolean isInvalidDate(int year, int month) {
+        boolean flag = false;
+
+        // 2000년 ~ 현재 년도까지만 조회가능
+        if (year < 2000 || LocalDate.now().getYear() < year) {
+            flag = true;
+        }
+        // 1월 ~ 12월 까지만 조회 가능
+        if (month < 1 || 12 < month) {
+            flag = true;
+        }
+
+        return flag;
+    }
+
+    private LocalDate getDate(int year, int month) {
+        return LocalDate.of(year, month, 1);
+    }
+
+    private LocalDate getEndDate(int year, int month) {
+        int nextMonth = getNextMonth(month);
+        int calculatedYear = calcYearByMonth(year, nextMonth);
+        return getDate(calculatedYear, nextMonth);
+    }
+
+    private int calcYearByMonth(int year, int month) {
+        if (month == 1) {
+            year++;
+        }
+        return year;
+    }
+
+    private int getNextMonth(int month) {
+        return ((month + 1) % 13);
     }
 
 }

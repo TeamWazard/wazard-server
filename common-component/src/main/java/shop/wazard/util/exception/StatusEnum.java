@@ -22,7 +22,8 @@ public enum StatusEnum {
     INVALID_TARDY_STATE(412, "퇴근 등록에는 지각처리가 불가합니다."),
     FAIL_TO_UPLOAD_IMAGE(503, "이미지 업로드에 실패했습니다."),
     ENTER_RECORD_NOT_FOUND(413, "출근 기록이 존재하지 않습니다."),
-    ROSTER_NOT_FOUND(414, "업장과 근로자의 관계를 찾을 수 없습니다.");
+    ROSTER_NOT_FOUND(414, "업장과 근로자의 관계를 찾을 수 없습니다."),
+    UNSUPPORTED_DATE(415, "지원되지 않는 날짜입니다."),;
 
     private int statusCode;
     private String message;
