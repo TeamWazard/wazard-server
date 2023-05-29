@@ -6,8 +6,11 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.GetWorkerAttendacneRecordReqDto;
+import shop.wazard.dto.GetWorkerAttendanceRecordResDto;
 import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
@@ -25,7 +28,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort {
+class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, CommuteRecordForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -33,6 +36,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
     private final RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
     private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
+    private final EnterRecordJpaForWorkerManagementRepository enterRecordJpaForWorkerManagementRepository;
+    private final AbsentRecordJpaForWorkerManagementRepository absentRecordJpaForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
@@ -93,6 +98,11 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     public List<WaitingWorkerResDto> getWaitingWorker(Long companyId) {
         List<WaitingListJpa> waitingWorkerJpaList = waitingListJpaForWorkerManagementRepository.findWaitingWorkers(companyId);
         return workerForManagementMapper.toWaitingWorkerList(waitingWorkerJpaList);
+    }
+
+    @Override
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
+        return null;
     }
 
 }
