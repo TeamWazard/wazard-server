@@ -14,6 +14,7 @@ import shop.wazard.dto.GetWorkerAttendanceRecordResDto;
 import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
@@ -24,6 +25,7 @@ import shop.wazard.exception.RosterNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
 import shop.wazard.util.exception.StatusEnum;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -38,6 +40,7 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
     private final EnterRecordJpaForWorkerManagementRepository enterRecordJpaForWorkerManagementRepository;
     private final AbsentRecordJpaForWorkerManagementRepository absentRecordJpaForWorkerManagementRepository;
+    private final ExitRecordJpaForWorkerManagementRepository exitRecordJpaForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
@@ -102,6 +105,11 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     @Override
     public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
+        Long companyId = getWorkerAttendacneRecordReqDto.getCompanyId();
+        Long accountId = getWorkerAttendacneRecordReqDto.getAccountId();
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = LocalDate.of(year, month + 1, 1);
+        List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForWorkerManagementRepository.findAllRecordOfWorker(accountId, companyId, startDate, endDate);
         return null;
     }
 
