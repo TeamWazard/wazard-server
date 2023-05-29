@@ -74,7 +74,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendacneRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         if (isInvalidDate(year, month)) {
-            throw new IllegalArgumentException(StatusEnum.UNSUPPORTED_DATE.getMessage());
+            throw new IllegalArgumentException(StatusEnum.UNSUPPORTED_DATE_RANGE.getMessage());
         }
         LocalDate startDate = getDate(year, month);
         LocalDate endDate = getEndDate(year, month);
