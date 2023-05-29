@@ -127,12 +127,11 @@ class WorkerManagementDbAdapterTest {
         // when
         AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
-        RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(
-                RosterJpa.builder()
-                        .accountJpa(savedAccountJpa)
-                        .companyJpa(savedCompanyJpa)
-                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
-                        .build());
+        RosterJpa savedRosterJpa = rosterJpaForWorkerManagementRepository.save(RosterJpa.builder()
+                .accountJpa(savedAccountJpa)
+                .companyJpa(savedCompanyJpa)
+                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                .build());
 
         // then
         Assertions.assertAll(
