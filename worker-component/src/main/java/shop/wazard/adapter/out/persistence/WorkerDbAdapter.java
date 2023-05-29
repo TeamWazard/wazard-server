@@ -26,7 +26,6 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
     private final AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     private final CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
 
-
     @Override
     public AccountForWorker findAccountByEmail(String email) {
         AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email);
@@ -44,7 +43,9 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
 
     @Override
     public List<GetMyReplaceResDto> getMyReplace(GetMyReplaceReqDto getMyReplaceReqDto) {
-        return null;
+        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(getMyReplaceReqDto.getEmail());
+        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplace(getMyReplaceReqDto.getCompanyId(), accountJpa);
+        return workerMapper.toMyReplace(replaceWorkerJpaList);
     }
 
 }
