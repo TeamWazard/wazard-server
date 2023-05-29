@@ -308,6 +308,7 @@ class WorkerManagementDbAdapterTest {
 
         List<LocalDate> absentDateList = setDefaultAbsentDate();
 
+        // account1 결석 기록
         AbsentJpa absentJpa_5_1_forAccount1 = AbsentJpa.builder()
                 .accountJpa(savedAccountJpa1)
                 .companyJpa(savedCompanyJpa)
@@ -324,7 +325,7 @@ class WorkerManagementDbAdapterTest {
                 .absentDate(absentDateList.get(2))
                 .build();
 
-        // 조회되지 않아야 함
+        // account2 결석 기록 -> 조회되지 않아야 함
         AbsentJpa absentJpa_5_1_forAccount2 = AbsentJpa.builder()
                 .accountJpa(savedAccountJpa2)
                 .companyJpa(savedCompanyJpa)
