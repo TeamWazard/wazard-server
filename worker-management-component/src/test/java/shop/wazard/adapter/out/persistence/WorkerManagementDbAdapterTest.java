@@ -16,6 +16,7 @@ import shop.wazard.application.domain.WaitingStatus;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
+import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.*;
@@ -239,7 +240,7 @@ class WorkerManagementDbAdapterTest {
             "퇴근을 아직 하지 않은 경우 출근 시간만 조회, 특정 근무자 + YYYY년 MM월 특정 기간에 속한 출퇴근 기록만 조회")
     public void findAllRecordOfWorkerSuccess() throws Exception {
         // given
-        List<AccountJpa> accountJpaList = setDefaultAccountJpaForFindAllRecordOfWorker();
+        List<AccountJpa> accountJpaList = setDefaultAccountJpaForGetWorkerAttendanceRecord();
         AccountJpa savedAccountJpa1 = accountJpaList.get(0);
         AccountJpa savedAccountJpa2 = accountJpaList.get(1);
 
@@ -267,8 +268,8 @@ class WorkerManagementDbAdapterTest {
         em.clear();
 
         // when
-        final LocalDate STARTDATE = LocalDate.of(2023, 5, 1);
-        final LocalDate ENDDATE = LocalDate.of(2023, 6, 1);
+        LocalDate STARTDATE = LocalDate.of(2023, 5, 1);
+        LocalDate ENDDATE = LocalDate.of(2023, 6, 1);
         List<EnterRecordJpa> result = enterRecordJpaForWorkerManagementRepository.findAllRecordOfWorker(savedAccountJpa1.getId(), savedCompanyJpa.getId(), STARTDATE, ENDDATE);
 
         // then
@@ -293,6 +294,81 @@ class WorkerManagementDbAdapterTest {
 
                 () -> Assertions.assertNull(result.get(1).getExitRecordJpa())  // 퇴근을 아직 하지 않았기 때문에 조회되지 않아야 함
         );
+    }
+
+    @Test
+    @DisplayName("고용주 - 특정 근무자 결석 기록 조회 - List<AbsentJpa> 조회")
+    public void findAllAbsentRecordOfWorkerSuccess() throws Exception {
+        // given
+        List<AccountJpa> accountJpaList = setDefaultAccountJpaForGetWorkerAttendanceRecord();
+        AccountJpa savedAccountJpa1 = accountJpaList.get(0);
+        AccountJpa savedAccountJpa2 = accountJpaList.get(1);
+
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(setDefaultCompanyJpa());
+
+        List<LocalDate> absentDateList = setDefaultAbsentDate();
+
+        AbsentJpa absentJpa_5_1_forAccount1 = AbsentJpa.builder()
+                .accountJpa(savedAccountJpa1)
+                .companyJpa(savedCompanyJpa)
+                .absentDate(absentDateList.get(0))
+                .build();
+        AbsentJpa absentJpa_5_20_forAccount1 = AbsentJpa.builder()
+                .accountJpa(savedAccountJpa1)
+                .companyJpa(savedCompanyJpa)
+                .absentDate(absentDateList.get(1))
+                .build();
+        AbsentJpa absentJpa_4_30_forAccount1 = AbsentJpa.builder()
+                .accountJpa(savedAccountJpa1)
+                .companyJpa(savedCompanyJpa)
+                .absentDate(absentDateList.get(2))
+                .build();
+
+        // 조회되지 않아야 함
+        AbsentJpa absentJpa_5_1_forAccount2 = AbsentJpa.builder()
+                .accountJpa(savedAccountJpa2)
+                .companyJpa(savedCompanyJpa)
+                .absentDate(absentDateList.get(0))
+                .build();
+
+        AbsentJpa savedAbsentJpa_5_1_forAccount1 = absentRecordJpaForWorkerManagementRepository.save(absentJpa_5_1_forAccount1);
+        AbsentJpa savedAbsentJpa_5_20_forAccount1 = absentRecordJpaForWorkerManagementRepository.save(absentJpa_5_20_forAccount1);
+        AbsentJpa savedAbsentJpa_4_30_forAccount1 = absentRecordJpaForWorkerManagementRepository.save(absentJpa_4_30_forAccount1);
+        AbsentJpa savedAbsentJpa_5_1_forAccount2 = absentRecordJpaForWorkerManagementRepository.save(absentJpa_5_1_forAccount2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        LocalDate STARTDATE = LocalDate.of(2023, 5, 1);
+        LocalDate ENDDATE = LocalDate.of(2023, 6, 1);
+        List<AbsentJpa> result = absentRecordJpaForWorkerManagementRepository.findAllAbsentRecordOfWorker(savedAccountJpa1.getId(), savedCompanyJpa.getId(), STARTDATE, ENDDATE);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(2, result.size()),
+
+                () -> Assertions.assertEquals(savedAccountJpa1.getId(), result.get(0).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(savedCompanyJpa.getId(), result.get(0).getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(savedAbsentJpa_5_1_forAccount1.getAbsentDate(), result.get(0).getAbsentDate()),
+
+                () -> Assertions.assertEquals(savedAccountJpa1.getId(), result.get(1).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(savedCompanyJpa.getId(), result.get(1).getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(savedAbsentJpa_5_20_forAccount1.getAbsentDate(), result.get(1).getAbsentDate())
+        );
+    }
+
+    private List<LocalDate> setDefaultAbsentDate() {
+        LocalDate ABSENTDATE_5_1 = LocalDate.of(2023, 5, 1);
+        LocalDate ABSENTDATE_5_20 = LocalDate.of(2023, 5, 20);
+        LocalDate ABSENTDATE_4_30 = LocalDate.of(2023, 4, 30);
+
+        List<LocalDate> absentDateList = new ArrayList<>();
+        absentDateList.add(ABSENTDATE_5_1);
+        absentDateList.add(ABSENTDATE_5_20);
+        absentDateList.add(ABSENTDATE_4_30);
+
+        return absentDateList;
     }
 
     private EnterRecordJpa setEnterRecordForAccount2(AccountJpa savedAccountJpa2, CompanyJpa savedCompanyJpa, List<LocalDate> enterDateList) {
@@ -420,7 +496,7 @@ class WorkerManagementDbAdapterTest {
         return exitDateList;
     }
 
-    private List<AccountJpa> setDefaultAccountJpaForFindAllRecordOfWorker() {
+    private List<AccountJpa> setDefaultAccountJpaForGetWorkerAttendanceRecord() {
         List<AccountJpa> accountJpaList = new ArrayList<>();
         AccountJpa accountJpa1 = AccountJpa.builder()
                 .email("test1@email.com")
