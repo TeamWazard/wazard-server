@@ -19,4 +19,7 @@ public class GetWorkerAttendacneRecordReqDto {
     @Positive
     private Long accountId;  // 조회하는 근무자의 accountId
 
+    @Positive
+    private Long companyId;
+
 }
