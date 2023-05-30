@@ -6,8 +6,8 @@ import shop.wazard.application.domain.AccountForWorker;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
-import shop.wazard.dto.GetMyReplaceReqDto;
-import shop.wazard.dto.GetMyReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
@@ -43,7 +43,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
     }
 
     @Override
-    public List<GetMyReplaceResDto> getMyReplace(GetMyReplaceReqDto getMyReplaceReqDto) {
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
         return null;
     }
 

@@ -8,8 +8,8 @@ import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
-import shop.wazard.dto.GetMyReplaceReqDto;
-import shop.wazard.dto.GetMyReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.dto.RegisterReplaceReqDto;
 import shop.wazard.dto.RegisterReplaceResDto;
 
@@ -36,10 +36,10 @@ class WorkerServiceImpl implements WorkerService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetMyReplaceResDto> getMyReplace(GetMyReplaceReqDto getMyReplaceReqDto) {
-        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getMyReplaceReqDto.getEmail());
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
+        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getMyReplaceRecordReqDto.getEmail());
         accountForWorker.checkIsEmployee();
-        return workerPort.getMyReplace(getMyReplaceReqDto);
+        return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto);
     }
 
 }

@@ -1,8 +1,8 @@
 package shop.wazard.application.port.out;
 
 import shop.wazard.application.domain.ReplaceInfo;
-import shop.wazard.dto.GetMyReplaceReqDto;
-import shop.wazard.dto.GetMyReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ public interface WorkerPort {
 
     void saveReplace(String email, ReplaceInfo replaceInfo);
 
-    List<GetMyReplaceResDto> getMyReplace(GetMyReplaceReqDto getMyReplaceReqDto);
+    List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto);
 }
