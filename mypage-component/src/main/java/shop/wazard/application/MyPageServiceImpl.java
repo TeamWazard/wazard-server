@@ -11,10 +11,7 @@ import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
-import shop.wazard.dto.GetMyPastWorkRecordReqDto;
-import shop.wazard.dto.GetMyPastWorkRecordResDto;
-import shop.wazard.dto.GetPastWorkplaceReqDto;
-import shop.wazard.dto.GetPastWorkplaceResDto;
+import shop.wazard.dto.*;
 import shop.wazard.util.calculator.Calculator;
 
 import java.util.List;
@@ -58,4 +55,15 @@ class MyPageServiceImpl implements MyPageService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public GetMyAttitudeScoreResDto getMyAttitudeScore(GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto) {
+        AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyAttitudeScoreReqDto.getEmail());
+        accountForMyPage.checkIsEmployee();
+        WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(accountForMyPage.getId(), getMyAttitudeScoreReqDto.getCompanyId());
+        double myAttitudeScore = Calculator.getAttitudeScore(workRecordForMyPage.getTardyCount(), workRecordForMyPage.getAbsentCount(), workRecordForMyPage.getWorkDayCount());
+        return GetMyAttitudeScoreResDto.builder()
+                .myAttitudeScore(myAttitudeScore)
+                .build();
+    }
 }

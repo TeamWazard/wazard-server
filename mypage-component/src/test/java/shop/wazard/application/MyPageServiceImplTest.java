@@ -17,10 +17,7 @@ import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
-import shop.wazard.dto.GetMyPastWorkRecordReqDto;
-import shop.wazard.dto.GetMyPastWorkRecordResDto;
-import shop.wazard.dto.GetPastWorkplaceReqDto;
-import shop.wazard.dto.GetPastWorkplaceResDto;
+import shop.wazard.dto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -122,6 +119,37 @@ class MyPageServiceImplTest {
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getAbsentCount(), result.getAbsentCount()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getTardyCount(), result.getTardyCount()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getWorkScore(), result.getWorkScore())
+        );
+    }
+
+    @Test
+    @DisplayName("근로자 - 과거 근무 기록 상세 조회 - 성공")
+    void getMyAttitudeScore() throws Exception {
+        // given
+        GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto = GetMyAttitudeScoreReqDto.builder()
+                .email("test@email.com")
+                .companyId(2L)
+                .build();
+        AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
+        WorkRecordForMyPage workRecordForMyPage = WorkRecordForMyPage.builder()
+                .absentCount(1)
+                .tardyCount(1)
+                .workDayCount(10)
+                .build();
+        GetMyAttitudeScoreResDto getMyAttitudeScoreResDto = GetMyAttitudeScoreResDto.builder()
+                .myAttitudeScore(4)
+                .build();
+
+        // when
+        Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
+                .thenReturn(accountForAttendance);
+        Mockito.when(workRecordForMyPagePort.getMyPastWorkRecord(anyLong(), anyLong()))
+                .thenReturn(workRecordForMyPage);
+        GetMyAttitudeScoreResDto result = myPageService.getMyAttitudeScore(getMyAttitudeScoreReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getMyAttitudeScoreResDto.getMyAttitudeScore(), result.getMyAttitudeScore())
         );
     }
 
