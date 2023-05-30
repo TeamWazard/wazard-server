@@ -7,9 +7,11 @@ import lombok.Getter;
 @Builder
 public class RosterForWorkerManagement {
 
+    private Long rosterId;
     private Long companyId;
     private Long accountId;
     RelationType relationType;
+    private BaseStatus baseStatus;
 
     public static RosterForWorkerManagement createRosterForWorkerManagement(WaitingInfo waitingInfo) {
         return RosterForWorkerManagement.builder()
@@ -19,4 +21,7 @@ public class RosterForWorkerManagement {
                 .build();
     }
 
+    public void updateRosterStateForExile() {
+        this.baseStatus = BaseStatus.INACTIVE;
+    }
 }

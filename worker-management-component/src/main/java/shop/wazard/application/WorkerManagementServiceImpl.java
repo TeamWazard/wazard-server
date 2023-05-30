@@ -8,12 +8,10 @@ import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.PermitWorkerToJoinReqDto;
-import shop.wazard.dto.PermitWorkerToJoinResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyReqDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.dto.*;
 
 import java.util.List;
 
@@ -25,6 +23,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final AccountForWorkerManagementPort accountForWorkerManagementPort;
     private final RosterForWorkerManagementPort rosterForWorkerManagementPort;
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    private final CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
 
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
@@ -45,6 +44,34 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
+    }
+
+    @Override
+    public ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(exileWorkerReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        RosterForWorkerManagement rosterForWorkerManagement = rosterForWorkerManagementPort.findRoster(exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId());
+        rosterForWorkerManagement.updateRosterStateForExile();
+        rosterForWorkerManagementPort.exileWorker(rosterForWorkerManagement);
+        return ExileWorkerResDto.builder()
+                .message("해당 근무자가 업장에서 퇴장되었습니다.")
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        return waitingListForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendacneRecordReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, year, month);
     }
 
 }

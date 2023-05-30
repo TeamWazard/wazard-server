@@ -8,6 +8,7 @@ import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
@@ -16,6 +17,7 @@ import shop.wazard.entity.company.RosterTypeJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.exception.RosterNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -71,6 +73,26 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     public List<WorkerBelongedToCompanyResDto> getWorkersBelongedToCompany(Long companyId) {
         List<AccountJpa> workersBelongedCompany = accountJpaForWorkerManagementRepository.findWorkersBelongedToCompany(companyId);
         return workerForManagementMapper.toWorkersBelongedToCompany(workersBelongedCompany);
+    }
+
+    @Override
+    public RosterForWorkerManagement findRoster(Long accountId, Long companyId) {
+        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findRosterJpaByAccountIdAndCompanyId(accountId, companyId)
+                .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
+        return workerForManagementMapper.toRosterDomain(rosterJpa);
+    }
+
+    @Override
+    public void exileWorker(RosterForWorkerManagement rosterForWorkerManagement) {
+        RosterJpa rosterJpa = rosterJpaForWorkerManagementRepository.findById(rosterForWorkerManagement.getRosterId())
+                .orElseThrow(() -> new RosterNotFoundException(StatusEnum.ROSTER_NOT_FOUND.getMessage()));
+        workerForManagementMapper.updateRosterStateForExile(rosterJpa, rosterForWorkerManagement);
+    }
+
+    @Override
+    public List<WaitingWorkerResDto> getWaitingWorker(Long companyId) {
+        List<WaitingListJpa> waitingWorkerJpaList = waitingListJpaForWorkerManagementRepository.findWaitingWorkers(companyId);
+        return workerForManagementMapper.toWaitingWorkerList(waitingWorkerJpaList);
     }
 
 }

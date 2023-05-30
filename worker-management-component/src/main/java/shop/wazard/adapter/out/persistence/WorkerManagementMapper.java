@@ -2,11 +2,12 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import shop.wazard.application.domain.GenderType;
-import shop.wazard.application.domain.WaitingInfo;
-import shop.wazard.application.domain.WaitingStatus;
+import shop.wazard.application.domain.*;
+import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
+import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
 
@@ -39,6 +40,30 @@ class WorkerManagementMapper {
                         .genderType(GenderType.valueOf(accountJpa.getGender().getGender()))
                         .build()
                 ).collect(Collectors.toList());
+    }
+
+    public RosterForWorkerManagement toRosterDomain(RosterJpa rosterJpa) {
+        return RosterForWorkerManagement.builder()
+                .rosterId(rosterJpa.getId())
+                .accountId(rosterJpa.getAccountJpa().getId())
+                .companyId(rosterJpa.getCompanyJpa().getId())
+                .baseStatus(BaseStatus.valueOf(rosterJpa.getBaseStatusJpa().getStatus()))
+                .build();
+    }
+
+    public void updateRosterStateForExile(RosterJpa rosterJpa, RosterForWorkerManagement rosterForWorkerManagement) {
+        rosterJpa.updateRosterStateForExile(BaseStatusJpa.valueOf(rosterForWorkerManagement.getBaseStatus().getStatus()));
+    }
+
+    public List<WaitingWorkerResDto> toWaitingWorkerList(List<WaitingListJpa> waitingWorkerJpaList) {
+        return waitingWorkerJpaList.stream()
+                .map(waitingListJpa -> WaitingWorkerResDto.builder()
+                        .accountId(waitingListJpa.getAccountJpa().getId())
+                        .email(waitingListJpa.getAccountJpa().getEmail())
+                        .userName(waitingListJpa.getAccountJpa().getUserName())
+                        .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }

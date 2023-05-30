@@ -59,4 +59,14 @@ public class WorkerManagementExceptionHandler {
         );
     }
 
+    @ExceptionHandler(RosterNotFoundException.class)
+    public ResponseEntity<ErrorMessage> rosterNotFoundException(RosterNotFoundException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.ROSTER_NOT_FOUND.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }
