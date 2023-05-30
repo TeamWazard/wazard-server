@@ -11,4 +11,5 @@ public interface WorkerPort {
     void saveReplace(String email, ReplaceInfo replaceInfo);
 
     List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto);
+
 }

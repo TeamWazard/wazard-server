@@ -54,7 +54,6 @@ class WorkerServiceImplTest {
         Mockito.when(accountForWorkerPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorker);
 
-
         // then
         Assertions.assertDoesNotThrow(() -> workerService.registerReplace(registerReplaceReqDto));
     }
