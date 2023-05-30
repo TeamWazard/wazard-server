@@ -19,7 +19,7 @@ public class ReplaceWorkerJpa {
 
     @Id
     @GeneratedValue
-    @Column(name = "ReplaceWorkerId")
+    @Column(name = "replaceWorkerId")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -9,6 +9,7 @@ import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
+import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -25,13 +26,15 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
 
     @Override
     public AccountForWorker findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email);
+        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForWorkerMapper.toAccount(accountJpa);
     }
 
     @Override
     public void saveReplace(String email, ReplaceInfo replaceInfo) {
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email);
+        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         CompanyJpa companyJpa = companyJpaForWorkerRepository.findById(replaceInfo.getCompanyId())
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         ReplaceWorkerJpa replaceWorkerJpa = workerMapper.saveReplaceInfo(accountJpa, companyJpa, replaceInfo);
