@@ -114,7 +114,10 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     }
 
     private int getNextMonth(int month) {
-        return ((month + 1) % 13);
+        if (++month == 13) {
+            month = 1;
+        }
+        return month;
     }
 
 }
