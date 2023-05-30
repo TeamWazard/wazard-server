@@ -20,6 +20,7 @@ public class ReplaceWorkerJpa {
     @Id
     @GeneratedValue
     @Column(name = "replaceWorkerId")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId", nullable = false)
