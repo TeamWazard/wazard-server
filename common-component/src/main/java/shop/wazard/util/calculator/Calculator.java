@@ -1,5 +1,7 @@
 package shop.wazard.util.calculator;
 
+import java.util.List;
+
 public class Calculator {
 
     public static double getAttitudeScore(int tardyCount, int absentCount, int totalWorkDay) {
@@ -11,7 +13,7 @@ public class Calculator {
 
     private static double calculateAttitudeScore(int tardyCount, int absentCount, int totalWorkDay) {
         double rawResult = 10 - (10 * (calculateTardyScore(tardyCount) + calculateAbsentScore(absentCount)) / (double) totalWorkDay);
-        return Math.round(rawResult * 10) / 10.0;
+        return roundTensPlaceScore(rawResult);
     }
 
     private static double calculateTardyScore(int tardyCount) {
@@ -22,4 +24,13 @@ public class Calculator {
         return absentCount * 5.0;
     }
 
+    private static double roundTensPlaceScore(double score) {
+        return Math.round(score * 10) / 10.0;
+    }
+
+    public static double getAverageAttitudeScore(List<Double> totalAttitudeScore) {
+        double total =  totalAttitudeScore.stream().reduce(0.0, Double::sum);
+        double average = total / totalAttitudeScore.size();
+        return roundTensPlaceScore(average);
+    }
 }

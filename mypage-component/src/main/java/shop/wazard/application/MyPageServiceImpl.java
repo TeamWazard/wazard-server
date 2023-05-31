@@ -15,6 +15,7 @@ import shop.wazard.dto.*;
 import shop.wazard.util.calculator.Calculator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -60,10 +61,19 @@ class MyPageServiceImpl implements MyPageService {
     public GetMyAttitudeScoreResDto getMyAttitudeScore(GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto) {
         AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyAttitudeScoreReqDto.getEmail());
         accountForMyPage.checkIsEmployee();
-        WorkRecordForMyPage workRecordForMyPage = workRecordForMyPagePort.getMyPastWorkRecord(accountForMyPage.getId(), getMyAttitudeScoreReqDto.getCompanyId());
-        double myAttitudeScore = Calculator.getAttitudeScore(workRecordForMyPage.getTardyCount(), workRecordForMyPage.getAbsentCount(), workRecordForMyPage.getWorkDayCount());
+        // accountId를 통해 roster에서 companyList를 반환 받은 후 그 아이디값들을 통해 지각횟수, 무단결석횟수, 총 근무일수를 가져옴
+        List<WorkRecordForMyPage> myTotalPastRecord = workRecordForMyPagePort.getMyTotalPastRecord(accountForMyPage.getId());
+        List<Double> totalMyAttitudeScores = getCalculatedAttitudeScore(myTotalPastRecord);
+        double myAttitudeScore = Calculator.getAverageAttitudeScore(totalMyAttitudeScores);
         return GetMyAttitudeScoreResDto.builder()
                 .myAttitudeScore(myAttitudeScore)
                 .build();
     }
+
+    private List<Double> getCalculatedAttitudeScore(List<WorkRecordForMyPage> myTotalPastRecord) {
+        return myTotalPastRecord.stream()
+                .map(record -> Calculator.getAttitudeScore(record.getTardyCount(), record.getAbsentCount(), record.getWorkDayCount()))
+                .collect(Collectors.toList());
+    }
+
 }

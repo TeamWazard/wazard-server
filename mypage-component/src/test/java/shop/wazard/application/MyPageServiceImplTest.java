@@ -18,10 +18,12 @@ import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
 import shop.wazard.dto.*;
+import shop.wazard.util.calculator.Calculator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -123,7 +125,7 @@ class MyPageServiceImplTest {
     }
 
     @Test
-    @DisplayName("근로자 - 과거 근무 기록 상세 조회 - 성공")
+    @DisplayName("근로자 - 나의 태도 점수 평균 조회 - 성공")
     void getMyAttitudeScore() throws Exception {
         // given
         GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto = GetMyAttitudeScoreReqDto.builder()
@@ -131,26 +133,47 @@ class MyPageServiceImplTest {
                 .companyId(2L)
                 .build();
         AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
-        WorkRecordForMyPage workRecordForMyPage = WorkRecordForMyPage.builder()
-                .absentCount(1)
-                .tardyCount(1)
-                .workDayCount(10)
-                .build();
-        GetMyAttitudeScoreResDto getMyAttitudeScoreResDto = GetMyAttitudeScoreResDto.builder()
-                .myAttitudeScore(4)
-                .build();
+        List<WorkRecordForMyPage> workRecordForMyPageList = setDefaultMyPastWorkRecordList();
+        List<Double> calculatedAttitudeScores = getCalculatedAttitudeScore(workRecordForMyPageList);
+        double myAttitudeScore = Calculator.getAverageAttitudeScore(calculatedAttitudeScores);
 
         // when
         Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
                 .thenReturn(accountForAttendance);
-        Mockito.when(workRecordForMyPagePort.getMyPastWorkRecord(anyLong(), anyLong()))
-                .thenReturn(workRecordForMyPage);
+        Mockito.when(workRecordForMyPagePort.getMyTotalPastRecord(anyLong()))
+                .thenReturn(workRecordForMyPageList);
         GetMyAttitudeScoreResDto result = myPageService.getMyAttitudeScore(getMyAttitudeScoreReqDto);
 
         // then
+        // + 값 직접 확인
         Assertions.assertAll(
-                () -> Assertions.assertEquals(getMyAttitudeScoreResDto.getMyAttitudeScore(), result.getMyAttitudeScore())
+                () -> Assertions.assertEquals(myAttitudeScore, result.getMyAttitudeScore())
         );
+    }
+
+    private List<Double> getCalculatedAttitudeScore(List<WorkRecordForMyPage> myTotalPastRecord) {
+        return myTotalPastRecord.stream()
+                .map(record -> Calculator.getAttitudeScore(record.getTardyCount(), record.getAbsentCount(), record.getWorkDayCount()))
+                .collect(Collectors.toList());
+    }
+
+    private List<WorkRecordForMyPage> setDefaultMyPastWorkRecordList() {
+        List<WorkRecordForMyPage> workRecordForMyPageList = new ArrayList<>();
+        // 0.4 점
+        WorkRecordForMyPage workRecordForMyPage1 = WorkRecordForMyPage.builder()
+                .absentCount(1)
+                .tardyCount(2)
+                .workDayCount(10)
+                .build();
+        // 0.8 점
+        WorkRecordForMyPage workRecordForMyPage2 = WorkRecordForMyPage.builder()
+                .absentCount(0)
+                .tardyCount(2)
+                .workDayCount(10)
+                .build();
+        workRecordForMyPageList.add(workRecordForMyPage1);
+        workRecordForMyPageList.add(workRecordForMyPage2);
+        return workRecordForMyPageList;
     }
 
     private List<GetPastWorkplaceResDto> setDefaultPastWorkPlaceList() {

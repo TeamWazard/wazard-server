@@ -66,6 +66,11 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
                 .build();
     }
 
+    @Override
+    public List<WorkRecordForMyPage> getMyTotalPastRecord(Long accountId) {
+        return null;
+    }
+
     private int getWorkDayCount(Long accountId, Long companyId) {
         return enterRecordJpaForMyPageRepository.countTotalWorkDayByAccountIdAndCompanyId(accountId, companyId);
     }
