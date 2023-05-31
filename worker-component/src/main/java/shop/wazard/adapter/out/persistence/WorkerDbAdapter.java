@@ -12,6 +12,10 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,6 +43,11 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
                 .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         ReplaceWorkerJpa replaceWorkerJpa = workerMapper.saveReplaceInfo(accountJpa, companyJpa, replaceInfo);
         replaceJpaForWorkerRepository.save(replaceWorkerJpa);
+    }
+
+    @Override
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
+        return null;
     }
 
 }

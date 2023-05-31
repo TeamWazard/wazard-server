@@ -10,7 +10,10 @@ import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.RegisterReplaceReqDto;
 import shop.wazard.dto.RegisterReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,6 +31,14 @@ class WorkerServiceImpl implements WorkerService {
         return RegisterReplaceResDto.builder()
                 .message("대타 등록이 완료되었습니다.")
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
+        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getMyReplaceRecordReqDto.getEmail());
+        accountForWorker.checkIsEmployee();
+        return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto);
     }
 
 }
