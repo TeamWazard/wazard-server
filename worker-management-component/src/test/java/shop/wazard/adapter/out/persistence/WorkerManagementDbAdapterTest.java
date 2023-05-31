@@ -250,13 +250,13 @@ class WorkerManagementDbAdapterTest {
 
         // account1 출/퇴근 기록 저장
         List<EnterRecordJpa> enterRecordJpaList = setEnterRecordForAccount1(savedAccountJpa1, savedCompanyJpa, enterDateList);
-        EnterRecordJpa savedEnterRecordJpa_5_1_forAccount1 = enterRecordJpaList.get(0);
-        EnterRecordJpa savedEnterRecordJpa_5_20_forAccount1 = enterRecordJpaList.get(1);
-        EnterRecordJpa savedEnterRecordJpa_4_30_forAccount1 = enterRecordJpaList.get(2);  // 조회되지 않아야 함
+        EnterRecordJpa savedEnterRecordJpa_12_1_forAccount1 = enterRecordJpaList.get(0);
+        EnterRecordJpa savedEnterRecordJpa_12_20_forAccount1 = enterRecordJpaList.get(1);
+        EnterRecordJpa savedEnterRecordJpa_11_30_forAccount1 = enterRecordJpaList.get(2);  // 조회되지 않아야 함
 
         List<ExitRecordJpa> exitRecordJpaList = setExitRecordForAccount1(enterRecordJpaList, exitDateList);
-        ExitRecordJpa savedExitRecordJpa_5_1_forAccount1 = exitRecordJpaList.get(0);
-        ExitRecordJpa savedExitRecordJpa_4_30_forAccount1 = exitRecordJpaList.get(1);  // 조회되지 않아야 함
+        ExitRecordJpa savedExitRecordJpa_12_1_forAccount1 = exitRecordJpaList.get(0);
+        ExitRecordJpa savedExitRecordJpa_11_30_forAccount1 = exitRecordJpaList.get(1);  // 조회되지 않아야 함
 
 
         // account2 출/퇴근 기록 - 조회되지 않아야 함
@@ -267,8 +267,8 @@ class WorkerManagementDbAdapterTest {
         em.clear();
 
         // when
-        LocalDate STARTDATE = LocalDate.of(2023, 5, 1);
-        LocalDate ENDDATE = LocalDate.of(2023, 6, 1);
+        LocalDate STARTDATE = LocalDate.of(2022, 12, 1);
+        LocalDate ENDDATE = LocalDate.of(2023, 1, 1);
         List<EnterRecordJpa> result = enterRecordJpaForWorkerManagementRepository.findAllRecordOfWorker(savedAccountJpa1.getId(), savedCompanyJpa.getId(), STARTDATE, ENDDATE);
 
         // then
@@ -276,20 +276,20 @@ class WorkerManagementDbAdapterTest {
                 () -> Assertions.assertEquals(2, result.size()),  // 5월에 특정 알바생의 출/퇴근 기록을 조회함
 
                 // 첫번째 출근 & 퇴근 기록
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_1_forAccount1.getAccountJpa().getId(), result.get(0).getAccountJpa().getId()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_1_forAccount1.getEnterDate(), result.get(0).getEnterDate()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_1_forAccount1.getEnterTime(), result.get(0).getEnterTime()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_1_forAccount1.isTardy(), result.get(0).isTardy()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_1_forAccount1.getAccountJpa().getId(), result.get(0).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_1_forAccount1.getEnterDate(), result.get(0).getEnterDate()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_1_forAccount1.getEnterTime(), result.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_1_forAccount1.isTardy(), result.get(0).isTardy()),
 
-                () -> Assertions.assertEquals(savedExitRecordJpa_5_1_forAccount1.getEnterRecordJpa().getId(), result.get(0).getId()),
-                () -> Assertions.assertEquals(savedExitRecordJpa_5_1_forAccount1.getExitDate(), result.get(0).getExitRecordJpa().getExitDate()),
-                () -> Assertions.assertEquals(savedExitRecordJpa_5_1_forAccount1.getExitTime(), result.get(0).getExitRecordJpa().getExitTime()),
+                () -> Assertions.assertEquals(savedExitRecordJpa_12_1_forAccount1.getEnterRecordJpa().getId(), result.get(0).getId()),
+                () -> Assertions.assertEquals(savedExitRecordJpa_12_1_forAccount1.getExitDate(), result.get(0).getExitRecordJpa().getExitDate()),
+                () -> Assertions.assertEquals(savedExitRecordJpa_12_1_forAccount1.getExitTime(), result.get(0).getExitRecordJpa().getExitTime()),
 
                 // 두번째 출근 기록(퇴근을 아직 안한 경우)
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_20_forAccount1.getAccountJpa().getId(), result.get(1).getAccountJpa().getId()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_20_forAccount1.getEnterDate(), result.get(1).getEnterDate()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_20_forAccount1.getEnterTime(), result.get(1).getEnterTime()),
-                () -> Assertions.assertEquals(savedEnterRecordJpa_5_20_forAccount1.isTardy(), result.get(1).isTardy()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_20_forAccount1.getAccountJpa().getId(), result.get(1).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_20_forAccount1.getEnterDate(), result.get(1).getEnterDate()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_20_forAccount1.getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(savedEnterRecordJpa_12_20_forAccount1.isTardy(), result.get(1).isTardy()),
 
                 () -> Assertions.assertNull(result.get(1).getExitRecordJpa())  // 퇴근을 아직 하지 않았기 때문에 조회되지 않아야 함
         );
@@ -471,27 +471,27 @@ class WorkerManagementDbAdapterTest {
     }
 
     private List<LocalDate> setDefaultEnterDate() {
-        LocalDate ENTERDATE_5_1 = LocalDate.of(2023, 5, 1);
-        LocalDate ENTERDATE_5_20 = LocalDate.of(2023, 5, 20);
-        LocalDate ENTERDATE_4_30 = LocalDate.of(2023, 4, 30);
+        LocalDate ENTERDATE_12_1 = LocalDate.of(2022, 12, 1);
+        LocalDate ENTERDATE_12_20 = LocalDate.of(2022, 12, 20);
+        LocalDate ENTERDATE_11_30 = LocalDate.of(2022, 11, 30);
 
         List<LocalDate> enterDateList = new ArrayList<>();
-        enterDateList.add(ENTERDATE_5_1);
-        enterDateList.add(ENTERDATE_5_20);
-        enterDateList.add(ENTERDATE_4_30);
+        enterDateList.add(ENTERDATE_12_1);
+        enterDateList.add(ENTERDATE_12_20);
+        enterDateList.add(ENTERDATE_11_30);
 
         return enterDateList;
     }
 
     private List<LocalDate> setDefaultExitDate() {
-        LocalDate EXITDATE_5_1 = LocalDate.of(2023, 5, 1);
-        LocalDate EXITDATE_5_20 = LocalDate.of(2023, 5, 21);
-        LocalDate EXITDATE_4_30 = LocalDate.of(2023, 4, 30);
+        LocalDate EXITDATE_12_1 = LocalDate.of(2022, 12, 1);
+        LocalDate EXITDATE_12_20 = LocalDate.of(2022, 12, 21);
+        LocalDate EXITDATE_11_30 = LocalDate.of(2022, 11, 30);
 
         List<LocalDate> exitDateList = new ArrayList<>();
-        exitDateList.add(EXITDATE_5_1);
-        exitDateList.add(EXITDATE_5_20);
-        exitDateList.add(EXITDATE_4_30);
+        exitDateList.add(EXITDATE_12_1);
+        exitDateList.add(EXITDATE_12_20);
+        exitDateList.add(EXITDATE_11_30);
 
         return exitDateList;
     }
