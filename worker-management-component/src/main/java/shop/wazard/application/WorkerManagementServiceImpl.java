@@ -70,15 +70,15 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto, int year, int month) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendacneRecordReqDto.getEmail());
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, int year, int month) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendanceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         if (isInvalidDate(year, month)) {
             throw new IllegalArgumentException(StatusEnum.UNSUPPORTED_DATE_RANGE.getMessage());
         }
         LocalDate startDate = getDate(year, month);
         LocalDate endDate = getEndDate(year, month);
-        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, startDate, endDate);
+        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, startDate, endDate);
     }
 
     private boolean isInvalidDate(int year, int month) {

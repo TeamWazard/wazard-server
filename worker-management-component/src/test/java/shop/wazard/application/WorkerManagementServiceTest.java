@@ -217,7 +217,7 @@ class WorkerManagementServiceTest {
     @DisplayName("고용주 - 특정 근무자 상세조회 - 성공")
     public void getWorkerAttendanceRecordSuccess() throws Exception {
         // given
-        GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto = GetWorkerAttendacneRecordReqDto.builder()
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
                 .email("employer@email.com")
                 .accountId(1L)
                 .build();
@@ -239,10 +239,10 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendacneRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(getWorkerAttendanceRecordResDto);
 
-        GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, 2023, 1);
+        GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2023, 1);
 
         // then
         Assertions.assertAll(
