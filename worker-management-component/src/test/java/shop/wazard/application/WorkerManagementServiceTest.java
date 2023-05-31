@@ -271,6 +271,43 @@ class WorkerManagementServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("고용주 - 특정 근무자 상세조회 - 실패" +
+            "지원되지 않는 날짜를 조회하는 경우")
+    public void getWorkerAttendanceRecordFailedByUnsupportedDate() throws Exception {
+        // given
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
+                .email("employer@email.com")
+                .accountId(1L)
+                .build();
+
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+
+        List<CommuteRecordDto> commuteRecordDtoList = setDefaultCommuteRecordDtoList();
+        List<AbsentRecordDto> absentRecordDtoList = setDefaultAbsentRecordDtoList();
+
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = GetWorkerAttendanceRecordResDto.builder()
+                .userName("홍길동")
+                .commuteRecordResDtoList(commuteRecordDtoList)
+                .absentRecordResDtoList(absentRecordDtoList)
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(getWorkerAttendanceRecordResDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 1999, 1)),
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2024, 1))
+        );
+    }
+
     private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {
         List<CommuteRecordDto> commuteRecordDtoList = new ArrayList<>();
 
