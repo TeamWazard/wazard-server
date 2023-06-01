@@ -8,7 +8,7 @@ public interface WorkerManagementService {
 
     PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto);
 
-    List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto);
+    List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(Long companyId, WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto);
 
     ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto);
 

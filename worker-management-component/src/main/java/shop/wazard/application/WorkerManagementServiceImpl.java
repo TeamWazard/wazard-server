@@ -40,10 +40,10 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
+    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(Long companyId, WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        return rosterForWorkerManagementPort.getWorkersBelongedToCompany(workerBelongedToCompanyReqDto.getCompanyId());
+        return rosterForWorkerManagementPort.getWorkersBelongedToCompany(companyId);
     }
 
     @Override
