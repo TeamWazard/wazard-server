@@ -49,7 +49,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
     public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
         AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(getMyReplaceRecordReqDto.getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplaceRecord(getMyReplaceRecordReqDto.getCompanyId(), accountJpa);
+        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplaceRecord(getMyReplaceRecordReqDto.getCompanyId(), accountJpa.getId());
         return workerMapper.toMyReplaceRecord(replaceWorkerJpaList);
     }
 

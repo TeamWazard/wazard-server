@@ -88,7 +88,7 @@ class WorkerDbAdapterTest {
         List<ReplaceWorkerJpa> replaceWorkerJpaList = setDefaultReplaceWorkerJpaList(savedAccountJpa, savedCompanyJpa);
         em.flush();
         em.clear();
-        List<ReplaceWorkerJpa> result = replaceJpaForWorkerRepository.findMyReplaceRecord(savedCompanyJpa.getId(), savedAccountJpa);
+        List<ReplaceWorkerJpa> result = replaceJpaForWorkerRepository.findMyReplaceRecord(savedCompanyJpa.getId(), savedAccountJpa.getId());
 
         // then
         Assertions.assertAll(
