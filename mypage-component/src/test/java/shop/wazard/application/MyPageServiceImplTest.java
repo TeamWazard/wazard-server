@@ -18,12 +18,10 @@ import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
 import shop.wazard.dto.*;
-import shop.wazard.util.calculator.Calculator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -134,8 +132,6 @@ class MyPageServiceImplTest {
                 .build();
         AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
         List<WorkRecordForMyPage> workRecordForMyPageList = setDefaultMyPastWorkRecordList();
-        List<Double> calculatedAttitudeScores = getCalculatedAttitudeScore(workRecordForMyPageList);
-        double myAttitudeScore = Calculator.getAverageAttitudeScore(calculatedAttitudeScores);
 
         // when
         Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
@@ -147,14 +143,8 @@ class MyPageServiceImplTest {
         // then
         // + 값 직접 확인
         Assertions.assertAll(
-                () -> Assertions.assertEquals(myAttitudeScore, result.getMyAttitudeScore())
+                () -> Assertions.assertEquals(result.getMyAttitudeScore(), 5.5)
         );
-    }
-
-    private List<Double> getCalculatedAttitudeScore(List<WorkRecordForMyPage> myTotalPastRecord) {
-        return myTotalPastRecord.stream()
-                .map(record -> Calculator.getAttitudeScore(record.getTardyCount(), record.getAbsentCount(), record.getWorkDayCount()))
-                .collect(Collectors.toList());
     }
 
     private List<WorkRecordForMyPage> setDefaultMyPastWorkRecordList() {
