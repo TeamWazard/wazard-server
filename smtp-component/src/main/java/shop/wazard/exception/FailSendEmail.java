@@ -2,10 +2,8 @@ package shop.wazard.exception;
 
 import lombok.NoArgsConstructor;
 
-import javax.mail.MessagingException;
-
 @NoArgsConstructor
-public class FailSendEmail extends MessagingException {
+public class FailSendEmail extends RuntimeException {
 
     public FailSendEmail(String message) {
         super(message);
