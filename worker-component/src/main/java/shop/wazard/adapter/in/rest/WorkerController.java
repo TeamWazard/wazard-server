@@ -30,7 +30,7 @@ class WorkerController {
     @Certification
     @GetMapping("/replace/{accountId{")
     public ResponseEntity<List<GetMyReplaceResDto>> getMyReplace(@PathVariable Long accountId, @Valid @RequestBody GetMyReplaceReqDto getMyReplaceReqDto) {
-        List<GetMyReplaceResDto> getMyReplaceResDtoList = workerService.getMyReplace(getMyReplaceReqDto);
+        List<GetMyReplaceResDto> getMyReplaceResDtoList = workerService.getMyReplaceRecord(getMyReplaceReqDto);
         return ResponseEntity.ok(getMyReplaceResDtoList);
     }
 
