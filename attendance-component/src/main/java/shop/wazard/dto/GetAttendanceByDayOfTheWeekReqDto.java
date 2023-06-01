@@ -1,14 +1,15 @@
 package shop.wazard.dto;
 
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +21,5 @@ public class GetAttendanceByDayOfTheWeekReqDto {
 
     @Positive
     private Long accountId;
-
-    @Nullable
-    private Long companyId;
 
 }

@@ -18,10 +18,10 @@ public class Attendance {
     private LocalDate exitDate;
     private LocalDateTime exitTime;
 
-    public static Attendance createAttendance(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+    public static Attendance createAttendance(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, Long companyId, LocalDate date) {
         return Attendance.builder()
                 .accountId(getAttendanceByDayOfTheWeekReqDto.getAccountId())
-                .companyId(getAttendanceByDayOfTheWeekReqDto.getCompanyId())
+                .companyId(companyId)
                 .enterDate(date)
                 .build();
     }

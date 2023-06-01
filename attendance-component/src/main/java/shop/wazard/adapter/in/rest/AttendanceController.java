@@ -40,8 +40,7 @@ class AttendanceController {
     @GetMapping("/employer/{accountId}/{companyId}/{year}/{month}/{day}")
     public ResponseEntity<List<GetAttendanceByDayOfTheWeekResDto>> getAttendancesByDayOfTheWeek(@PathVariable Long accountId, @PathVariable Long companyId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto) {
         LocalDate date = LocalDate.of(year, month, day);
-        getAttendanceByDayOfTheWeekReqDto.setCompanyId(companyId);
-        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceResDtoList = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
+        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceResDtoList = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, companyId, date);
         return ResponseEntity.ok(getAttendanceResDtoList);
     }
 
@@ -49,8 +48,7 @@ class AttendanceController {
     @GetMapping("/employee/{accountId}/{companyId}/{year}/{month}/{day}")
     public ResponseEntity<List<GetAttendanceByDayOfTheWeekResDto>> getMyAttendanceByDayOfTheWeek(@PathVariable Long accountId, @PathVariable Long companyId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto) {
         LocalDate date = LocalDate.of(year, month, day);
-        getAttendanceByDayOfTheWeekReqDto.setCompanyId(companyId);
-        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceByDayOfTheWeekResDtoList = attendanceService.getMyAttendanceByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
+        List<GetAttendanceByDayOfTheWeekResDto> getAttendanceByDayOfTheWeekResDtoList = attendanceService.getMyAttendanceByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, companyId, date);
         return ResponseEntity.ok(getAttendanceByDayOfTheWeekResDtoList);
     }
 
