@@ -11,10 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.WorkerManagementService;
-import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
-import shop.wazard.application.port.out.RosterForWorkerManagementPort;
-import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.exception.JoinWorkerDeniedException;
 import shop.wazard.exception.NotAuthorizedException;
@@ -40,6 +37,8 @@ class WorkerManagementServiceTest {
     private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
     @MockBean
     private CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
+    @MockBean
+    private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
 
     @Test
     @DisplayName("고용주 - 근무자 가입 수락 - 성공")
@@ -308,6 +307,44 @@ class WorkerManagementServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("고용주 - 전체대타 기록 조회- 성공")
+    public void getAllReplaceSuccess() throws Exception {
+        // given
+        GetAllReplaceRecordReqDto getAllReplaceRecordReqDto = GetAllReplaceRecordReqDto.builder()
+                .email("test@email.com")
+                .companyId(1L)
+                .build();
+        AccountForWorkerManagement accountForWorkerManagement = setDefaultEmployerAccountForWorkerManagement();
+        List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList = setDefaultReplaceList();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(replaceForWorkerManagementPort.getAllReplaceRecord(any(GetAllReplaceRecordReqDto.class)))
+                .thenReturn(getAllReplaceRecordResDtoList);
+        List<GetAllReplaceRecordResDto> result = workerManagementService.getAllReplaceRecord(getAllReplaceRecordReqDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(0).getUserName(), result.get(0).getUserName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(0).getReplaceWorkerName(), result.get(0).getReplaceWorkerName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(0).getReplaceDate(), result.get(0).getReplaceDate()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(0).getEnterTime(), result.get(0).getEnterTime()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(0).getExitTime(), result.get(0).getExitTime()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(1).getUserName(), result.get(1).getUserName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(1).getReplaceWorkerName(), result.get(1).getReplaceWorkerName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(1).getReplaceDate(), result.get(1).getReplaceDate()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(1).getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(1).getExitTime(), result.get(1).getExitTime()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(2).getUserName(), result.get(2).getUserName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(2).getReplaceWorkerName(), result.get(2).getReplaceWorkerName()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(2).getReplaceDate(), result.get(2).getReplaceDate()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(2).getEnterTime(), result.get(2).getEnterTime()),
+                () -> Assertions.assertEquals(getAllReplaceRecordResDtoList.get(2).getExitTime(), result.get(2).getExitTime())
+        );
+    }
+
     private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {
         List<CommuteRecordDto> commuteRecordDtoList = new ArrayList<>();
 
@@ -374,6 +411,42 @@ class WorkerManagementServiceTest {
                 .email("test4@email.com")
                 .build());
         return waitingWorkerResDtoList;
+    }
+
+    private AccountForWorkerManagement setDefaultEmployerAccountForWorkerManagement() {
+        return AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+    }
+
+    private List<GetAllReplaceRecordResDto> setDefaultReplaceList() {
+        List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList = new ArrayList<>();
+        GetAllReplaceRecordResDto getAllReplaceRecordResDto1 = GetAllReplaceRecordResDto.builder()
+                .userName("test1")
+                .replaceWorkerName("test2")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        GetAllReplaceRecordResDto getAllReplaceRecordResDto2 = GetAllReplaceRecordResDto.builder()
+                .userName("test2")
+                .replaceWorkerName("test3")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        GetAllReplaceRecordResDto getAllReplaceRecordResDto3 = GetAllReplaceRecordResDto.builder()
+                .userName("test3")
+                .replaceWorkerName("test1")
+                .replaceDate(LocalDate.now())
+                .enterTime(LocalDateTime.now())
+                .exitTime(LocalDateTime.now())
+                .build();
+        getAllReplaceRecordResDtoList.add(getAllReplaceRecordResDto1);
+        getAllReplaceRecordResDtoList.add(getAllReplaceRecordResDto2);
+        getAllReplaceRecordResDtoList.add(getAllReplaceRecordResDto3);
+        return getAllReplaceRecordResDtoList;
     }
 
 }

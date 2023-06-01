@@ -7,10 +7,7 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
-import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
-import shop.wazard.application.port.out.RosterForWorkerManagementPort;
-import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -25,6 +22,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final AccountForWorkerManagementPort accountForWorkerManagementPort;
     private final RosterForWorkerManagementPort rosterForWorkerManagementPort;
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    private final ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
     private final CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
 
     @Override
@@ -79,6 +77,14 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         LocalDate startDate = getDate(year, month);
         LocalDate endDate = getEndDate(year, month);
         return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, startDate, endDate);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getAllReplaceRecordReqDto.getEmail());
+        accountForWorkerManagement.checkIsEmployer();
+        return replaceForWorkerManagementPort.getAllReplaceRecord(getAllReplaceRecordReqDto);
     }
 
     private boolean isInvalidDate(int year, int month) {

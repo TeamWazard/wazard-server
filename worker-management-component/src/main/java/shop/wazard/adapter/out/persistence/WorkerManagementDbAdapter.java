@@ -5,14 +5,8 @@ import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
-import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
-import shop.wazard.application.port.out.RosterForWorkerManagementPort;
-import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.GetWorkerAttendanceRecordReqDto;
-import shop.wazard.dto.GetWorkerAttendanceRecordResDto;
-import shop.wazard.dto.WaitingWorkerResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.application.port.out.*;
+import shop.wazard.dto.*;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
@@ -31,7 +25,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, CommuteRecordForWorkerManagementPort {
+class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, CommuteRecordForWorkerManagementPort, ReplaceForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -113,4 +107,8 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
         return workerForManagementMapper.toWorkerAttendaceRecord(accountJpa, enterRecordJpaList, absentJpaList);
     }
 
+    @Override
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        return null;
+    }
 }
