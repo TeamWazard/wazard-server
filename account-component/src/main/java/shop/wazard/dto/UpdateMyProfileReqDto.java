@@ -2,7 +2,7 @@ package shop.wazard.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import shop.wazard.application.port.domain.GenderType;
+import shop.wazard.application.domain.GenderType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

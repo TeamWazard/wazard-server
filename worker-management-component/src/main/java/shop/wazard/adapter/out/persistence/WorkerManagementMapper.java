@@ -3,10 +3,11 @@ package shop.wazard.adapter.out.persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.*;
-import shop.wazard.dto.WaitingWorkerResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.dto.*;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
+import shop.wazard.entity.commuteRecord.AbsentJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
@@ -64,6 +65,27 @@ class WorkerManagementMapper {
                         .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public GetWorkerAttendanceRecordResDto toWorkerAttendaceRecord(AccountJpa accountJpa, List<EnterRecordJpa> enterRecordJpaList, List<AbsentJpa> absentJpaList) {
+        List<CommuteRecordDto> commuteRecordDtoList = enterRecordJpaList.stream()
+                .map(enterRecordJpa -> CommuteRecordDto.builder()
+                        .commuteDate(enterRecordJpa.getEnterDate())
+                        .enterTime(enterRecordJpa.getEnterTime())
+                        .exitTime(enterRecordJpa.getExitRecordJpa().getExitTime())
+                        .tardy(enterRecordJpa.isTardy())
+                        .build())
+                .collect(Collectors.toList());
+        List<AbsentRecordDto> absentRecordDtoList = absentJpaList.stream()
+                .map(absentJpa -> AbsentRecordDto.builder()
+                        .absentDate(absentJpa.getAbsentDate())
+                        .build())
+                .collect(Collectors.toList());
+        return GetWorkerAttendanceRecordResDto.builder()
+                .userName(accountJpa.getUserName())
+                .commuteRecordResDtoList(commuteRecordDtoList)
+                .absentRecordResDtoList(absentRecordDtoList)
+                .build();
     }
 
 }
