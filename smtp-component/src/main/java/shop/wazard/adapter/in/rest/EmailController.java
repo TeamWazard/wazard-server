@@ -10,7 +10,7 @@ import shop.wazard.adapter.in.rest.request.EmailAuthReq;
 import shop.wazard.adapter.in.rest.response.EmailAuthRes;
 import shop.wazard.application.port.in.EmailService;
 
-import javax.mail.MessagingException;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/auth")
-    public ResponseEntity<EmailAuthRes> mailAuthentication(@RequestBody EmailAuthReq emailAuthReq) throws MessagingException {
+    public ResponseEntity<EmailAuthRes> mailAuthentication(@Valid @RequestBody EmailAuthReq emailAuthReq) {
         return ResponseEntity.ok(
                 EmailAuthRes.builder()
                         .authenticationCode(emailService.sendEmail(emailAuthReq.getEmail()))
