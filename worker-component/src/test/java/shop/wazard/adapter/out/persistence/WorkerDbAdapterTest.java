@@ -78,6 +78,7 @@ class WorkerDbAdapterTest {
     @Test
     @DisplayName("근무자 - 대타기록 조회 - List<RepalceWorkerJpa> 조회")
     public void getMyReplaceRecordSuccess() throws Exception {
+
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
