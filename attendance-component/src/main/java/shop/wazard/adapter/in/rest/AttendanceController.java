@@ -37,9 +37,10 @@ class AttendanceController {
     }
 
     @Certification
-    @GetMapping("/employer/{accountId}/{year}/{month}/{day}")
-    public ResponseEntity<List<GetAttendanceByDayOfTheWeekResDto>> getAttendancesByDayOfTheWeek(@PathVariable Long accountId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto) {
+    @GetMapping("/employer/{accountId}/{companyId}/{year}/{month}/{day}")
+    public ResponseEntity<List<GetAttendanceByDayOfTheWeekResDto>> getAttendancesByDayOfTheWeek(@PathVariable Long accountId, @PathVariable Long companyId, @PathVariable int year, @PathVariable int month, @PathVariable int day, @Valid @RequestBody GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto) {
         LocalDate date = LocalDate.of(year, month, day);
+        getAttendanceByDayOfTheWeekReqDto.setCompanyId(companyId);
         List<GetAttendanceByDayOfTheWeekResDto> getAttendanceResDtoList = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
         return ResponseEntity.ok(getAttendanceResDtoList);
     }
