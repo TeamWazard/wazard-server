@@ -44,7 +44,7 @@ class WorkerDbAdapterTest {
     private EntityManager em;
 
     @Test
-    @DisplayName("근무자 - 대타 등록 - 성공")
+    @DisplayName("근무자 - 대타 등록 - ReplaceWorkerJpa 저장")
     public void registerReplaceSuccess() throws Exception {
         // given
 

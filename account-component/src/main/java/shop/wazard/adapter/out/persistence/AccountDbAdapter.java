@@ -2,7 +2,7 @@ package shop.wazard.adapter.out.persistence;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import shop.wazard.application.port.domain.Account;
+import shop.wazard.application.domain.Account;
 import shop.wazard.application.port.out.AccountPort;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.exception.AccountNotFoundException;

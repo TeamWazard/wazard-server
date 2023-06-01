@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.wazard.application.port.domain.Account;
+import shop.wazard.application.domain.Account;
 import shop.wazard.application.port.in.AccountService;
 import shop.wazard.application.port.out.AccountPort;
 import shop.wazard.dto.*;
