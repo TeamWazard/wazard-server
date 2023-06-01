@@ -22,8 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerServiceImpl.class})
@@ -62,9 +61,9 @@ class WorkerServiceImplTest {
     @DisplayName("근무자 - 대타 기록 조회 - 성공")
     public void getMyReplaceRecordSuccess() throws Exception {
         // given
+        Long companyId = 1L;
         GetMyReplaceRecordReqDto getMyReplaceRecordReqDto = GetMyReplaceRecordReqDto.builder()
                 .email("test@email.com")
-                .companyId(1L)
                 .build();
         AccountForWorker accountForWorker = setDefaultEmployeeAccountForWorker();
         List<GetMyReplaceRecordResDto> getMyReplaceRecordResDtoList = setDefaultReplaceRecordList();
@@ -72,9 +71,9 @@ class WorkerServiceImplTest {
         // when
         Mockito.when(accountForWorkerPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorker);
-        Mockito.when(workerPort.getMyReplaceRecord(any(GetMyReplaceRecordReqDto.class)))
+        Mockito.when(workerPort.getMyReplaceRecord(any(GetMyReplaceRecordReqDto.class), anyLong()))
                 .thenReturn(getMyReplaceRecordResDtoList);
-        List<GetMyReplaceRecordResDto> result = workerService.getMyReplaceRecord(getMyReplaceRecordReqDto);
+        List<GetMyReplaceRecordResDto> result = workerService.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
 
         // then
         Assertions.assertAll(

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 
 @Getter
 @Builder
@@ -16,6 +15,4 @@ public class GetMyReplaceRecordReqDto {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
-    @Positive
-    private Long companyId;
 }

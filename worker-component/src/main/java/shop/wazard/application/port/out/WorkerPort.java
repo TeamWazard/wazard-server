@@ -10,6 +10,6 @@ public interface WorkerPort {
 
     void saveReplace(String email, ReplaceInfo replaceInfo);
 
-    List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto);
+    List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId);
 
 }
