@@ -19,6 +19,7 @@ import shop.wazard.util.exception.StatusEnum;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
 
@@ -68,7 +69,10 @@ class MyPageDbAdapter implements AccountForMyPagePort, CompanyForMyPagePort, Ros
 
     @Override
     public List<WorkRecordForMyPage> getMyTotalPastRecord(Long accountId) {
-        return null;
+        List<CompanyJpa> pastCompanies = companyJpaForMyPageRepository.findAllMyPastCompaniesByAccountId(accountId);
+        return pastCompanies.stream()
+                .map(x -> getMyPastWorkRecord(accountId, x.getId()))
+                .collect(Collectors.toList());
     }
 
     private int getWorkDayCount(Long accountId, Long companyId) {
