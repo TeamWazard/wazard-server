@@ -9,6 +9,7 @@ import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
+import shop.wazard.exception.UnsupportedDateException;
 import shop.wazard.util.exception.StatusEnum;
 
 import java.time.LocalDate;
@@ -72,7 +73,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendanceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         if (isInvalidDate(year, month)) {
-            throw new IllegalArgumentException(StatusEnum.UNSUPPORTED_DATE_RANGE.getMessage());
+            throw new UnsupportedDateException(StatusEnum.UNSUPPORTED_DATE_RANGE.getMessage());
         }
         LocalDate startDate = getDate(year, month);
         LocalDate endDate = getEndDate(year, month);
