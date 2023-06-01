@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerService;
-import shop.wazard.dto.GetMyReplaceReqDto;
-import shop.wazard.dto.GetMyReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.dto.RegisterReplaceReqDto;
 import shop.wazard.dto.RegisterReplaceResDto;
 import shop.wazard.util.aop.Certification;
@@ -29,9 +29,9 @@ class WorkerController {
 
     @Certification
     @GetMapping("/replace/{accountId{")
-    public ResponseEntity<List<GetMyReplaceResDto>> getMyReplace(@PathVariable Long accountId, @Valid @RequestBody GetMyReplaceReqDto getMyReplaceReqDto) {
-        List<GetMyReplaceResDto> getMyReplaceResDtoList = workerService.getMyReplaceRecord(getMyReplaceReqDto);
-        return ResponseEntity.ok(getMyReplaceResDtoList);
+    public ResponseEntity<List<GetMyReplaceRecordResDto>> getMyReplace(@PathVariable Long accountId, @Valid @RequestBody GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
+        List<GetMyReplaceRecordResDto> getMyReplaceRecordResDtoList = workerService.getMyReplaceRecord(getMyReplaceRecordReqDto);
+        return ResponseEntity.ok(getMyReplaceRecordResDtoList);
     }
 
 }

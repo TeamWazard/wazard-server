@@ -15,8 +15,6 @@ import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.GetMyReplaceRecordReqDto;
 import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.GetMyReplaceReqDto;
-import shop.wazard.dto.GetMyReplaceResDto;
 import shop.wazard.dto.RegisterReplaceReqDto;
 
 import java.time.LocalDate;
