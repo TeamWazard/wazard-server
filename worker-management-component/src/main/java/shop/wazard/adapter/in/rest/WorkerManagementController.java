@@ -26,8 +26,8 @@ class WorkerManagementController {
 
     @Certification
     @GetMapping("/workers/{accountId}")
-    public ResponseEntity<List<WorkerBelongedToCompanyResDto>> getWorkersBelongedCompany(@PathVariable Long accountId, @Valid @RequestBody WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
-        List<WorkerBelongedToCompanyResDto> workerBelongedToCompanyResDtoList = workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto);
+    public ResponseEntity<List<WorkerBelongedToCompanyResDto>> getWorkersBelongedCompany(@PathVariable Long accountId, @RequestParam Long companyId, @Valid @RequestBody WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
+        List<WorkerBelongedToCompanyResDto> workerBelongedToCompanyResDtoList = workerManagementService.getWorkersBelongedCompany(companyId, workerBelongedToCompanyReqDto);
         return ResponseEntity.ok(workerBelongedToCompanyResDtoList);
     }
 

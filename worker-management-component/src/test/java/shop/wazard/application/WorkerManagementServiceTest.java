@@ -100,8 +100,8 @@ class WorkerManagementServiceTest {
     @DisplayName("고용주 - 업장 근무자 리스트 조회 - 성공")
     public void getWorkersBelongedToCompanySuccess() throws Exception {
         // given
+        Long companyId = 1L;
         WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto = WorkerBelongedToCompanyReqDto.builder()
-                .companyId(1L)
                 .email("test@email.com")
                 .build();
         AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
@@ -114,15 +114,15 @@ class WorkerManagementServiceTest {
                 .thenReturn(accountForWorkerManagement);
 
         // then
-        Assertions.assertDoesNotThrow(() -> workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto));
+        Assertions.assertDoesNotThrow(() -> workerManagementService.getWorkersBelongedCompany(companyId, workerBelongedToCompanyReqDto));
     }
 
     @Test
     @DisplayName("근무자 - 업장 근무자 리스트 조회 불가능 - 실패")
     public void getWorkersBelongedToCompanyByWorkerFailed() throws Exception {
         // given
+        Long companyId = 1L;
         WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto = WorkerBelongedToCompanyReqDto.builder()
-                .companyId(1L)
                 .email("test@email.com")
                 .build();
         AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
@@ -135,7 +135,7 @@ class WorkerManagementServiceTest {
                 .thenReturn(accountForWorkerManagement);
 
         // then
-        Assertions.assertThrows(NotAuthorizedException.class, () -> workerManagementService.getWorkersBelongedCompany(workerBelongedToCompanyReqDto));
+        Assertions.assertThrows(NotAuthorizedException.class, () -> workerManagementService.getWorkersBelongedCompany(companyId, workerBelongedToCompanyReqDto));
     }
 
     @Test
