@@ -12,7 +12,7 @@ public class Calculator {
     }
 
     private static double calculateAttitudeScore(int tardyCount, int absentCount, int totalWorkDay) {
-        double rawResult = 10 - (10 * (calculateTardyScore(tardyCount) + calculateAbsentScore(absentCount)) / (double) totalWorkDay);
+        double rawResult = 10 - (10 * (calculateTardyScore(tardyCount) + calculateAbsentScore(absentCount)) / (double) (totalWorkDay + absentCount));
         return roundTensPlaceScore(rawResult);
     }
 
