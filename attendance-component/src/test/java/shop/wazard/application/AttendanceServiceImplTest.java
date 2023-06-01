@@ -122,9 +122,9 @@ class AttendanceServiceImplTest {
         // given
         GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto = GetAttendanceByDayOfTheWeekReqDto.builder()
                 .accountId(1L)
-                .companyId(2L)
                 .email("test@email.com")
                 .build();
+        Long companyId = 2L;
         LocalDate date = setDefaultDayEmployeeAccountForAttendance();
         AccountForAttendance accountForAttendance = setDefaultEmployeeAccountForAttendance();
         List<GetAttendanceByDayOfTheWeekResDto> getAttendanceByDayOfTheWeekResDtoList = setDefaultEmployeeAttendanceList();
@@ -134,7 +134,7 @@ class AttendanceServiceImplTest {
                 .thenReturn(accountForAttendance);
         Mockito.when(commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(any(Attendance.class)))
                 .thenReturn(getAttendanceByDayOfTheWeekResDtoList);
-        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getMyAttendanceByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
+        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getMyAttendanceByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, companyId, date);
 
         // then
         Assertions.assertAll(
@@ -153,10 +153,10 @@ class AttendanceServiceImplTest {
                 .build();
         GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto = GetAttendanceByDayOfTheWeekReqDto.builder()
                 .email("test@email.com")
-                .companyId(2L)
                 .build();
+        Long companyId = 2L;
         LocalDate date = LocalDate.now();
-        Attendance attendance = Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date);
+        Attendance attendance = Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, companyId, date);
         List<GetAttendanceByDayOfTheWeekResDto> attendanceByDayOfTheWeekResDtoList = setDefaultAttendanceByDayOfTheWeekResDtoList();
 
         // when
@@ -164,7 +164,7 @@ class AttendanceServiceImplTest {
                 .thenReturn(accountForAttendance);
         Mockito.when(commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(any(Attendance.class)))
                 .thenReturn(attendanceByDayOfTheWeekResDtoList);
-        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, date);
+        List<GetAttendanceByDayOfTheWeekResDto> result = attendanceService.getAttendancesByDayOfTheWeek(getAttendanceByDayOfTheWeekReqDto, companyId, date);
 
         // then
         Assertions.assertAll(

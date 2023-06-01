@@ -22,7 +22,4 @@ public class GetAttendanceByDayOfTheWeekReqDto {
     @Positive
     private Long accountId;
 
-    @Positive
-    private Long companyId;
-
 }

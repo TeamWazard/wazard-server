@@ -53,21 +53,21 @@ class AttendanceServiceImpl implements AttendanceService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+    public List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, Long companyId, LocalDate date) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
         accountForAttendance.checkIsEmployer();
         return commuteRecordForAttendancePort.getAttendancesByDayOfTheWeek(
-                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date)
+                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, companyId, date)
         );
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, LocalDate date) {
+    public List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, Long companyId, LocalDate date) {
         AccountForAttendance accountForAttendance = accountForAttendancePort.findAccountByEmail(getAttendanceByDayOfTheWeekReqDto.getEmail());
         accountForAttendance.checkIsEmployee();
         return commuteRecordForAttendancePort.getMyAttendanceByDayOfTheWeek(
-                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, date)
+                Attendance.createAttendance(getAttendanceByDayOfTheWeekReqDto, companyId, date)
         );
     }
 
