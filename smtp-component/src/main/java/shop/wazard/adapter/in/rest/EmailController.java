@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shop.wazard.adapter.in.rest.request.EmailAuthReq;
-import shop.wazard.adapter.in.rest.response.EmailAuthRes;
 import shop.wazard.application.port.in.EmailService;
+import shop.wazard.dto.EmailAuthReqDto;
+import shop.wazard.dto.EmailAuthResDto;
 
 import javax.validation.Valid;
 
@@ -20,10 +20,10 @@ class EmailController {
     private final EmailService emailService;
 
     @PostMapping("/auth")
-    public ResponseEntity<EmailAuthRes> mailAuthentication(@Valid @RequestBody EmailAuthReq emailAuthReq) {
+    public ResponseEntity<EmailAuthResDto> mailAuthentication(@Valid @RequestBody EmailAuthReqDto emailAuthReqDto) {
         return ResponseEntity.ok(
-                EmailAuthRes.builder()
-                        .authenticationCode(emailService.sendEmail(emailAuthReq.getEmail()))
+                EmailAuthResDto.builder()
+                        .authenticationCode(emailService.sendEmail(emailAuthReqDto.getEmail()))
                         .build()
         );
     }
