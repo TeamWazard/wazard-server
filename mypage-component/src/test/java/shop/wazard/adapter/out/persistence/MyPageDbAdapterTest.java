@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.CompanyInfoForMyPage;
+import shop.wazard.application.domain.WorkRecordForMyPage;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
@@ -208,6 +209,43 @@ class MyPageDbAdapterTest {
         Assertions.assertEquals(result, 3);
     }
 
+    @Test
+    @DisplayName("근무자 - 내 평균 점수 조회를 위한 과거 기록 조회 - companyJpa조회 후 workRecordForMyPage 도메인 반환")
+    void getMyTotalPastRecord() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        List<CompanyJpa> companyJpaList = setDefaultCompanyJpaList();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForMyPageRepository.save(accountJpa);
+        List<RosterJpa> rosterJpaList = setDefaultRosterJpaListForGetPastWorkplaces(savedAccountJpa, companyJpaList);
+        rosterJpaList.forEach(rel -> rel.updateRosterStateForExile(BaseStatusJpa.INACTIVE));
+        // 2번 무단결석
+        List<AbsentJpa> absentJpaListForFirstCompany = setDefaultAbsentJpaList(savedAccountJpa, companyJpaList.get(0));
+        // 1번 무단결석
+        List<AbsentJpa> absentJpaListForSecondCompany = setDefaultAbsentJpaList2(savedAccountJpa, companyJpaList.get(1));
+        // 3일 출석
+        List<EnterRecordJpa> enterRecordJpaListForFirstCompany = setDefaultEnterRecordJpa(savedAccountJpa, companyJpaList.get(0));
+        List<ExitRecordJpa> exitRecordJpaListForFirstCompany = setDefaultExitRecordJpa(enterRecordJpaListForFirstCompany);
+        // 5일 출석
+        List<EnterRecordJpa> enterRecordJpaListForSecondCompany = setDefaultEnterRecordJpa2(savedAccountJpa, companyJpaList.get(1));
+        List<ExitRecordJpa> exitRecordJpaListForSecondCompany = setDefaultExitRecordJpa2(enterRecordJpaListForSecondCompany);
+        List<CompanyJpa> findCompany = companyJpaForMyPageRepository.findAllMyPastCompaniesByAccountId(savedAccountJpa.getId());
+        List<WorkRecordForMyPage> workRecordForMyPage = myPageDbAdapter.getMyTotalPastRecord(savedAccountJpa.getId());
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(companyJpaList.get(0).getCompanyName(), findCompany.get(0).getCompanyName()),
+                () -> Assertions.assertEquals(companyJpaList.get(1).getCompanyName(), findCompany.get(1).getCompanyName()),
+                () -> Assertions.assertEquals(2, workRecordForMyPage.get(0).getAbsentCount()),
+                () -> Assertions.assertEquals(2, workRecordForMyPage.get(0).getTardyCount()),
+                () -> Assertions.assertEquals(3, workRecordForMyPage.get(0).getWorkDayCount()),
+                () -> Assertions.assertEquals(1, workRecordForMyPage.get(1).getAbsentCount()),
+                () -> Assertions.assertEquals(0, workRecordForMyPage.get(1).getTardyCount()),
+                () -> Assertions.assertEquals(5, workRecordForMyPage.get(1).getWorkDayCount())
+        );
+    }
+
     private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
         List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
         ExitRecordJpa exitRecordJpa1 = ExitRecordJpa.builder()
@@ -231,6 +269,41 @@ class MyPageDbAdapterTest {
         return exitRecordJpaList;
     }
 
+    private List<ExitRecordJpa> setDefaultExitRecordJpa2(List<EnterRecordJpa> enterRecordJpaList) {
+        List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
+        ExitRecordJpa exitRecordJpa1 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(0))
+                .exitDate(LocalDate.of(2023, 10, 1))
+                .build();
+        ExitRecordJpa exitRecordJpa2 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(1))
+                .exitDate(LocalDate.of(2023, 10, 3))
+                .build();
+        ExitRecordJpa exitRecordJpa3 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(2))
+                .exitDate(LocalDate.of(2023, 10, 5))
+                .build();
+        ExitRecordJpa exitRecordJpa4 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(3))
+                .exitDate(LocalDate.of(2023, 10, 3))
+                .build();
+        ExitRecordJpa exitRecordJpa5 = ExitRecordJpa.builder()
+                .enterRecordJpa(enterRecordJpaList.get(4))
+                .exitDate(LocalDate.of(2023, 10, 5))
+                .build();
+        ExitRecordJpa savedExitRecordJpa1 = exitRecordJpaForMyPageRepository.save(exitRecordJpa1);
+        ExitRecordJpa savedExitRecordJpa2 = exitRecordJpaForMyPageRepository.save(exitRecordJpa2);
+        ExitRecordJpa savedExitRecordJpa3 = exitRecordJpaForMyPageRepository.save(exitRecordJpa3);
+        ExitRecordJpa savedExitRecordJpa4 = exitRecordJpaForMyPageRepository.save(exitRecordJpa4);
+        ExitRecordJpa savedExitRecordJpa5 = exitRecordJpaForMyPageRepository.save(exitRecordJpa5);
+        exitRecordJpaList.add(savedExitRecordJpa1);
+        exitRecordJpaList.add(savedExitRecordJpa2);
+        exitRecordJpaList.add(savedExitRecordJpa3);
+        exitRecordJpaList.add(savedExitRecordJpa4);
+        exitRecordJpaList.add(savedExitRecordJpa5);
+        return exitRecordJpaList;
+    }
+
     private RosterJpa setDefaultRosterJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
         RosterJpa rosterJpa = RosterJpa.builder()
                 .accountJpa(accountJpa)
@@ -246,17 +319,29 @@ class MyPageDbAdapterTest {
         AbsentJpa absentJpa1 = AbsentJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
-                .absentDate(LocalDate.of(2023,2,10))
+                .absentDate(LocalDate.of(2023,5,10))
                 .build();
         AbsentJpa absentJpa2 = AbsentJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
-                .absentDate(LocalDate.of(2023,3,10))
+                .absentDate(LocalDate.of(2023,5,12))
                 .build();
         AbsentJpa savedAbsent1 = absentJpaForMyPageRepository.save(absentJpa1);
         AbsentJpa savedAbsent2 = absentJpaForMyPageRepository.save(absentJpa2);
         absentJpaList.add(savedAbsent1);
         absentJpaList.add(savedAbsent2);
+        return absentJpaList;
+    }
+
+    private List<AbsentJpa> setDefaultAbsentJpaList2(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<AbsentJpa> absentJpaList = new ArrayList<>();
+        AbsentJpa absentJpa1 = AbsentJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .absentDate(LocalDate.of(2023,7,10))
+                .build();
+        AbsentJpa savedAbsent1 = absentJpaForMyPageRepository.save(absentJpa1);
+        absentJpaList.add(savedAbsent1);
         return absentJpaList;
     }
 
@@ -327,6 +412,51 @@ class MyPageDbAdapterTest {
         enterRecordJpaList.add(savedEnterRecordJpa1);
         enterRecordJpaList.add(savedEnterRecordJpa2);
         enterRecordJpaList.add(savedEnterRecordJpa3);
+        return enterRecordJpaList;
+    }
+
+    private List<EnterRecordJpa> setDefaultEnterRecordJpa2(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 7))
+                .build();
+        EnterRecordJpa enterRecordJpa2 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 8))
+                .build();
+        EnterRecordJpa enterRecordJpa3 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 9))
+                .build();
+        EnterRecordJpa enterRecordJpa4 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 10))
+                .build();
+        EnterRecordJpa enterRecordJpa5 = EnterRecordJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .tardy(false)
+                .enterDate(LocalDate.of(2023, 3, 11))
+                .build();
+        EnterRecordJpa savedEnterRecordJpa1 = enterRecordJpaForMyPageRepository.save(enterRecordJpa1);
+        EnterRecordJpa savedEnterRecordJpa2 = enterRecordJpaForMyPageRepository.save(enterRecordJpa2);
+        EnterRecordJpa savedEnterRecordJpa3 = enterRecordJpaForMyPageRepository.save(enterRecordJpa3);
+        EnterRecordJpa savedEnterRecordJpa4 = enterRecordJpaForMyPageRepository.save(enterRecordJpa4);
+        EnterRecordJpa savedEnterRecordJpa5 = enterRecordJpaForMyPageRepository.save(enterRecordJpa5);
+        enterRecordJpaList.add(savedEnterRecordJpa1);
+        enterRecordJpaList.add(savedEnterRecordJpa2);
+        enterRecordJpaList.add(savedEnterRecordJpa3);
+        enterRecordJpaList.add(savedEnterRecordJpa4);
+        enterRecordJpaList.add(savedEnterRecordJpa5);
         return enterRecordJpaList;
     }
 
