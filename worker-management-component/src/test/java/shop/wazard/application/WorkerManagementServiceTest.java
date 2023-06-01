@@ -175,8 +175,8 @@ class WorkerManagementServiceTest {
     @DisplayName("고용주 - 초대 대기자 목록 조회 - 성공")
     public void getWaitingWorkersSuccess() throws Exception {
         // given
+        Long companyId = 10L;
         WaitingWorkerReqDto waitingWorkerReqDto = WaitingWorkerReqDto.builder()
-                .companyId(10L)
                 .email("employer@email.com")
                 .build();
         AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
@@ -191,7 +191,7 @@ class WorkerManagementServiceTest {
         Mockito.when(waitingListForWorkerManagementPort.getWaitingWorker(anyLong()))
                 .thenReturn(waitingWorkerResDtoList);
 
-        List<WaitingWorkerResDto> result = workerManagementService.getWaitingWorkers(waitingWorkerReqDto);
+        List<WaitingWorkerResDto> result = workerManagementService.getWaitingWorkers(companyId, waitingWorkerReqDto);
 
         // then
         Assertions.assertAll(

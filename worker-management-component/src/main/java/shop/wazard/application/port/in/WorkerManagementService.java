@@ -12,7 +12,7 @@ public interface WorkerManagementService {
 
     ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto);
 
-    List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto);
+    List<WaitingWorkerResDto> getWaitingWorkers(Long companyId, WaitingWorkerReqDto waitingWorkerReqDto);
 
     GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, int year, int month);
 

@@ -60,10 +60,10 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<WaitingWorkerResDto> getWaitingWorkers(WaitingWorkerReqDto waitingWorkerReqDto) {
+    public List<WaitingWorkerResDto> getWaitingWorkers(Long companyId, WaitingWorkerReqDto waitingWorkerReqDto) {
         AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        return waitingListForWorkerManagementPort.getWaitingWorker(waitingWorkerReqDto.getCompanyId());
+        return waitingListForWorkerManagementPort.getWaitingWorker(companyId);
     }
 
     @Transactional(readOnly = true)

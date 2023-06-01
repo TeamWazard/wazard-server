@@ -40,8 +40,8 @@ class WorkerManagementController {
 
     @Certification
     @GetMapping("/workers/waiting/{accountId}")
-    public ResponseEntity<List<WaitingWorkerResDto>> getWaitingWorkers(@PathVariable Long accountId, @Valid @RequestBody WaitingWorkerReqDto waitingWorkerReqDto) {
-        List<WaitingWorkerResDto> waitingWorkerList = workerManagementService.getWaitingWorkers(waitingWorkerReqDto);
+    public ResponseEntity<List<WaitingWorkerResDto>> getWaitingWorkers(@PathVariable Long accountId, @RequestParam Long companyId, @Valid @RequestBody WaitingWorkerReqDto waitingWorkerReqDto) {
+        List<WaitingWorkerResDto> waitingWorkerList = workerManagementService.getWaitingWorkers(companyId, waitingWorkerReqDto);
         return ResponseEntity.ok(waitingWorkerList);
     }
 
