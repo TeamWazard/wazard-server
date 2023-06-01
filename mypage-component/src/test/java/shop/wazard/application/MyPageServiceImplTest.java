@@ -17,10 +17,7 @@ import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
-import shop.wazard.dto.GetMyPastWorkRecordReqDto;
-import shop.wazard.dto.GetMyPastWorkRecordResDto;
-import shop.wazard.dto.GetPastWorkplaceReqDto;
-import shop.wazard.dto.GetPastWorkplaceResDto;
+import shop.wazard.dto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -123,6 +120,50 @@ class MyPageServiceImplTest {
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getTardyCount(), result.getTardyCount()),
                 () -> Assertions.assertEquals(getMyPastWorkRecordResDto.getWorkScore(), result.getWorkScore())
         );
+    }
+
+    @Test
+    @DisplayName("근로자 - 나의 태도 점수 평균 조회 - 성공")
+    void getMyAttitudeScore() throws Exception {
+        // given
+        GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto = GetMyAttitudeScoreReqDto.builder()
+                .email("test@email.com")
+                .companyId(2L)
+                .build();
+        AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
+        List<WorkRecordForMyPage> workRecordForMyPageList = setDefaultMyPastWorkRecordList();
+
+        // when
+        Mockito.when(accountForMyPagePort.findAccountByEmail(anyString()))
+                .thenReturn(accountForAttendance);
+        Mockito.when(workRecordForMyPagePort.getMyTotalPastRecord(anyLong()))
+                .thenReturn(workRecordForMyPageList);
+        GetMyAttitudeScoreResDto result = myPageService.getMyAttitudeScore(getMyAttitudeScoreReqDto);
+
+        // then
+        // + 값 직접 확인
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(5.5, result.getMyAttitudeScore())
+        );
+    }
+
+    private List<WorkRecordForMyPage> setDefaultMyPastWorkRecordList() {
+        List<WorkRecordForMyPage> workRecordForMyPageList = new ArrayList<>();
+        // 0.4 점
+        WorkRecordForMyPage workRecordForMyPage1 = WorkRecordForMyPage.builder()
+                .absentCount(1)
+                .tardyCount(2)
+                .workDayCount(10)
+                .build();
+        // 0.8 점
+        WorkRecordForMyPage workRecordForMyPage2 = WorkRecordForMyPage.builder()
+                .absentCount(0)
+                .tardyCount(2)
+                .workDayCount(10)
+                .build();
+        workRecordForMyPageList.add(workRecordForMyPage1);
+        workRecordForMyPageList.add(workRecordForMyPage2);
+        return workRecordForMyPageList;
     }
 
     private List<GetPastWorkplaceResDto> setDefaultPastWorkPlaceList() {

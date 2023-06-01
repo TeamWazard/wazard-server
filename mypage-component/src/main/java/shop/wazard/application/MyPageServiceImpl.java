@@ -11,13 +11,11 @@ import shop.wazard.application.port.out.AccountForMyPagePort;
 import shop.wazard.application.port.out.CompanyForMyPagePort;
 import shop.wazard.application.port.out.RosterForMyPagePort;
 import shop.wazard.application.port.out.WorkRecordForMyPagePort;
-import shop.wazard.dto.GetMyPastWorkRecordReqDto;
-import shop.wazard.dto.GetMyPastWorkRecordResDto;
-import shop.wazard.dto.GetPastWorkplaceReqDto;
-import shop.wazard.dto.GetPastWorkplaceResDto;
+import shop.wazard.dto.*;
 import shop.wazard.util.calculator.Calculator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -56,6 +54,26 @@ class MyPageServiceImpl implements MyPageService {
                 .startWorkingDate(workRecordForMyPage.getStartWorkingDate())
                 .endWorkingDate(workRecordForMyPage.getEndWorkingDate())
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetMyAttitudeScoreResDto getMyAttitudeScore(GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto) {
+        AccountForMyPage accountForMyPage = accountForMyPagePort.findAccountByEmail(getMyAttitudeScoreReqDto.getEmail());
+        accountForMyPage.checkIsEmployee();
+        // accountId를 통해 roster에서 companyList를 반환 받은 후 그 아이디값들을 통해 지각횟수, 무단결석횟수, 총 근무일수를 가져옴
+        List<WorkRecordForMyPage> myTotalPastRecord = workRecordForMyPagePort.getMyTotalPastRecord(accountForMyPage.getId());
+        List<Double> totalMyAttitudeScores = getCalculatedAttitudeScore(myTotalPastRecord);
+        double myAttitudeScore = Calculator.getAverageAttitudeScore(totalMyAttitudeScores);
+        return GetMyAttitudeScoreResDto.builder()
+                .myAttitudeScore(myAttitudeScore)
+                .build();
+    }
+
+    private List<Double> getCalculatedAttitudeScore(List<WorkRecordForMyPage> myTotalPastRecord) {
+        return myTotalPastRecord.stream()
+                .map(record -> Calculator.getAttitudeScore(record.getTardyCount(), record.getAbsentCount(), record.getWorkDayCount()))
+                .collect(Collectors.toList());
     }
 
 }
