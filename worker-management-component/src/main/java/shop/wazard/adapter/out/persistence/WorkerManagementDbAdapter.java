@@ -6,14 +6,19 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.dto.GetWorkerAttendanceRecordReqDto;
+import shop.wazard.dto.GetWorkerAttendanceRecordResDto;
 import shop.wazard.dto.GetAllReplaceReqDto;
 import shop.wazard.dto.GetAllReplaceResDto;
 import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.commuteRecord.AbsentJpa;
+import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
@@ -24,11 +29,12 @@ import shop.wazard.exception.RosterNotFoundException;
 import shop.wazard.exception.WorkerNotFoundInWaitingListException;
 import shop.wazard.util.exception.StatusEnum;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, ReplaceForWorkerManagementPort {
+class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, RosterForWorkerManagementPort, WaitingListForWorkerManagementPort, CommuteRecordForWorkerManagementPort, ReplaceForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -36,6 +42,9 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
     private final RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
     private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
+    private final EnterRecordJpaForWorkerManagementRepository enterRecordJpaForWorkerManagementRepository;
+    private final AbsentRecordJpaForWorkerManagementRepository absentRecordJpaForWorkerManagementRepository;
+    private final ExitRecordJpaForWorkerManagementRepository exitRecordJpaForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
@@ -96,6 +105,15 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     public List<WaitingWorkerResDto> getWaitingWorker(Long companyId) {
         List<WaitingListJpa> waitingWorkerJpaList = waitingListJpaForWorkerManagementRepository.findWaitingWorkers(companyId);
         return workerForManagementMapper.toWaitingWorkerList(waitingWorkerJpaList);
+    }
+
+    @Override
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, LocalDate startDate, LocalDate endDate) {
+        AccountJpa accountJpa = accountJpaForWorkerManagementRepository.findById(getWorkerAttendanceRecordReqDto.getAccountId())
+                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        List<EnterRecordJpa> enterRecordJpaList = enterRecordJpaForWorkerManagementRepository.findAllRecordOfWorker(getWorkerAttendanceRecordReqDto.getAccountId(), getWorkerAttendanceRecordReqDto.getCompanyId(), startDate, endDate);
+        List<AbsentJpa> absentJpaList = absentRecordJpaForWorkerManagementRepository.findAllAbsentRecordOfWorker(getWorkerAttendanceRecordReqDto.getAccountId(), getWorkerAttendanceRecordReqDto.getCompanyId(), startDate, endDate);
+        return workerForManagementMapper.toWorkerAttendaceRecord(accountJpa, enterRecordJpaList, absentJpaList);
     }
 
     @Override

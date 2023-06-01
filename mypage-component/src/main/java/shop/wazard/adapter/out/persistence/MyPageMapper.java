@@ -1,6 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
+import shop.wazard.application.domain.CompanyInfoForMyPage;
 import shop.wazard.dto.GetPastWorkplaceResDto;
 import shop.wazard.entity.company.CompanyJpa;
 
@@ -20,6 +21,16 @@ class MyPageMapper {
                         .logoImageUrl(companyInfo.getLogoImageUrl())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public CompanyInfoForMyPage createCompanyInfoForMyPage(CompanyJpa findCompanyJpa) {
+        return CompanyInfoForMyPage.builder()
+                .companyName(findCompanyJpa.getCompanyName())
+                .companyContact(findCompanyJpa.getCompanyContact())
+                .companyAddress(findCompanyJpa.getCompanyAddress())
+                .logoImageUrl(findCompanyJpa.getLogoImageUrl())
+                .salaryDate(findCompanyJpa.getSalaryDate())
+                .build();
     }
 
 }

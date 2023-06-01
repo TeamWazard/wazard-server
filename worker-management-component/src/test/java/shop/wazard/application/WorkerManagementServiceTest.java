@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.*;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.AccountForWorkerManagementPort;
+import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
 import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
 import shop.wazard.application.port.out.RosterForWorkerManagementPort;
 import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
@@ -24,8 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerManagementServiceImpl.class})
@@ -39,6 +39,8 @@ class WorkerManagementServiceTest {
     private RosterForWorkerManagementPort rosterForWorkerManagementPort;
     @MockBean
     private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
+    @MockBean
+    private CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
     @MockBean
     private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
 
@@ -215,6 +217,101 @@ class WorkerManagementServiceTest {
     }
 
     @Test
+    @DisplayName("고용주 - 특정 근무자 상세조회 - 성공")
+    public void getWorkerAttendanceRecordSuccess() throws Exception {
+        // given
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
+                .email("employer@email.com")
+                .accountId(1L)
+                .build();
+
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+
+        List<CommuteRecordDto> commuteRecordDtoList = setDefaultCommuteRecordDtoList();
+        List<AbsentRecordDto> absentRecordDtoList = setDefaultAbsentRecordDtoList();
+
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = GetWorkerAttendanceRecordResDto.builder()
+                .userName("홍길동")
+                .commuteRecordResDtoList(commuteRecordDtoList)
+                .absentRecordResDtoList(absentRecordDtoList)
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(getWorkerAttendanceRecordResDto);
+
+        GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2023, 1);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getUserName(), result.getUserName()),
+
+                () -> Assertions.assertEquals(3, result.getCommuteRecordResDtoList().size()),
+                () -> Assertions.assertEquals(2, result.getAbsentRecordResDtoList().size()),
+
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getCommuteDate(), result.getCommuteRecordResDtoList().get(0).getCommuteDate()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getEnterTime(), result.getCommuteRecordResDtoList().get(0).getEnterTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).getExitTime(), result.getCommuteRecordResDtoList().get(0).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(0).isTardy(), result.getCommuteRecordResDtoList().get(0).isTardy()),
+
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getCommuteDate(), result.getCommuteRecordResDtoList().get(1).getCommuteDate()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getEnterTime(), result.getCommuteRecordResDtoList().get(1).getEnterTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).getExitTime(), result.getCommuteRecordResDtoList().get(1).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(1).isTardy(), result.getCommuteRecordResDtoList().get(1).isTardy()),
+
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getCommuteDate(), result.getCommuteRecordResDtoList().get(2).getCommuteDate()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getEnterTime(), result.getCommuteRecordResDtoList().get(2).getEnterTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).getExitTime(), result.getCommuteRecordResDtoList().get(2).getExitTime()),
+                () -> Assertions.assertEquals(getWorkerAttendanceRecordResDto.getCommuteRecordResDtoList().get(2).isTardy(), result.getCommuteRecordResDtoList().get(2).isTardy()),
+
+                () -> Assertions.assertEquals(absentRecordDtoList.get(0).getAbsentDate(), result.getAbsentRecordResDtoList().get(0).getAbsentDate()),
+                () -> Assertions.assertEquals(absentRecordDtoList.get(1).getAbsentDate(), result.getAbsentRecordResDtoList().get(1).getAbsentDate())
+        );
+    }
+
+    @Test
+    @DisplayName("고용주 - 특정 근무자 상세조회 - 실패" +
+            "지원되지 않는 날짜를 조회하는 경우")
+    public void getWorkerAttendanceRecordFailedByUnsupportedDate() throws Exception {
+        // given
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
+                .email("employer@email.com")
+                .accountId(1L)
+                .build();
+
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+
+        List<CommuteRecordDto> commuteRecordDtoList = setDefaultCommuteRecordDtoList();
+        List<AbsentRecordDto> absentRecordDtoList = setDefaultAbsentRecordDtoList();
+
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = GetWorkerAttendanceRecordResDto.builder()
+                .userName("홍길동")
+                .commuteRecordResDtoList(commuteRecordDtoList)
+                .absentRecordResDtoList(absentRecordDtoList)
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(getWorkerAttendanceRecordResDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 1999, 1)),
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2024, 1))
+        );
+    }
+
+    @Test
     @DisplayName("고용주 - 전체대타 기록 조회- 성공")
     public void getAllReplaceSuccess() throws Exception {
         // given
@@ -238,6 +335,51 @@ class WorkerManagementServiceTest {
                 () -> Assertions.assertEquals(getAllReplaceResDtoList.get(1).getUserName(), result.get(1).getUserName()),
                 () -> Assertions.assertEquals(getAllReplaceResDtoList.get(2).getUserName(), result.get(2).getUserName())
         );
+    }
+
+    private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {
+        List<CommuteRecordDto> commuteRecordDtoList = new ArrayList<>();
+
+        CommuteRecordDto commuteRecordDto1 = CommuteRecordDto.builder()
+                .commuteDate(LocalDate.of(2023, 1, 2))
+                .enterTime(LocalDateTime.of(2023, 1, 1, 10, 20))
+                .exitTime(LocalDateTime.of(2023, 1, 1, 13, 0))
+                .tardy(true)
+                .build();
+        CommuteRecordDto commuteRecordDto2 = CommuteRecordDto.builder()
+                .commuteDate(LocalDate.of(2023, 1, 5))
+                .enterTime(LocalDateTime.of(2023, 1, 5, 17, 50))
+                .exitTime(LocalDateTime.of(2023, 1, 5, 19, 30))
+                .tardy(false)
+                .build();
+        CommuteRecordDto commuteRecordDto3 = CommuteRecordDto.builder()
+                .commuteDate(LocalDate.of(2023, 1, 14))
+                .enterTime(LocalDateTime.of(2023, 1, 14, 20, 20))
+                .exitTime(LocalDateTime.of(2023, 1, 14, 21, 0))
+                .tardy(false)
+                .build();
+
+        commuteRecordDtoList.add(commuteRecordDto1);
+        commuteRecordDtoList.add(commuteRecordDto2);
+        commuteRecordDtoList.add(commuteRecordDto3);
+
+        return commuteRecordDtoList;
+    }
+
+    private List<AbsentRecordDto> setDefaultAbsentRecordDtoList() {
+        List<AbsentRecordDto> absentRecordDtoList = new ArrayList<>();
+
+        AbsentRecordDto absentRecordDto1 = AbsentRecordDto.builder()
+                .absentDate(LocalDate.of(2023, 1, 1))
+                .build();
+        AbsentRecordDto absentRecordDto2 = AbsentRecordDto.builder()
+                .absentDate(LocalDate.of(2023, 1, 10))
+                .build();
+
+        absentRecordDtoList.add(absentRecordDto1);
+        absentRecordDtoList.add(absentRecordDto2);
+
+        return absentRecordDtoList;
     }
 
     private List<WaitingWorkerResDto> setWaitingWorkerResDtoList() {

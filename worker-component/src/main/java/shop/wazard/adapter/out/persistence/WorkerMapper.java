@@ -2,7 +2,7 @@ package shop.wazard.adapter.out.persistence;
 
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.ReplaceInfo;
-import shop.wazard.dto.GetMyReplaceResDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 class WorkerMapper {
+
     public ReplaceWorkerJpa saveReplaceInfo(AccountJpa accountJpa, CompanyJpa companyJpa, ReplaceInfo replaceInfo) {
         return ReplaceWorkerJpa.builder()
                 .accountJpa(accountJpa)
@@ -23,9 +24,9 @@ class WorkerMapper {
                 .build();
     }
 
-    public List<GetMyReplaceResDto> toMyReplace(List<ReplaceWorkerJpa> replaceWorkerJpaList) {
+    public List<GetMyReplaceRecordResDto> toMyReplaceRecord(List<ReplaceWorkerJpa> replaceWorkerJpaList) {
         return replaceWorkerJpaList.stream()
-                .map(ReplaceWorkerJpa -> GetMyReplaceResDto.builder()
+                .map(ReplaceWorkerJpa -> GetMyReplaceRecordResDto.builder()
                         .userName(ReplaceWorkerJpa.getAccountJpa().getUserName())
                         .replaceWorkerName(ReplaceWorkerJpa.getReplaceWorkerName())
                         .replaceDate(ReplaceWorkerJpa.getReplaceDate())

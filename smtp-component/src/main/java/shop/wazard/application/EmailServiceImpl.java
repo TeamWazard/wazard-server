@@ -12,7 +12,6 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
@@ -29,18 +28,19 @@ class EmailServiceImpl implements EmailService {
     private String authenticationCode;
 
     @Override
-    public String sendEmail(String email) throws MessagingException {
+    public String sendEmail(String email) {
         MimeMessage emailForm = createEmailForm(email);
         try {
             log.info("================== email = {}, 메일 전송 시작 ====================", email);
             emailSender.send(emailForm);
         } catch (MailException e) {
+            log.info("메일 전송에 실패, message = {}", e.getMessage(), e);
             throw new FailSendEmail("메일 전송에 실패하였습니다.");
         }
         return authenticationCode;
     }
 
-    private MimeMessage createEmailForm(String email) throws MessagingException {
+    private MimeMessage createEmailForm(String email) {
         String title = "Wazard 회원가입 인증번호";
         MimeMessage message = emailSender.createMimeMessage();
         try {
@@ -49,6 +49,7 @@ class EmailServiceImpl implements EmailService {
             message.setFrom(senderEmail);
             message.setText(setContext(createCode()), "utf-8", "html");
         } catch (Exception e) {
+            log.info("메일 폼 작성에 실패, message = {}", e.getMessage(), e);
             throw new FailCreateEmailForm("메일 폼 작성에 실패했습니다.");
         }
         return message;
