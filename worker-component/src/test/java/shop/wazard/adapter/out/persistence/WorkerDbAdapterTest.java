@@ -76,8 +76,8 @@ class WorkerDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근무자 - 대타기록 조회 - 성공")
-    public void getMyReplace() throws Exception {
+    @DisplayName("근무자 - 대타기록 조회 - List<RepalceWorkerJpa> 조회")
+    public void getMyReplaceRecordSuccess() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
@@ -88,7 +88,7 @@ class WorkerDbAdapterTest {
         List<ReplaceWorkerJpa> replaceWorkerJpaList = setDefaultReplaceWorkerJpaList(savedAccountJpa, savedCompanyJpa);
         em.flush();
         em.clear();
-        List<ReplaceWorkerJpa> result = replaceJpaForWorkerRepository.findMyReplace(savedCompanyJpa.getId(), savedAccountJpa);
+        List<ReplaceWorkerJpa> result = replaceJpaForWorkerRepository.findMyReplaceRecord(savedCompanyJpa.getId(), savedAccountJpa);
 
         // then
         Assertions.assertAll(
@@ -97,7 +97,19 @@ class WorkerDbAdapterTest {
                 () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getReplaceWorkerName(), result.get(0).getReplaceWorkerName()),
                 () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getReplaceDate(), result.get(0).getReplaceDate()),
                 () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getEnterTime(), result.get(0).getEnterTime()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getExitTime(), result.get(0).getExitTime())
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getExitTime(), result.get(0).getExitTime()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getAccountJpa().getId(), result.get(1).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getCompanyJpa().getId(), result.get(1).getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getReplaceWorkerName(), result.get(1).getReplaceWorkerName()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getReplaceDate(), result.get(1).getReplaceDate()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getEnterTime(), result.get(1).getEnterTime()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getExitTime(), result.get(1).getExitTime()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getAccountJpa().getId(), result.get(2).getAccountJpa().getId()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getCompanyJpa().getId(), result.get(2).getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getReplaceWorkerName(), result.get(2).getReplaceWorkerName()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getReplaceDate(), result.get(2).getReplaceDate()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getEnterTime(), result.get(2).getEnterTime()),
+                () -> Assertions.assertEquals(replaceWorkerJpaList.get(2).getExitTime(), result.get(2).getExitTime())
         );
     }
 

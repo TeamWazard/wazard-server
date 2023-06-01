@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
+import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ReplaceWorker")
-public class ReplaceWorkerJpa {
+public class ReplaceWorkerJpa extends BaseEntity {
 
     @Id
     @GeneratedValue

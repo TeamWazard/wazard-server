@@ -6,14 +6,14 @@ import shop.wazard.application.domain.AccountForWorker;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
+import shop.wazard.dto.GetMyReplaceRecordReqDto;
+import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
+import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
-import shop.wazard.exception.AccountNotFoundException;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
     public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto) {
         AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(getMyReplaceRecordReqDto.getEmail())
                 .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplace(getMyReplaceRecordReqDto.getCompanyId(), accountJpa);
+        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplaceRecord(getMyReplaceRecordReqDto.getCompanyId(), accountJpa);
         return workerMapper.toMyReplaceRecord(replaceWorkerJpaList);
     }
 
