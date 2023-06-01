@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GetWorkerAttendacneRecordReqDto {
+public class GetWorkerAttendanceRecordReqDto {
 
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
@@ -18,5 +18,8 @@ public class GetWorkerAttendacneRecordReqDto {
 
     @Positive
     private Long accountId;  // 조회하는 근무자의 accountId
+
+    @Positive
+    private Long companyId;
 
 }

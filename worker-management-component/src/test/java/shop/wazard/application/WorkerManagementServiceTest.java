@@ -24,8 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerManagementServiceImpl.class})
@@ -218,7 +217,7 @@ class WorkerManagementServiceTest {
     @DisplayName("고용주 - 특정 근무자 상세조회 - 성공")
     public void getWorkerAttendanceRecordSuccess() throws Exception {
         // given
-        GetWorkerAttendacneRecordReqDto getWorkerAttendacneRecordReqDto = GetWorkerAttendacneRecordReqDto.builder()
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
                 .email("employer@email.com")
                 .accountId(1L)
                 .build();
@@ -240,10 +239,10 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForWorkerManagement);
-        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, 2023, 1))
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(getWorkerAttendanceRecordResDto);
 
-        GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendacneRecordReqDto, 2023, 1);
+        GetWorkerAttendanceRecordResDto result = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2023, 1);
 
         // then
         Assertions.assertAll(
@@ -269,6 +268,43 @@ class WorkerManagementServiceTest {
 
                 () -> Assertions.assertEquals(absentRecordDtoList.get(0).getAbsentDate(), result.getAbsentRecordResDtoList().get(0).getAbsentDate()),
                 () -> Assertions.assertEquals(absentRecordDtoList.get(1).getAbsentDate(), result.getAbsentRecordResDtoList().get(1).getAbsentDate())
+        );
+    }
+
+    @Test
+    @DisplayName("고용주 - 특정 근무자 상세조회 - 실패" +
+            "지원되지 않는 날짜를 조회하는 경우")
+    public void getWorkerAttendanceRecordFailedByUnsupportedDate() throws Exception {
+        // given
+        GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto = GetWorkerAttendanceRecordReqDto.builder()
+                .email("employer@email.com")
+                .accountId(1L)
+                .build();
+
+        AccountForWorkerManagement accountForWorkerManagement = AccountForWorkerManagement.builder()
+                .id(1L)
+                .roles("EMPLOYER")
+                .build();
+
+        List<CommuteRecordDto> commuteRecordDtoList = setDefaultCommuteRecordDtoList();
+        List<AbsentRecordDto> absentRecordDtoList = setDefaultAbsentRecordDtoList();
+
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = GetWorkerAttendanceRecordResDto.builder()
+                .userName("홍길동")
+                .commuteRecordResDtoList(commuteRecordDtoList)
+                .absentRecordResDtoList(absentRecordDtoList)
+                .build();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorkerManagement);
+        Mockito.when(commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(any(GetWorkerAttendanceRecordReqDto.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(getWorkerAttendanceRecordResDto);
+
+        // then
+        Assertions.assertAll(
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 1999, 1)),
+                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2024, 1))
         );
     }
 
