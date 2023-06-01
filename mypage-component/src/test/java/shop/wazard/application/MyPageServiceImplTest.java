@@ -143,7 +143,7 @@ class MyPageServiceImplTest {
         // then
         // + 값 직접 확인
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.getMyAttitudeScore(), 5.5)
+                () -> Assertions.assertEquals(5.5, result.getMyAttitudeScore())
         );
     }
 
