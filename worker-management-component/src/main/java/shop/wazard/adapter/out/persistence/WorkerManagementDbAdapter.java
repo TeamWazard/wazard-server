@@ -5,17 +5,8 @@ import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
-import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
-import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
-import shop.wazard.application.port.out.RosterForWorkerManagementPort;
-import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
-import shop.wazard.dto.GetWorkerAttendanceRecordReqDto;
-import shop.wazard.dto.GetWorkerAttendanceRecordResDto;
-import shop.wazard.dto.GetAllReplaceReqDto;
-import shop.wazard.dto.GetAllReplaceResDto;
-import shop.wazard.dto.WaitingWorkerResDto;
-import shop.wazard.dto.WorkerBelongedToCompanyResDto;
+import shop.wazard.application.port.out.*;
+import shop.wazard.dto.*;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
@@ -117,7 +108,7 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     }
 
     @Override
-    public List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto) {
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
         return null;
     }
 }

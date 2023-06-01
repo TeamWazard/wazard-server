@@ -16,6 +16,6 @@ public interface WorkerManagementService {
 
     GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, int year, int month);
 
-    List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto);
+    List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto);
 
 }

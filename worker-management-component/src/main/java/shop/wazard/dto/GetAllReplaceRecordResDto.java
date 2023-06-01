@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GetAllReplaceResDto {
+public class GetAllReplaceRecordResDto {
 
     private String userName;
 

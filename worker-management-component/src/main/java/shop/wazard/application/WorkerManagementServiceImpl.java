@@ -7,11 +7,7 @@ import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.port.in.WorkerManagementService;
-import shop.wazard.application.port.out.AccountForWorkerManagementPort;
-import shop.wazard.application.port.out.CommuteRecordForWorkerManagementPort;
-import shop.wazard.application.port.out.ReplaceForWorkerManagementPort;
-import shop.wazard.application.port.out.RosterForWorkerManagementPort;
-import shop.wazard.application.port.out.WaitingListForWorkerManagementPort;
+import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.util.exception.StatusEnum;
 
@@ -83,11 +79,12 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, startDate, endDate);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<GetAllReplaceResDto> getAllReplace(GetAllReplaceReqDto getAllReplaceReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getAllReplaceReqDto.getEmail());
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getAllReplaceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        return replaceForWorkerManagementPort.getAllReplace(getAllReplaceReqDto);
+        return replaceForWorkerManagementPort.getAllReplaceRecord(getAllReplaceRecordReqDto);
     }
 
     private boolean isInvalidDate(int year, int month) {
