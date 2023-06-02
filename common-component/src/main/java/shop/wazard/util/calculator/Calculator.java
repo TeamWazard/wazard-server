@@ -4,16 +4,25 @@ import java.util.List;
 
 public class Calculator {
 
-    public static double getAttitudeScore(int tardyCount, int absentCount, int totalWorkDay) {
-        double result = calculateAttitudeScore(tardyCount, absentCount, totalWorkDay);
+    public static double getAttitudeScore(int tardyCount, int absentCount, int workDayCount) {
+        double result = calculateAttitudeScore(tardyCount, absentCount, workDayCount);
         if (result < 0)
             result = 0;
         return result;
     }
 
-    private static double calculateAttitudeScore(int tardyCount, int absentCount, int totalWorkDay) {
-        double rawResult = 10 - (10 * (calculateTardyScore(tardyCount) + calculateAbsentScore(absentCount)) / (double) (totalWorkDay + absentCount));
+    private static double calculateAttitudeScore(int tardyCount, int absentCount, int workDayCount) {
+        double penaltyPoint = calculatePenaltyPoint(tardyCount, absentCount, workDayCount);
+        double rawResult = 10 * (1 - penaltyPoint);
         return roundTensPlaceScore(rawResult);
+    }
+
+    private static double calculatePenaltyPoint(int tardyCount, int absentCount, int workDayCount) {
+        return (calculateTardyScore(tardyCount) + calculateAbsentScore(absentCount)) / sumTotalWorkDay(workDayCount, absentCount);
+    }
+
+    private static int sumTotalWorkDay(int workDayCount, int absentCount) {
+        return workDayCount + absentCount;
     }
 
     private static double calculateTardyScore(int tardyCount) {
