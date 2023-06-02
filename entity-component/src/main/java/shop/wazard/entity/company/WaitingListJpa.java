@@ -1,13 +1,12 @@
 package shop.wazard.entity.company;
 
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -33,7 +32,8 @@ public class WaitingListJpa extends BaseEntity {
     private WaitingStatusJpa waitingStatusJpa;
 
     @Builder
-    public WaitingListJpa(AccountJpa accountJpa, CompanyJpa companyJpa, WaitingStatusJpa waitingStatusJpa) {
+    public WaitingListJpa(
+            AccountJpa accountJpa, CompanyJpa companyJpa, WaitingStatusJpa waitingStatusJpa) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.waitingStatusJpa = waitingStatusJpa;

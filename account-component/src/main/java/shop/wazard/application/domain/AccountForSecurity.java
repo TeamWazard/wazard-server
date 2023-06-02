@@ -1,11 +1,10 @@
 package shop.wazard.application.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -21,5 +20,4 @@ public class AccountForSecurity {
         }
         return new ArrayList<>();
     }
-
 }

@@ -3,6 +3,10 @@ package shop.wazard.util.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,11 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
 
 @Slf4j
 @Component
@@ -27,9 +26,11 @@ public class JwtProvider implements InitializingBean {
     private final Long ATK_LIVE;
     private Key atkKey;
 
-    public JwtProvider(UserDetailsService userDetailsService, ObjectMapper objectMapper,
-                       @Value("${spring.jwt.atkKey}") String secret_key,
-                       @Value("${spring.jwt.live.atk}") Long atk_live) {
+    public JwtProvider(
+            UserDetailsService userDetailsService,
+            ObjectMapper objectMapper,
+            @Value("${spring.jwt.atkKey}") String secret_key,
+            @Value("${spring.jwt.live.atk}") Long atk_live) {
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
         this.SECRET_KEY = secret_key;
@@ -49,13 +50,11 @@ public class JwtProvider implements InitializingBean {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(atkKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims =
+                Jwts.parserBuilder().setSigningKey(atkKey).build().parseClaimsJws(token).getBody();
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, token, userDetails.getAuthorities());
     }
 
     public JwtCode validateToken(String token) throws RuntimeException {
@@ -85,11 +84,8 @@ public class JwtProvider implements InitializingBean {
 
     public Long getAccountId(HttpServletRequest request) throws JwtException {
         String token = request.getHeader("ACCESS-TOKEN");
-        Jws<Claims> claims = Jwts.parserBuilder()
-                .setSigningKey(atkKey)
-                .build()
-                .parseClaimsJws(token);
-        return claims.getBody().get("accountId", Long.class);  // jwt 에서 userIdx를 추출합니다.
+        Jws<Claims> claims =
+                Jwts.parserBuilder().setSigningKey(atkKey).build().parseClaimsJws(token);
+        return claims.getBody().get("accountId", Long.class); // jwt 에서 userIdx를 추출합니다.
     }
-
 }

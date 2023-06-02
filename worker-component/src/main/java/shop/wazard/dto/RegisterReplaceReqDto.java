@@ -1,12 +1,11 @@
 package shop.wazard.dto;
 
-import lombok.*;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Builder
@@ -18,8 +17,7 @@ public class RegisterReplaceReqDto {
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
 
-    @Positive
-    private Long companyId;
+    @Positive private Long companyId;
 
     private String replaceWorkerName;
 

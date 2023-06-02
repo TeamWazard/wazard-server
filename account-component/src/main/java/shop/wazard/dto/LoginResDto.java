@@ -12,5 +12,4 @@ public class LoginResDto {
     private String userName;
     private String role;
     private String accessToken;
-
 }

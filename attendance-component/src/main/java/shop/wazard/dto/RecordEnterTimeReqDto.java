@@ -16,5 +16,4 @@ public class RecordEnterTimeReqDto {
     private Long companyId;
 
     private boolean tardy;
-
 }

@@ -1,5 +1,8 @@
 package shop.wazard.entity.worker;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,10 +10,6 @@ import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -44,7 +43,13 @@ public class ReplaceWorkerJpa extends BaseEntity {
     private LocalDateTime exitTime;
 
     @Builder
-    public ReplaceWorkerJpa(AccountJpa accountJpa, CompanyJpa companyJpa, String replaceWorkerName, LocalDate replaceDate, LocalDateTime enterTime, LocalDateTime exitTime) {
+    public ReplaceWorkerJpa(
+            AccountJpa accountJpa,
+            CompanyJpa companyJpa,
+            String replaceWorkerName,
+            LocalDate replaceDate,
+            LocalDateTime enterTime,
+            LocalDateTime exitTime) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.replaceWorkerName = replaceWorkerName;
@@ -52,5 +57,4 @@ public class ReplaceWorkerJpa extends BaseEntity {
         this.enterTime = enterTime;
         this.exitTime = exitTime;
     }
-
 }

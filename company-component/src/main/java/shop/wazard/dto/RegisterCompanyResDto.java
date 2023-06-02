@@ -9,5 +9,4 @@ import lombok.*;
 public class RegisterCompanyResDto {
 
     private String message;
-
 }

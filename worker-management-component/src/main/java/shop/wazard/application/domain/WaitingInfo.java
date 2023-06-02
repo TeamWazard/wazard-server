@@ -24,5 +24,4 @@ public class WaitingInfo {
     private boolean isAgreed() {
         return this.waitingStatus.equals(WaitingStatus.AGREED);
     }
-
 }

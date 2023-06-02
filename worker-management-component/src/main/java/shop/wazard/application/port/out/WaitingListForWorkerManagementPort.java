@@ -1,9 +1,8 @@
 package shop.wazard.application.port.out;
 
+import java.util.List;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.dto.WaitingWorkerResDto;
-
-import java.util.List;
 
 public interface WaitingListForWorkerManagementPort {
 
@@ -12,5 +11,4 @@ public interface WaitingListForWorkerManagementPort {
     void updateWaitingStatus(WaitingInfo waitingInfo);
 
     List<WaitingWorkerResDto> getWaitingWorker(Long companyId);
-
 }

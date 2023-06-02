@@ -1,5 +1,7 @@
 package shop.wazard.application;
 
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,63 +33,80 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
 
     @Override
-    public PermitWorkerToJoinResDto permitWorkerToJoin(PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(permitWorkerToJoinReqDto.getEmail());
+    public PermitWorkerToJoinResDto permitWorkerToJoin(
+            PermitWorkerToJoinReqDto permitWorkerToJoinReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        permitWorkerToJoinReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        WaitingInfo waitingInfo = waitingListForWorkerManagementPort.findWaitingInfo(permitWorkerToJoinReqDto.getWaitingListId());
+        WaitingInfo waitingInfo =
+                waitingListForWorkerManagementPort.findWaitingInfo(
+                        permitWorkerToJoinReqDto.getWaitingListId());
         waitingInfo.changeWaitingStatus();
         waitingListForWorkerManagementPort.updateWaitingStatus(waitingInfo);
-        rosterForWorkerManagementPort.joinWorker(RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
-        return PermitWorkerToJoinResDto.builder()
-                .message("업장 근무자 명단에 추가되었습니다.")
-                .build();
+        rosterForWorkerManagementPort.joinWorker(
+                RosterForWorkerManagement.createRosterForWorkerManagement(waitingInfo));
+        return PermitWorkerToJoinResDto.builder().message("업장 근무자 명단에 추가되었습니다.").build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(Long companyId, WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(workerBelongedToCompanyReqDto.getEmail());
+    public List<WorkerBelongedToCompanyResDto> getWorkersBelongedCompany(
+            Long companyId, WorkerBelongedToCompanyReqDto workerBelongedToCompanyReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        workerBelongedToCompanyReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return rosterForWorkerManagementPort.getWorkersBelongedToCompany(companyId);
     }
 
     @Override
     public ExileWorkerResDto exileWorker(ExileWorkerReqDto exileWorkerReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(exileWorkerReqDto.getEmail());
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(exileWorkerReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
-        RosterForWorkerManagement rosterForWorkerManagement = rosterForWorkerManagementPort.findRoster(exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId());
+        RosterForWorkerManagement rosterForWorkerManagement =
+                rosterForWorkerManagementPort.findRoster(
+                        exileWorkerReqDto.getAccountId(), exileWorkerReqDto.getCompanyId());
         rosterForWorkerManagement.updateRosterStateForExile();
         rosterForWorkerManagementPort.exileWorker(rosterForWorkerManagement);
-        return ExileWorkerResDto.builder()
-                .message("해당 근무자가 업장에서 퇴장되었습니다.")
-                .build();
+        return ExileWorkerResDto.builder().message("해당 근무자가 업장에서 퇴장되었습니다.").build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<WaitingWorkerResDto> getWaitingWorkers(Long companyId, WaitingWorkerReqDto waitingWorkerReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
+    public List<WaitingWorkerResDto> getWaitingWorkers(
+            Long companyId, WaitingWorkerReqDto waitingWorkerReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(waitingWorkerReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return waitingListForWorkerManagementPort.getWaitingWorker(companyId);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, int year, int month) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttendanceRecordReqDto.getEmail());
+    public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(
+            GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto, int year, int month) {
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        getWorkerAttendanceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         if (isInvalidDate(year, month)) {
             throw new UnsupportedDateException(StatusEnum.UNSUPPORTED_DATE_RANGE.getMessage());
         }
         LocalDate startDate = getDate(year, month);
         LocalDate endDate = getEndDate(year, month);
-        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, startDate, endDate);
+        return commuteRecordForWorkerManagementPort.getWorkerAttendanceRecord(
+                getWorkerAttendanceRecordReqDto, startDate, endDate);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
-        AccountForWorkerManagement accountForWorkerManagement = accountForWorkerManagementPort.findAccountByEmail(getAllReplaceRecordReqDto.getEmail());
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(
+            GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        AccountForWorkerManagement accountForWorkerManagement =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        getAllReplaceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return replaceForWorkerManagementPort.getAllReplaceRecord(getAllReplaceRecordReqDto);
     }
@@ -149,5 +168,4 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         }
         return month;
     }
-
 }

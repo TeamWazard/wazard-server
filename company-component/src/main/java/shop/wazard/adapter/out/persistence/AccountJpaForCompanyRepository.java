@@ -6,5 +6,4 @@ import shop.wazard.entity.account.AccountJpa;
 interface AccountJpaForCompanyRepository extends JpaRepository<AccountJpa, Long> {
 
     AccountJpa findByEmail(String email);
-
 }

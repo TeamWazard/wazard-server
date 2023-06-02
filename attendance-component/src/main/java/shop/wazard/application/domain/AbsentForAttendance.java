@@ -11,11 +11,11 @@ public class AbsentForAttendance {
     private Long accountId;
     private Long companyId;
 
-    public static AbsentForAttendance createAbsentForAttendance(MarkingAbsentReqDto markingAbsentReqDto) {
+    public static AbsentForAttendance createAbsentForAttendance(
+            MarkingAbsentReqDto markingAbsentReqDto) {
         return AbsentForAttendance.builder()
                 .accountId(markingAbsentReqDto.getAccountId())
                 .companyId(markingAbsentReqDto.getCompanyId())
                 .build();
     }
-
 }
