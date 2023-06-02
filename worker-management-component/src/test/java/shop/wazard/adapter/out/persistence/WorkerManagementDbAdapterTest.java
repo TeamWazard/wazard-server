@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
 import shop.wazard.application.domain.WaitingStatus;
+import shop.wazard.application.domain.WorkRecordForWorkerManagement;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
@@ -47,6 +48,7 @@ class WorkerManagementDbAdapterTest {
 
     @Autowired private WorkerManagementMapper workerManagementMapper;
     @Autowired private AccountForWorkerManagementMapper accountForWorkerManagementMapper;
+    @Autowired private WorkerManagementDbAdapter workerManagementDbAdapter;
 
     @Autowired
     private RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
@@ -484,6 +486,59 @@ class WorkerManagementDbAdapterTest {
                                 result.get(1).getAbsentDate()));
     }
 
+    @Test
+    @DisplayName("고용주 - 근무자의 평균 태도 점수 조회를 위한 과거 기록 조회 - companyJpa조회 후 workRecordForMyPage 도메인 반환")
+    void getMyTotalPastRecord() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        List<CompanyJpa> companyJpaList = setDefaultCompanyJpaList();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        List<RosterJpa> rosterJpaList =
+                setDefaultRosterJpaListForGetPastWorkplaces(savedAccountJpa, companyJpaList);
+        rosterJpaList.forEach(
+                rel -> rel.updateRosterStateForExile(BaseEntity.BaseStatusJpa.INACTIVE));
+        // 2번 무단결석
+        List<AbsentJpa> absentJpaListForFirstCompany =
+                setDefaultAbsentJpaList(savedAccountJpa, companyJpaList.get(0));
+        // 1번 무단결석
+        List<AbsentJpa> absentJpaListForSecondCompany =
+                setDefaultAbsentJpaList2(savedAccountJpa, companyJpaList.get(1));
+        // 3일 출석
+        List<EnterRecordJpa> enterRecordJpaListForFirstCompany =
+                setDefaultEnterRecordJpa(savedAccountJpa, companyJpaList.get(0));
+        List<ExitRecordJpa> exitRecordJpaListForFirstCompany =
+                setDefaultExitRecordJpa(enterRecordJpaListForFirstCompany);
+        // 5일 출석
+        List<EnterRecordJpa> enterRecordJpaListForSecondCompany =
+                setDefaultEnterRecordJpa2(savedAccountJpa, companyJpaList.get(1));
+        List<ExitRecordJpa> exitRecordJpaListForSecondCompany =
+                setDefaultExitRecordJpa2(enterRecordJpaListForSecondCompany);
+        List<CompanyJpa> findCompany =
+                companyJpaForWorkerManagementRepository.findAllWorkerPastCompaniesByAccountId(
+                        savedAccountJpa.getId());
+        List<WorkRecordForWorkerManagement> workRecordForMyPage =
+                workerManagementDbAdapter.getWorkerTotalPastRecord(savedAccountJpa.getId());
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                companyJpaList.get(0).getCompanyName(),
+                                findCompany.get(0).getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                companyJpaList.get(1).getCompanyName(),
+                                findCompany.get(1).getCompanyName()),
+                () -> Assertions.assertEquals(2, workRecordForMyPage.get(0).getAbsentCount()),
+                () -> Assertions.assertEquals(2, workRecordForMyPage.get(0).getTardyCount()),
+                () -> Assertions.assertEquals(3, workRecordForMyPage.get(0).getWorkDayCount()),
+                () -> Assertions.assertEquals(1, workRecordForMyPage.get(1).getAbsentCount()),
+                () -> Assertions.assertEquals(0, workRecordForMyPage.get(1).getTardyCount()),
+                () -> Assertions.assertEquals(5, workRecordForMyPage.get(1).getWorkDayCount()));
+    }
+
     private List<LocalDate> setDefaultAbsentDate() {
         LocalDate ABSENTDATE_5_1 = LocalDate.of(2023, 5, 1);
         LocalDate ABSENTDATE_5_20 = LocalDate.of(2023, 5, 20);
@@ -873,5 +928,265 @@ class WorkerManagementDbAdapterTest {
                 .salaryDate(1)
                 .logoImageUrl("www.test.com")
                 .build();
+    }
+
+    private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
+        List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
+        ExitRecordJpa exitRecordJpa1 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(0))
+                        .exitDate(LocalDate.of(2023, 10, 1))
+                        .build();
+        ExitRecordJpa exitRecordJpa2 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(1))
+                        .exitDate(LocalDate.of(2023, 10, 3))
+                        .build();
+        ExitRecordJpa exitRecordJpa3 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(2))
+                        .exitDate(LocalDate.of(2023, 10, 5))
+                        .build();
+        ExitRecordJpa savedExitRecordJpa1 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa1);
+        ExitRecordJpa savedExitRecordJpa2 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa2);
+        ExitRecordJpa savedExitRecordJpa3 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa3);
+        exitRecordJpaList.add(savedExitRecordJpa1);
+        exitRecordJpaList.add(savedExitRecordJpa2);
+        exitRecordJpaList.add(savedExitRecordJpa3);
+        return exitRecordJpaList;
+    }
+
+    private List<ExitRecordJpa> setDefaultExitRecordJpa2(List<EnterRecordJpa> enterRecordJpaList) {
+        List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
+        ExitRecordJpa exitRecordJpa1 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(0))
+                        .exitDate(LocalDate.of(2023, 10, 1))
+                        .build();
+        ExitRecordJpa exitRecordJpa2 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(1))
+                        .exitDate(LocalDate.of(2023, 10, 3))
+                        .build();
+        ExitRecordJpa exitRecordJpa3 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(2))
+                        .exitDate(LocalDate.of(2023, 10, 5))
+                        .build();
+        ExitRecordJpa exitRecordJpa4 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(3))
+                        .exitDate(LocalDate.of(2023, 10, 3))
+                        .build();
+        ExitRecordJpa exitRecordJpa5 =
+                ExitRecordJpa.builder()
+                        .enterRecordJpa(enterRecordJpaList.get(4))
+                        .exitDate(LocalDate.of(2023, 10, 5))
+                        .build();
+        ExitRecordJpa savedExitRecordJpa1 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa1);
+        ExitRecordJpa savedExitRecordJpa2 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa2);
+        ExitRecordJpa savedExitRecordJpa3 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa3);
+        ExitRecordJpa savedExitRecordJpa4 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa4);
+        ExitRecordJpa savedExitRecordJpa5 =
+                exitRecordJpaForWorkerManagementRepository.save(exitRecordJpa5);
+        exitRecordJpaList.add(savedExitRecordJpa1);
+        exitRecordJpaList.add(savedExitRecordJpa2);
+        exitRecordJpaList.add(savedExitRecordJpa3);
+        exitRecordJpaList.add(savedExitRecordJpa4);
+        exitRecordJpaList.add(savedExitRecordJpa5);
+        return exitRecordJpaList;
+    }
+
+    private List<AbsentJpa> setDefaultAbsentJpaList(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<AbsentJpa> absentJpaList = new ArrayList<>();
+        AbsentJpa absentJpa1 =
+                AbsentJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .absentDate(LocalDate.of(2023, 5, 10))
+                        .build();
+        AbsentJpa absentJpa2 =
+                AbsentJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .absentDate(LocalDate.of(2023, 5, 12))
+                        .build();
+        AbsentJpa savedAbsent1 = absentRecordJpaForWorkerManagementRepository.save(absentJpa1);
+        AbsentJpa savedAbsent2 = absentRecordJpaForWorkerManagementRepository.save(absentJpa2);
+        absentJpaList.add(savedAbsent1);
+        absentJpaList.add(savedAbsent2);
+        return absentJpaList;
+    }
+
+    private List<AbsentJpa> setDefaultAbsentJpaList2(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<AbsentJpa> absentJpaList = new ArrayList<>();
+        AbsentJpa absentJpa1 =
+                AbsentJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .absentDate(LocalDate.of(2023, 7, 10))
+                        .build();
+        AbsentJpa savedAbsent1 = absentRecordJpaForWorkerManagementRepository.save(absentJpa1);
+        absentJpaList.add(savedAbsent1);
+        return absentJpaList;
+    }
+
+    private List<EnterRecordJpa> setDefaultEnterRecordJpa(
+            AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(true)
+                        .enterDate(LocalDate.of(2023, 2, 20))
+                        .build();
+        EnterRecordJpa enterRecordJpa2 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(true)
+                        .enterDate(LocalDate.of(2023, 3, 2))
+                        .build();
+        EnterRecordJpa enterRecordJpa3 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 5))
+                        .build();
+        EnterRecordJpa savedEnterRecordJpa1 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa1);
+        EnterRecordJpa savedEnterRecordJpa2 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa2);
+        EnterRecordJpa savedEnterRecordJpa3 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa3);
+        enterRecordJpaList.add(savedEnterRecordJpa1);
+        enterRecordJpaList.add(savedEnterRecordJpa2);
+        enterRecordJpaList.add(savedEnterRecordJpa3);
+        return enterRecordJpaList;
+    }
+
+    private List<EnterRecordJpa> setDefaultEnterRecordJpa2(
+            AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<EnterRecordJpa> enterRecordJpaList = new ArrayList<>();
+        EnterRecordJpa enterRecordJpa1 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 7))
+                        .build();
+        EnterRecordJpa enterRecordJpa2 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 8))
+                        .build();
+        EnterRecordJpa enterRecordJpa3 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 9))
+                        .build();
+        EnterRecordJpa enterRecordJpa4 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 10))
+                        .build();
+        EnterRecordJpa enterRecordJpa5 =
+                EnterRecordJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .tardy(false)
+                        .enterDate(LocalDate.of(2023, 3, 11))
+                        .build();
+        EnterRecordJpa savedEnterRecordJpa1 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa1);
+        EnterRecordJpa savedEnterRecordJpa2 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa2);
+        EnterRecordJpa savedEnterRecordJpa3 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa3);
+        EnterRecordJpa savedEnterRecordJpa4 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa4);
+        EnterRecordJpa savedEnterRecordJpa5 =
+                enterRecordJpaForWorkerManagementRepository.save(enterRecordJpa5);
+        enterRecordJpaList.add(savedEnterRecordJpa1);
+        enterRecordJpaList.add(savedEnterRecordJpa2);
+        enterRecordJpaList.add(savedEnterRecordJpa3);
+        enterRecordJpaList.add(savedEnterRecordJpa4);
+        enterRecordJpaList.add(savedEnterRecordJpa5);
+        return enterRecordJpaList;
+    }
+
+    private List<RosterJpa> setDefaultRosterJpaListForGetPastWorkplaces(
+            AccountJpa accountJpa, List<CompanyJpa> companyJpaList) {
+        List<RosterJpa> rosterJpaList = new ArrayList<>();
+        RosterJpa rosterJpa1 =
+                RosterJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpaList.get(0))
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                        .build();
+        RosterJpa rosterJpa2 =
+                RosterJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpaList.get(1))
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                        .build();
+        RosterJpa savedRosterJpa1 = rosterJpaForWorkerManagementRepository.save(rosterJpa1);
+        RosterJpa savedRosterJpa2 = rosterJpaForWorkerManagementRepository.save(rosterJpa2);
+        rosterJpaList.add(savedRosterJpa1);
+        rosterJpaList.add(savedRosterJpa2);
+        return rosterJpaList;
+    }
+
+    private AccountJpa setDefaultEmployeeAccountJpa() {
+        return AccountJpa.builder()
+                .email("testEmployee@email.com")
+                .password("testPwd")
+                .userName("testName2")
+                .phoneNumber("010-2222-2222")
+                .gender(GenderTypeJpa.MALE.getGender())
+                .birth(LocalDate.of(2023, 1, 1))
+                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                .roles("EMPLOYEE")
+                .build();
+    }
+
+    private List<CompanyJpa> setDefaultCompanyJpaList() {
+        List<CompanyJpa> companyJpaList = new ArrayList<>();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .companyAddress("companyAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .companyAddress("companyAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(1)
+                        .logoImageUrl("www.test2.com")
+                        .build();
+        CompanyJpa savedCompanyJpa1 = companyJpaForWorkerManagementRepository.save(companyJpa1);
+        CompanyJpa savedCompanyJpa2 = companyJpaForWorkerManagementRepository.save(companyJpa2);
+        companyJpaList.add(savedCompanyJpa1);
+        companyJpaList.add(savedCompanyJpa2);
+        return companyJpaList;
     }
 }

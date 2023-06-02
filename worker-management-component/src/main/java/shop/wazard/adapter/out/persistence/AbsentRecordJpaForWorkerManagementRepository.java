@@ -16,4 +16,9 @@ interface AbsentRecordJpaForWorkerManagementRepository extends JpaRepository<Abs
             @Param("companyId") Long companyId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    @Query(
+            "select count(ab.id) from AbsentJpa ab where ab.accountJpa.id = :accountId and ab.companyJpa.id = :companyId and ab.baseStatusJpa = 'ACTIVE'")
+    int countAbsentByAccountIdAndCompanyId(
+            @Param("accountId") Long accountId, @Param("companyId") Long companyId);
 }
