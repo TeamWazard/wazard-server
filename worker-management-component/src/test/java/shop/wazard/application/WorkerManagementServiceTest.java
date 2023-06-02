@@ -1,5 +1,11 @@
 package shop.wazard.application;
 
+import static org.mockito.ArgumentMatchers.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,13 +23,6 @@ import shop.wazard.exception.JoinWorkerDeniedException;
 import shop.wazard.exception.NotAuthorizedException;
 import shop.wazard.exception.UnsupportedDateException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.*;
-
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerManagementServiceImpl.class})
 class WorkerManagementServiceTest {
@@ -34,8 +33,7 @@ class WorkerManagementServiceTest {
     @MockBean private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
     @MockBean private CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
     @MockBean private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
-    @MockBean
-    private WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
+    @MockBean private WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
 
     @Test
     @DisplayName("고용주 - 근무자 가입 수락 - 성공")
