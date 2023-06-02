@@ -8,5 +8,4 @@ import lombok.Getter;
 public class GetWorkerAttitudeScoreResDto {
 
     private double workerAttitudeScore;
-
 }

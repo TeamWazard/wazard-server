@@ -2,6 +2,7 @@ package shop.wazard.application;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +16,6 @@ import shop.wazard.dto.*;
 import shop.wazard.exception.UnsupportedDateException;
 import shop.wazard.util.calculator.Calculator;
 import shop.wazard.util.exception.StatusEnum;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -113,20 +110,33 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetWorkerAttitudeScoreResDto getWorkerAttitudeScore(GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto) {
-        AccountForWorkerManagement accountForMyPage = accountForWorkerManagementPort.findAccountByEmail(getWorkerAttitudeScoreReqDto.getEmail());
+    public GetWorkerAttitudeScoreResDto getWorkerAttitudeScore(
+            GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto) {
+        AccountForWorkerManagement accountForMyPage =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        getWorkerAttitudeScoreReqDto.getEmail());
         accountForMyPage.checkIsEmployer();
-        List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord = workRecordForWorkerManagementPort.getWorkerTotalPastRecord(getWorkerAttitudeScoreReqDto.getAccountId(), getWorkerAttitudeScoreReqDto.getCompanyId());
-        List<Double> totalWorkerAttitudeScores = getCalculatedAttitudeScore(workerTotalPastWorkRecord);
+        List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord =
+                workRecordForWorkerManagementPort.getWorkerTotalPastRecord(
+                        getWorkerAttitudeScoreReqDto.getAccountId(),
+                        getWorkerAttitudeScoreReqDto.getCompanyId());
+        List<Double> totalWorkerAttitudeScores =
+                getCalculatedAttitudeScore(workerTotalPastWorkRecord);
         double workerAttitudeScore = Calculator.getAverageAttitudeScore(totalWorkerAttitudeScores);
         return GetWorkerAttitudeScoreResDto.builder()
                 .workerAttitudeScore(workerAttitudeScore)
                 .build();
     }
 
-    private List<Double> getCalculatedAttitudeScore(List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord) {
+    private List<Double> getCalculatedAttitudeScore(
+            List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord) {
         return workerTotalPastWorkRecord.stream()
-                .map(record -> Calculator.getAttitudeScore(record.getTardyCount(), record.getAbsentCount(), record.getWorkDayCount()))
+                .map(
+                        record ->
+                                Calculator.getAttitudeScore(
+                                        record.getTardyCount(),
+                                        record.getAbsentCount(),
+                                        record.getWorkDayCount()))
                 .collect(Collectors.toList());
     }
 

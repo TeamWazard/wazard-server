@@ -10,5 +10,4 @@ public class WorkRecordForWorkerManagement {
     private int tardyCount;
     private int absentCount;
     private int workDayCount;
-
 }
