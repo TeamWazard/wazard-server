@@ -9,5 +9,4 @@ import lombok.*;
 public class RegisterReplaceResDto {
 
     private String message;
-
 }

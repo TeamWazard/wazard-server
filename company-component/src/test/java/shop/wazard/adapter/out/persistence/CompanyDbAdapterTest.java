@@ -1,5 +1,8 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,66 +24,79 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.util.List;
-
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = {EntityManager.class, CompanyDbAdapter.class, CompanyMapper.class, AccountForCompanyMapper.class, CompanyJpaRepository.class, AccountJpaForCompanyRepository.class, RosterJpaForCompanyRepository.class})
+// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(
+        classes = {
+            EntityManager.class,
+            CompanyDbAdapter.class,
+            CompanyMapper.class,
+            AccountForCompanyMapper.class,
+            CompanyJpaRepository.class,
+            AccountJpaForCompanyRepository.class,
+            RosterJpaForCompanyRepository.class
+        })
 class CompanyDbAdapterTest {
 
-    @Autowired
-    private CompanyMapper companyMapper;
-    @MockBean
-    private AccountForCompanyMapper accountForCompanyMapper;
-    @Autowired
-    private CompanyJpaRepository companyJpaRepository;
-    @Autowired
-    private AccountJpaForCompanyRepository accountJpaForCompanyRepository;
-    @Autowired
-    private RosterJpaForCompanyRepository rosterJpaForCompanyRepository;
-    @Autowired
-    private EntityManager em;
+    @Autowired private CompanyMapper companyMapper;
+    @MockBean private AccountForCompanyMapper accountForCompanyMapper;
+    @Autowired private CompanyJpaRepository companyJpaRepository;
+    @Autowired private AccountJpaForCompanyRepository accountJpaForCompanyRepository;
+    @Autowired private RosterJpaForCompanyRepository rosterJpaForCompanyRepository;
+    @Autowired private EntityManager em;
 
     @Test
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
         // given
-        AccountForCompany accountForCompany = AccountForCompany.builder()
-                .id(1L)
-                .roles("EMPLOYER")
-                .email("test@email.com")
-                .userName("name")
-                .build();
-        Company company = Company.builder()
-                .companyInfo(
-                        CompanyInfo.builder()
-                                .companyName("companyName")
-                                .companyAddress("companyAddress")
-                                .companyContact("02-111-1111")
-                                .salaryDate(1)
-                                .logoImageUrl("www.test.com")
-                                .build()
-                )
-                .build();
+        AccountForCompany accountForCompany =
+                AccountForCompany.builder()
+                        .id(1L)
+                        .roles("EMPLOYER")
+                        .email("test@email.com")
+                        .userName("name")
+                        .build();
+        Company company =
+                Company.builder()
+                        .companyInfo(
+                                CompanyInfo.builder()
+                                        .companyName("companyName")
+                                        .companyAddress("companyAddress")
+                                        .companyContact("02-111-1111")
+                                        .salaryDate(1)
+                                        .logoImageUrl("www.test.com")
+                                        .build())
+                        .build();
 
         // when
-        AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(accountForCompany.getEmail());
+        AccountJpa accountJpa =
+                accountJpaForCompanyRepository.findByEmail(accountForCompany.getEmail());
         CompanyJpa result = companyJpaRepository.save(companyMapper.toCompanyJpa(company));
         em.flush();
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
-                () -> Assertions.assertEquals(result.getCompanyAddress(), company.getCompanyInfo().getCompanyAddress()),
-                () -> Assertions.assertEquals(result.getCompanyContact(), company.getCompanyInfo().getCompanyContact()),
-                () -> Assertions.assertEquals(result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
-                () -> Assertions.assertEquals(result.getLogoImageUrl(), company.getCompanyInfo().getLogoImageUrl())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                result.getCompanyAddress(),
+                                company.getCompanyInfo().getCompanyAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                result.getCompanyContact(),
+                                company.getCompanyInfo().getCompanyContact()),
+                () ->
+                        Assertions.assertEquals(
+                                result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
+                () ->
+                        Assertions.assertEquals(
+                                result.getLogoImageUrl(),
+                                company.getCompanyInfo().getLogoImageUrl()));
     }
 
     @Test
@@ -93,33 +109,33 @@ class CompanyDbAdapterTest {
         // when
         accountJpaForCompanyRepository.save(accountJpa);
         companyJpaRepository.save(companyJpa);
-        RosterJpa rosterJpa = companyMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
+        RosterJpa rosterJpa =
+                companyMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
         RosterJpa result = rosterJpaForCompanyRepository.save(rosterJpa);
         em.flush();
 
         // then
         Assertions.assertAll(
                 () -> Assertions.assertEquals(result.getAccountJpa(), accountJpa),
-                () -> Assertions.assertEquals(result.getCompanyJpa(), companyJpa)
-        );
+                () -> Assertions.assertEquals(result.getCompanyJpa(), companyJpa));
     }
-    
+
     @Test
     @DisplayName("고용주 - 업장 정보 수정 - CompanyAccountRel 수정")
     public void updateCompanyInfoSuccess() throws Exception {
         // given
         CompanyJpa companyJpa = setDefaultCompanyJpa();
-        Company changedCompany = Company.builder()
-                .companyInfo(
-                        CompanyInfo.builder()
-                                .companyName("testName")
-                                .companyAddress("testAddress")
-                                .companyContact("031-123-1234")
-                                .logoImageUrl("testLogoUrl")
-                                .salaryDate(1)
-                                .build()
-                )
-                .build();
+        Company changedCompany =
+                Company.builder()
+                        .companyInfo(
+                                CompanyInfo.builder()
+                                        .companyName("testName")
+                                        .companyAddress("testAddress")
+                                        .companyContact("031-123-1234")
+                                        .logoImageUrl("testLogoUrl")
+                                        .salaryDate(1)
+                                        .build())
+                        .build();
 
         // when
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
@@ -129,12 +145,26 @@ class CompanyDbAdapterTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyName(), result.getCompanyName()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyAddress(), result.getCompanyAddress()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getCompanyContact(), result.getCompanyContact()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getLogoImageUrl(), result.getLogoImageUrl()),
-                () -> Assertions.assertEquals(changedCompany.getCompanyInfo().getSalaryDate(), result.getSalaryDate())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                changedCompany.getCompanyInfo().getCompanyName(),
+                                result.getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                changedCompany.getCompanyInfo().getCompanyAddress(),
+                                result.getCompanyAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                changedCompany.getCompanyInfo().getCompanyContact(),
+                                result.getCompanyContact()),
+                () ->
+                        Assertions.assertEquals(
+                                changedCompany.getCompanyInfo().getLogoImageUrl(),
+                                result.getLogoImageUrl()),
+                () ->
+                        Assertions.assertEquals(
+                                changedCompany.getCompanyInfo().getSalaryDate(),
+                                result.getSalaryDate()));
     }
 
     @Test
@@ -147,11 +177,13 @@ class CompanyDbAdapterTest {
         // when
         AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaRepository.save(companyJpa);
-        RosterJpa rosterJpa = rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
-                .build());
+        RosterJpa rosterJpa =
+                rosterJpaForCompanyRepository.save(
+                        RosterJpa.builder()
+                                .accountJpa(savedAccountJpa)
+                                .companyJpa(savedCompanyJpa)
+                                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
+                                .build());
         rosterJpaForCompanyRepository.deleteCompanyAccountRel(savedCompanyJpa.getId());
         List<RosterJpa> resultList = rosterJpaForCompanyRepository.findAll();
         em.flush();
@@ -189,8 +221,7 @@ class CompanyDbAdapterTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals("companyName1", result.get(0).getCompanyName()),
                 () -> Assertions.assertEquals("companyName2", result.get(1).getCompanyName()),
-                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName())
-        );
+                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName()));
     }
 
     @Test
@@ -207,8 +238,7 @@ class CompanyDbAdapterTest {
         Assertions.assertAll(
                 () -> Assertions.assertEquals("companyName1", result.get(0).getCompanyName()),
                 () -> Assertions.assertEquals("companyName2", result.get(1).getCompanyName()),
-                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName())
-        );
+                () -> Assertions.assertEquals("companyName3", result.get(2).getCompanyName()));
     }
 
     private CompanyJpa setDefaultCompanyJpa() {
@@ -236,98 +266,109 @@ class CompanyDbAdapterTest {
 
     private Long setDefaultOwnedCompanyList() {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
-        CompanyJpa companyJpa1 = CompanyJpa.builder()
-                .companyName("companyName1")
-                .companyAddress("companyAddress1")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .logoImageUrl("www.test1.com")
-                .build();
-        CompanyJpa companyJpa2 = CompanyJpa.builder()
-                .companyName("companyName2")
-                .companyAddress("companyAddress2")
-                .companyContact("02-222-2222")
-                .salaryDate(2)
-                .logoImageUrl("www.test2.com")
-                .build();
-        CompanyJpa companyJpa3 = CompanyJpa.builder()
-                .companyName("companyName3")
-                .companyAddress("companyAddress3")
-                .companyContact("02-333-3333")
-                .salaryDate(3)
-                .logoImageUrl("www.test3.com")
-                .build();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .companyAddress("companyAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .companyAddress("companyAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(2)
+                        .logoImageUrl("www.test2.com")
+                        .build();
+        CompanyJpa companyJpa3 =
+                CompanyJpa.builder()
+                        .companyName("companyName3")
+                        .companyAddress("companyAddress3")
+                        .companyContact("02-333-3333")
+                        .salaryDate(3)
+                        .logoImageUrl("www.test3.com")
+                        .build();
 
         AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa1 = companyJpaRepository.save(companyJpa1);
         CompanyJpa savedCompanyJpa2 = companyJpaRepository.save(companyJpa2);
         CompanyJpa savedCompanyJpa3 = companyJpaRepository.save(companyJpa3);
 
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa1)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
-                .build());
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa2)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
-                .build());
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa3)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
-                .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa1)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
+                        .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa2)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
+                        .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa3)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYER)
+                        .build());
         em.flush();
         return savedAccountJpa.getId();
     }
 
     private Long setDefaultBelongedCompanyList() {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
-        CompanyJpa companyJpa1 = CompanyJpa.builder()
-                .companyName("companyName1")
-                .companyAddress("companyAddress1")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .logoImageUrl("www.test1.com")
-                .build();
-        CompanyJpa companyJpa2 = CompanyJpa.builder()
-                .companyName("companyName2")
-                .companyAddress("companyAddress2")
-                .companyContact("02-222-2222")
-                .salaryDate(2)
-                .logoImageUrl("www.test2.com")
-                .build();
-        CompanyJpa companyJpa3 = CompanyJpa.builder()
-                .companyName("companyName3")
-                .companyAddress("companyAddress3")
-                .companyContact("02-333-3333")
-                .salaryDate(3)
-                .logoImageUrl("www.test3.com")
-                .build();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .companyAddress("companyAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .companyAddress("companyAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(2)
+                        .logoImageUrl("www.test2.com")
+                        .build();
+        CompanyJpa companyJpa3 =
+                CompanyJpa.builder()
+                        .companyName("companyName3")
+                        .companyAddress("companyAddress3")
+                        .companyContact("02-333-3333")
+                        .salaryDate(3)
+                        .logoImageUrl("www.test3.com")
+                        .build();
 
         AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa1 = companyJpaRepository.save(companyJpa1);
         CompanyJpa savedCompanyJpa2 = companyJpaRepository.save(companyJpa2);
         CompanyJpa savedCompanyJpa3 = companyJpaRepository.save(companyJpa3);
 
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa1)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
-                .build());
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa2)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
-                .build());
-        rosterJpaForCompanyRepository.save(RosterJpa.builder()
-                .accountJpa(savedAccountJpa)
-                .companyJpa(savedCompanyJpa3)
-                .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
-                .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa1)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                        .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa2)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                        .build());
+        rosterJpaForCompanyRepository.save(
+                RosterJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa3)
+                        .rosterTypeJpa(RosterTypeJpa.EMPLOYEE)
+                        .build());
         em.flush();
         return savedAccountJpa.getId();
     }
-
 }

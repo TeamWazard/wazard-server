@@ -8,9 +8,7 @@ import shop.wazard.entity.company.LogoImageJpa;
 class FileMapper {
 
     public LogoImageJpa toLogoImageJpa(LogoImage logoImage) {
-        return LogoImageJpa.builder()
-                .logoImageUrl(logoImage.getLogoImageUrl())
-                .build();
+        return LogoImageJpa.builder().logoImageUrl(logoImage.getLogoImageUrl()).build();
     }
 
     public LogoImage toLogoImage(LogoImageJpa logoImageJpa) {
@@ -19,5 +17,4 @@ class FileMapper {
                 .logoImageUrl(logoImageJpa.getLogoImageUrl())
                 .build();
     }
-
 }

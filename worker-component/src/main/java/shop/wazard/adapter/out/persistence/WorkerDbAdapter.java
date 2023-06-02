@@ -1,5 +1,6 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorker;
@@ -15,8 +16,6 @@ import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
-import java.util.List;
-
 @Repository
 @RequiredArgsConstructor
 class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
@@ -27,30 +26,51 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
     private final AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     private final CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
 
-
     @Override
     public AccountForWorker findAccountByEmail(String email) {
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email)
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        AccountJpa accountJpa =
+                accountJpaForWorkerRepository
+                        .findByEmail(email)
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         return accountForWorkerMapper.toAccount(accountJpa);
     }
 
     @Override
     public void saveReplace(String email, ReplaceInfo replaceInfo) {
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(email)
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        CompanyJpa companyJpa = companyJpaForWorkerRepository.findById(replaceInfo.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        ReplaceWorkerJpa replaceWorkerJpa = workerMapper.saveReplaceInfo(accountJpa, companyJpa, replaceInfo);
+        AccountJpa accountJpa =
+                accountJpaForWorkerRepository
+                        .findByEmail(email)
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaForWorkerRepository
+                        .findById(replaceInfo.getCompanyId())
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        ReplaceWorkerJpa replaceWorkerJpa =
+                workerMapper.saveReplaceInfo(accountJpa, companyJpa, replaceInfo);
         replaceJpaForWorkerRepository.save(replaceWorkerJpa);
     }
 
     @Override
-    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId) {
-        AccountJpa accountJpa = accountJpaForWorkerRepository.findByEmail(getMyReplaceRecordReqDto.getEmail())
-                .orElseThrow(() -> new AccountNotFoundException(StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerRepository.findMyReplaceRecord(companyId, accountJpa.getId());
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(
+            GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId) {
+        AccountJpa accountJpa =
+                accountJpaForWorkerRepository
+                        .findByEmail(getMyReplaceRecordReqDto.getEmail())
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        List<ReplaceWorkerJpa> replaceWorkerJpaList =
+                replaceJpaForWorkerRepository.findMyReplaceRecord(companyId, accountJpa.getId());
         return workerMapper.toMyReplaceRecord(replaceWorkerJpaList);
     }
-
 }

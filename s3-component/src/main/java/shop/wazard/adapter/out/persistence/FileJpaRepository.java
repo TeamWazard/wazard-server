@@ -8,5 +8,4 @@ import shop.wazard.entity.company.LogoImageJpa;
 interface FileJpaRepository extends JpaRepository<LogoImageJpa, Long> {
 
     public LogoImageJpa save(LogoImageJpa logoImageJpa);
-
 }

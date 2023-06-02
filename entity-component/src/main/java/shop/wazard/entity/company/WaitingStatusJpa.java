@@ -11,8 +11,8 @@ public enum WaitingStatusJpa {
     INVITED("INVITED"),
     AGREED("AGREED"),
     DISAGREED("DISAGREED"),
-    JOINED("JOINED"),;
+    JOINED("JOINED"),
+    ;
 
     public final String status;
-
 }

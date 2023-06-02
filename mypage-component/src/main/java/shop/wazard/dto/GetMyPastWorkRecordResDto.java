@@ -1,9 +1,8 @@
 package shop.wazard.dto;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -18,5 +17,4 @@ public class GetMyPastWorkRecordResDto {
     private double workScore;
     private LocalDate startWorkingDate;
     private LocalDate endWorkingDate;
-
 }

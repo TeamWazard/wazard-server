@@ -1,14 +1,13 @@
 package shop.wazard.entity.commuteRecord;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -30,10 +29,10 @@ public class ExitRecordJpa extends BaseEntity {
     private LocalDateTime exitTime;
 
     @Builder
-    public ExitRecordJpa(EnterRecordJpa enterRecordJpa, LocalDate exitDate, LocalDateTime exitTime) {
+    public ExitRecordJpa(
+            EnterRecordJpa enterRecordJpa, LocalDate exitDate, LocalDateTime exitTime) {
         this.enterRecordJpa = enterRecordJpa;
         this.exitDate = exitDate;
         this.exitTime = exitTime;
     }
-
 }

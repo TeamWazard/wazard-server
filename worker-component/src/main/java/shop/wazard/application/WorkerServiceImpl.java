@@ -1,5 +1,6 @@
 package shop.wazard.application;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,6 @@ import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.dto.RegisterReplaceReqDto;
 import shop.wazard.dto.RegisterReplaceResDto;
 
-import java.util.List;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,20 +24,21 @@ class WorkerServiceImpl implements WorkerService {
 
     @Override
     public RegisterReplaceResDto registerReplace(RegisterReplaceReqDto registerReplaceReqDto) {
-        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(registerReplaceReqDto.getEmail());
+        AccountForWorker accountForWorker =
+                accountForWorkerPort.findAccountByEmail(registerReplaceReqDto.getEmail());
         accountForWorker.checkIsEmployee();
-        workerPort.saveReplace(accountForWorker.getEmail(), ReplaceInfo.createReplace(registerReplaceReqDto));
-        return RegisterReplaceResDto.builder()
-                .message("대타 등록이 완료되었습니다.")
-                .build();
+        workerPort.saveReplace(
+                accountForWorker.getEmail(), ReplaceInfo.createReplace(registerReplaceReqDto));
+        return RegisterReplaceResDto.builder().message("대타 등록이 완료되었습니다.").build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId) {
-        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getMyReplaceRecordReqDto.getEmail());
+    public List<GetMyReplaceRecordResDto> getMyReplaceRecord(
+            GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId) {
+        AccountForWorker accountForWorker =
+                accountForWorkerPort.findAccountByEmail(getMyReplaceRecordReqDto.getEmail());
         accountForWorker.checkIsEmployee();
         return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
     }
-
 }

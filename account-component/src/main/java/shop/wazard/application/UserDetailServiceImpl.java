@@ -1,5 +1,7 @@
 package shop.wazard.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -10,9 +12,6 @@ import org.springframework.stereotype.Service;
 import shop.wazard.application.domain.Account;
 import shop.wazard.application.port.out.AccountPort;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 class UserDetailServiceImpl implements UserDetailsService {
@@ -21,19 +20,24 @@ class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountPort.findAccountByEmailForUserDetails(email)
-                .orElseThrow(() -> new UsernameNotFoundException("email : " + email + " was not found"));
+        Account account =
+                accountPort
+                        .findAccountByEmailForUserDetails(email)
+                        .orElseThrow(
+                                () ->
+                                        new UsernameNotFoundException(
+                                                "email : " + email + " was not found"));
         return createUserDetails(account);
     }
 
     private UserDetails createUserDetails(Account account) {
-        List<SimpleGrantedAuthority> grantedAuthorities = account.getRoleList()
-                .stream()
-                .map(authority -> new SimpleGrantedAuthority(authority))
-                .collect(Collectors.toList());
-        return new User(account.getMyProfile().getEmail(),
+        List<SimpleGrantedAuthority> grantedAuthorities =
+                account.getRoleList().stream()
+                        .map(authority -> new SimpleGrantedAuthority(authority))
+                        .collect(Collectors.toList());
+        return new User(
+                account.getMyProfile().getEmail(),
                 account.getMyProfile().getPassword(),
                 grantedAuthorities);
     }
-
 }

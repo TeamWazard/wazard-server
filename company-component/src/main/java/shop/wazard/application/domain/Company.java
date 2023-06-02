@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.RegisterCompanyReqDto;
 
-
 @Getter
 @Builder
 public class Company {
@@ -14,14 +13,14 @@ public class Company {
 
     public static Company createCompany(RegisterCompanyReqDto registerCompanyReqDto) {
         return Company.builder()
-                .companyInfo(CompanyInfo.builder()
-                        .companyName(registerCompanyReqDto.getCompanyName())
-                        .companyAddress(registerCompanyReqDto.getCompanyAddress())
-                        .companyContact(registerCompanyReqDto.getCompanyContact())
-                        .salaryDate(registerCompanyReqDto.getSalaryDate())
-                        .logoImageUrl(registerCompanyReqDto.getLogoImageUrl())
-                        .build())
+                .companyInfo(
+                        CompanyInfo.builder()
+                                .companyName(registerCompanyReqDto.getCompanyName())
+                                .companyAddress(registerCompanyReqDto.getCompanyAddress())
+                                .companyContact(registerCompanyReqDto.getCompanyContact())
+                                .salaryDate(registerCompanyReqDto.getSalaryDate())
+                                .logoImageUrl(registerCompanyReqDto.getLogoImageUrl())
+                                .build())
                 .build();
     }
-
 }
