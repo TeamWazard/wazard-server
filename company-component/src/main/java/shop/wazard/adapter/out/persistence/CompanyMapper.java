@@ -1,5 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.Company;
 import shop.wazard.application.domain.CompanyInfo;
@@ -9,9 +11,6 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 class CompanyMapper {
@@ -26,7 +25,8 @@ class CompanyMapper {
                 .build();
     }
 
-    public RosterJpa saveRelationInfo(AccountJpa accountJpa, CompanyJpa companyJpa, RosterTypeJpa rosterTypeJpa) {
+    public RosterJpa saveRelationInfo(
+            AccountJpa accountJpa, CompanyJpa companyJpa, RosterTypeJpa rosterTypeJpa) {
         return RosterJpa.builder()
                 .accountJpa(accountJpa)
                 .companyJpa(companyJpa)
@@ -40,8 +40,7 @@ class CompanyMapper {
                 company.getCompanyInfo().getCompanyAddress(),
                 company.getCompanyInfo().getCompanyContact(),
                 company.getCompanyInfo().getSalaryDate(),
-                company.getCompanyInfo().getLogoImageUrl()
-        );
+                company.getCompanyInfo().getLogoImageUrl());
     }
 
     public Company toCompanyDomain(CompanyJpa companyJpa) {
@@ -54,35 +53,38 @@ class CompanyMapper {
                                 .companyContact(companyJpa.getCompanyContact())
                                 .salaryDate(companyJpa.getSalaryDate())
                                 .logoImageUrl(companyJpa.getLogoImageUrl())
-                                .build()
-                )
+                                .build())
                 .build();
     }
 
     public List<GetOwnedCompanyResDto> toOwnedCompanyList(List<CompanyJpa> ownedCompanyJpaList) {
         return ownedCompanyJpaList.stream()
-                .map(companyJpa -> GetOwnedCompanyResDto.builder()
-                        .companyId(companyJpa.getId())
-                        .companyName(companyJpa.getCompanyName())
-                        .companyAddress(companyJpa.getCompanyAddress())
-                        .companyContact(companyJpa.getCompanyContact())
-                        .logoImageUrl(companyJpa.getLogoImageUrl())
-                        .salaryDate(companyJpa.getSalaryDate())
-                        .build()
-                ).collect(Collectors.toList());
+                .map(
+                        companyJpa ->
+                                GetOwnedCompanyResDto.builder()
+                                        .companyId(companyJpa.getId())
+                                        .companyName(companyJpa.getCompanyName())
+                                        .companyAddress(companyJpa.getCompanyAddress())
+                                        .companyContact(companyJpa.getCompanyContact())
+                                        .logoImageUrl(companyJpa.getLogoImageUrl())
+                                        .salaryDate(companyJpa.getSalaryDate())
+                                        .build())
+                .collect(Collectors.toList());
     }
 
-    public List<GetBelongedCompanyResDto> toBelongedCompanyList(List<CompanyJpa> belongedCompanyJpaList) {
+    public List<GetBelongedCompanyResDto> toBelongedCompanyList(
+            List<CompanyJpa> belongedCompanyJpaList) {
         return belongedCompanyJpaList.stream()
-                .map(companyJpa -> GetBelongedCompanyResDto.builder()
-                        .companyId(companyJpa.getId())
-                        .companyName(companyJpa.getCompanyName())
-                        .companyAddress(companyJpa.getCompanyAddress())
-                        .companyContact(companyJpa.getCompanyContact())
-                        .logoImageUrl(companyJpa.getLogoImageUrl())
-                        .salaryDate(companyJpa.getSalaryDate())
-                        .build()
-                ).collect(Collectors.toList());
+                .map(
+                        companyJpa ->
+                                GetBelongedCompanyResDto.builder()
+                                        .companyId(companyJpa.getId())
+                                        .companyName(companyJpa.getCompanyName())
+                                        .companyAddress(companyJpa.getCompanyAddress())
+                                        .companyContact(companyJpa.getCompanyContact())
+                                        .logoImageUrl(companyJpa.getLogoImageUrl())
+                                        .salaryDate(companyJpa.getSalaryDate())
+                                        .build())
+                .collect(Collectors.toList());
     }
-
 }

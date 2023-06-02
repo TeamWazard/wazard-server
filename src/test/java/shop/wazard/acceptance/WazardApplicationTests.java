@@ -9,8 +9,6 @@ import shop.wazard.WazardApplication;
 @ContextConfiguration(classes = WazardApplication.class)
 class WazardApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {}
 }

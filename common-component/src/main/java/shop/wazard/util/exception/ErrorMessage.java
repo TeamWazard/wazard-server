@@ -9,5 +9,4 @@ public class ErrorMessage {
 
     private int errorCode;
     private String errorMessage;
-
 }

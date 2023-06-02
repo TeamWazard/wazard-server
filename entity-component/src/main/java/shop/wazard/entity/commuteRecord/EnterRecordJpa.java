@@ -1,5 +1,8 @@
 package shop.wazard.entity.commuteRecord;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,10 +10,6 @@ import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -41,12 +40,16 @@ public class EnterRecordJpa extends BaseEntity {
     private ExitRecordJpa exitRecordJpa;
 
     @Builder
-    public EnterRecordJpa(AccountJpa accountJpa, CompanyJpa companyJpa, boolean tardy, LocalDate enterDate, LocalDateTime enterTime) {
+    public EnterRecordJpa(
+            AccountJpa accountJpa,
+            CompanyJpa companyJpa,
+            boolean tardy,
+            LocalDate enterDate,
+            LocalDateTime enterTime) {
         this.accountJpa = accountJpa;
         this.companyJpa = companyJpa;
         this.tardy = tardy;
         this.enterDate = enterDate;
         this.enterTime = enterTime;
     }
-
 }

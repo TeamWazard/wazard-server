@@ -1,12 +1,11 @@
 package shop.wazard.application.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import shop.wazard.dto.JoinReqDto;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
+import shop.wazard.dto.JoinReqDto;
 
 @Getter
 @Builder
@@ -27,16 +26,16 @@ public class Account {
 
     public static Account createAccount(JoinReqDto joinReqDto) {
         return Account.builder()
-                .myProfile(MyProfile.builder()
-                        .email(joinReqDto.getEmail())
-                        .password(joinReqDto.getPassword())
-                        .userName(joinReqDto.getUserName())
-                        .gender(GenderType.valueOf(joinReqDto.getGender()))
-                        .birth(joinReqDto.getBirth())
-                        .phoneNumber(joinReqDto.getPhoneNumber())
-                        .build())
+                .myProfile(
+                        MyProfile.builder()
+                                .email(joinReqDto.getEmail())
+                                .password(joinReqDto.getPassword())
+                                .userName(joinReqDto.getUserName())
+                                .gender(GenderType.valueOf(joinReqDto.getGender()))
+                                .birth(joinReqDto.getBirth())
+                                .phoneNumber(joinReqDto.getPhoneNumber())
+                                .build())
                 .roles(joinReqDto.getRole())
                 .build();
     }
-
 }

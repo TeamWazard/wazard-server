@@ -1,10 +1,9 @@
 package shop.wazard.application.port.out;
 
+import java.util.List;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.dto.WaitingWorkerResDto;
 import shop.wazard.dto.WorkerBelongedToCompanyResDto;
-
-import java.util.List;
 
 public interface RosterForWorkerManagementPort {
 
@@ -17,5 +16,4 @@ public interface RosterForWorkerManagementPort {
     void exileWorker(RosterForWorkerManagement rosterForWorkerManagement);
 
     List<WaitingWorkerResDto> getWaitingWorker(Long companyId);
-
 }

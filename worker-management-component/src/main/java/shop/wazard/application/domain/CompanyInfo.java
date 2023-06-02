@@ -12,5 +12,4 @@ public class CompanyInfo {
     private String companyContact;
     private int salaryDate;
     private String logoImageUrl;
-
 }

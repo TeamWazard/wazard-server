@@ -13,5 +13,4 @@ public class GetOwnedCompanyResDto {
     private String companyContact;
     private String logoImageUrl;
     private int salaryDate;
-
 }

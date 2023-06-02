@@ -1,12 +1,11 @@
 package shop.wazard.application.port.out;
 
+import java.util.List;
 import shop.wazard.dto.GetAllReplaceRecordReqDto;
 import shop.wazard.dto.GetAllReplaceRecordResDto;
 
-import java.util.List;
-
 public interface ReplaceForWorkerManagementPort {
 
-    List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto);
-
+    List<GetAllReplaceRecordResDto> getAllReplaceRecord(
+            GetAllReplaceRecordReqDto getAllReplaceRecordReqDto);
 }

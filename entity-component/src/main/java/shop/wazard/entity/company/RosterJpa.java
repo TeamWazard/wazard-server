@@ -1,13 +1,12 @@
 package shop.wazard.entity.company;
 
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -42,5 +41,4 @@ public class RosterJpa extends BaseEntity {
     public void updateRosterStateForExile(BaseStatusJpa baseStatusJpa) {
         this.baseStatusJpa = baseStatusJpa;
     }
-
 }

@@ -1,10 +1,9 @@
 package shop.wazard.dto;
 
-import lombok.*;
-import org.hibernate.validator.constraints.Range;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 @Getter
 @Builder
@@ -30,5 +29,4 @@ public class RegisterCompanyReqDto {
 
     @Range(min = 0, max = 31)
     private int salaryDate;
-
 }

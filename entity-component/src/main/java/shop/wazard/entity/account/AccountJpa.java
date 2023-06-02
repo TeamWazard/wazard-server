@@ -1,17 +1,16 @@
 package shop.wazard.entity.account;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.RosterJpa;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Getter
 @Entity
@@ -42,7 +41,6 @@ public class AccountJpa extends BaseEntity {
     @OneToMany(mappedBy = "accountJpa")
     private List<RosterJpa> rosterJpaList = new ArrayList<>();
 
-
     public List<String> getRoleList() {
         if (roles.length() > 0) {
             return Arrays.asList(roles.split(","));
@@ -51,7 +49,16 @@ public class AccountJpa extends BaseEntity {
     }
 
     @Builder
-    public AccountJpa(String email, String password, String userName, String phoneNumber, String gender, LocalDate birth, String roles, BaseStatusJpa baseStatusJpa,  List<RosterJpa> rosterJpaList) {
+    public AccountJpa(
+            String email,
+            String password,
+            String userName,
+            String phoneNumber,
+            String gender,
+            LocalDate birth,
+            String roles,
+            BaseStatusJpa baseStatusJpa,
+            List<RosterJpa> rosterJpaList) {
         this.email = email;
         this.password = password;
         this.userName = userName;
@@ -63,11 +70,11 @@ public class AccountJpa extends BaseEntity {
         this.rosterJpaList = rosterJpaList;
     }
 
-    public void updateMyProfile(String userName, String phoneNumber, String genderType, LocalDate birth) {
+    public void updateMyProfile(
+            String userName, String phoneNumber, String genderType, LocalDate birth) {
         this.userName = userName;
         this.phoneNumber = phoneNumber;
         this.gender = GenderTypeJpa.valueOf(genderType);
         this.birth = birth;
     }
-
 }

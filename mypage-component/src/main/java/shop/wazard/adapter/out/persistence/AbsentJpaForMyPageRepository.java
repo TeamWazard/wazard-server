@@ -7,7 +7,8 @@ import shop.wazard.entity.commuteRecord.AbsentJpa;
 
 public interface AbsentJpaForMyPageRepository extends JpaRepository<AbsentJpa, Long> {
 
-    @Query("select count(ab.id) from AbsentJpa ab where ab.accountJpa.id = :accountId and ab.companyJpa.id = :companyId and ab.baseStatusJpa = 'ACTIVE'")
-    int countAbsentByAccountIdAndCompanyId(@Param("accountId") Long accountId, @Param("companyId") Long companyId);
-
+    @Query(
+            "select count(ab.id) from AbsentJpa ab where ab.accountJpa.id = :accountId and ab.companyJpa.id = :companyId and ab.baseStatusJpa = 'ACTIVE'")
+    int countAbsentByAccountIdAndCompanyId(
+            @Param("accountId") Long accountId, @Param("companyId") Long companyId);
 }
