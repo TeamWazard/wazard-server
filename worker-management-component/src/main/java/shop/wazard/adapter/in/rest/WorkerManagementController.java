@@ -45,4 +45,11 @@ class WorkerManagementController {
         return ResponseEntity.ok(waitingWorkerList);
     }
 
+    @Certification
+    @GetMapping("/attendance/{accountId}/{year}/{month}")
+    public ResponseEntity<GetWorkerAttendanceRecordResDto> getWorkerAttendanceRecord(@PathVariable Long accountId, @PathVariable int year, @PathVariable int month, @Valid GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto) {
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, year, month);
+        return ResponseEntity.ok(getWorkerAttendanceRecordResDto);
+    }
+
 }

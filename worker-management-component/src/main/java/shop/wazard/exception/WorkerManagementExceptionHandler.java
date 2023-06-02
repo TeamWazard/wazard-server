@@ -69,4 +69,14 @@ public class WorkerManagementExceptionHandler {
         );
     }
 
+    @ExceptionHandler(UnsupportedDateException.class)
+    public ResponseEntity<ErrorMessage> unsupportedDateException(UnsupportedDateException e) {
+        return ResponseEntity.badRequest().body(
+                ErrorMessage.builder()
+                        .errorCode(StatusEnum.UNSUPPORTED_DATE_RANGE.getStatusCode())
+                        .errorMessage(e.getMessage())
+                        .build()
+        );
+    }
+
 }
