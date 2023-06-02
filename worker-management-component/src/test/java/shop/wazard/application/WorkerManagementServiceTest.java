@@ -33,6 +33,7 @@ class WorkerManagementServiceTest {
     @MockBean private WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
     @MockBean private CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
     @MockBean private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
+    @MockBean private WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
 
     @Test
     @DisplayName("고용주 - 근무자 가입 수락 - 성공")
@@ -514,6 +515,57 @@ class WorkerManagementServiceTest {
                         Assertions.assertEquals(
                                 getAllReplaceRecordResDtoList.get(2).getExitTime(),
                                 result.get(2).getExitTime()));
+    }
+
+    @Test
+    @DisplayName("고용주 - 근무자의 태도 점수 조회 - 성공")
+    void getWorkerAttitudeScore() throws Exception {
+        // given
+        GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto =
+                GetWorkerAttitudeScoreReqDto.builder()
+                        .email("test@email.com")
+                        .accountId(1L)
+                        .companyId(2L)
+                        .build();
+        AccountForWorkerManagement accountForAttendance =
+                setDefaultEmployerAccountForWorkerManagement();
+        List<WorkRecordForWorkerManagement> workRecordForWorkerManagementList =
+                setDefaultWorkerPastWorkRecordList();
+
+        // when
+        Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForAttendance);
+        Mockito.when(
+                        workRecordForWorkerManagementPort.getWorkerTotalPastRecord(
+                                anyLong(), anyLong()))
+                .thenReturn(workRecordForWorkerManagementList);
+        GetWorkerAttitudeScoreResDto result =
+                workerManagementService.getWorkerAttitudeScore(getWorkerAttitudeScoreReqDto);
+
+        // then
+        // + 값 직접 확인
+        Assertions.assertAll(() -> Assertions.assertEquals(5.8, result.getWorkerAttitudeScore()));
+    }
+
+    private List<WorkRecordForWorkerManagement> setDefaultWorkerPastWorkRecordList() {
+        List<WorkRecordForWorkerManagement> workRecordForMyPageList = new ArrayList<>();
+        // 0.4 점
+        WorkRecordForWorkerManagement workRecordForMyPage1 =
+                WorkRecordForWorkerManagement.builder()
+                        .absentCount(1)
+                        .tardyCount(2)
+                        .workDayCount(10)
+                        .build();
+        // 0.8 점
+        WorkRecordForWorkerManagement workRecordForMyPage2 =
+                WorkRecordForWorkerManagement.builder()
+                        .absentCount(0)
+                        .tardyCount(2)
+                        .workDayCount(10)
+                        .build();
+        workRecordForMyPageList.add(workRecordForMyPage1);
+        workRecordForMyPageList.add(workRecordForMyPage2);
+        return workRecordForMyPageList;
     }
 
     private List<CommuteRecordDto> setDefaultCommuteRecordDtoList() {

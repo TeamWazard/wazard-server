@@ -20,4 +20,7 @@ public interface WorkerManagementService {
 
     List<GetAllReplaceRecordResDto> getAllReplaceRecord(
             GetAllReplaceRecordReqDto getAllReplaceRecordReqDto);
+
+    GetWorkerAttitudeScoreResDto getWorkerAttitudeScore(
+            GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto);
 }

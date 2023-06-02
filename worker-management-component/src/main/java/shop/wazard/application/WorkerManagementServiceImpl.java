@@ -2,16 +2,19 @@ package shop.wazard.application;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
+import shop.wazard.application.domain.WorkRecordForWorkerManagement;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.exception.UnsupportedDateException;
+import shop.wazard.util.calculator.Calculator;
 import shop.wazard.util.exception.StatusEnum;
 
 @Transactional
@@ -24,6 +27,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final WaitingListForWorkerManagementPort waitingListForWorkerManagementPort;
     private final ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
     private final CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
+    private final WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
 
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(
@@ -102,6 +106,38 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
                         getAllReplaceRecordReqDto.getEmail());
         accountForWorkerManagement.checkIsEmployer();
         return replaceForWorkerManagementPort.getAllReplaceRecord(getAllReplaceRecordReqDto);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetWorkerAttitudeScoreResDto getWorkerAttitudeScore(
+            GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto) {
+        AccountForWorkerManagement accountForMyPage =
+                accountForWorkerManagementPort.findAccountByEmail(
+                        getWorkerAttitudeScoreReqDto.getEmail());
+        accountForMyPage.checkIsEmployer();
+        List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord =
+                workRecordForWorkerManagementPort.getWorkerTotalPastRecord(
+                        getWorkerAttitudeScoreReqDto.getAccountId(),
+                        getWorkerAttitudeScoreReqDto.getCompanyId());
+        List<Double> totalWorkerAttitudeScores =
+                getCalculatedAttitudeScore(workerTotalPastWorkRecord);
+        double workerAttitudeScore = Calculator.getAverageAttitudeScore(totalWorkerAttitudeScores);
+        return GetWorkerAttitudeScoreResDto.builder()
+                .workerAttitudeScore(workerAttitudeScore)
+                .build();
+    }
+
+    private List<Double> getCalculatedAttitudeScore(
+            List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord) {
+        return workerTotalPastWorkRecord.stream()
+                .map(
+                        record ->
+                                Calculator.getAttitudeScore(
+                                        record.getTardyCount(),
+                                        record.getAbsentCount(),
+                                        record.getWorkDayCount()))
+                .collect(Collectors.toList());
     }
 
     private boolean isInvalidDate(int year, int month) {
