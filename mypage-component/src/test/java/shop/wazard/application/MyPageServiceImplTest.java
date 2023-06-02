@@ -94,7 +94,7 @@ class MyPageServiceImplTest {
                 .companyLogoImage("testLogoImage")
                 .tardyCount(1)
                 .absentCount(1)
-                .workScore(4)
+                .workScore(4.5)
                 .startWorkingDate(LocalDate.of(2023, 5, 20))
                 .endWorkingDate(LocalDate.of(2023, 5, 23))
                 .build();
@@ -143,7 +143,7 @@ class MyPageServiceImplTest {
         // then
         // + 값 직접 확인
         Assertions.assertAll(
-                () -> Assertions.assertEquals(5.5, result.getMyAttitudeScore())
+                () -> Assertions.assertEquals(5.8, result.getMyAttitudeScore())
         );
     }
 
