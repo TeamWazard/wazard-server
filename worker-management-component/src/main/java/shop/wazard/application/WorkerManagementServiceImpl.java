@@ -118,8 +118,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         accountForMyPage.checkIsEmployer();
         List<WorkRecordForWorkerManagement> workerTotalPastWorkRecord =
                 workRecordForWorkerManagementPort.getWorkerTotalPastRecord(
-                        getWorkerAttitudeScoreReqDto.getAccountId(),
-                        getWorkerAttitudeScoreReqDto.getCompanyId());
+                        getWorkerAttitudeScoreReqDto.getAccountId());
         List<Double> totalWorkerAttitudeScores =
                 getCalculatedAttitudeScore(workerTotalPastWorkRecord);
         double workerAttitudeScore = Calculator.getAverageAttitudeScore(totalWorkerAttitudeScores);

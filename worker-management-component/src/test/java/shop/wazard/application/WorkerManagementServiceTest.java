@@ -535,9 +535,7 @@ class WorkerManagementServiceTest {
         // when
         Mockito.when(accountForWorkerManagementPort.findAccountByEmail(anyString()))
                 .thenReturn(accountForAttendance);
-        Mockito.when(
-                        workRecordForWorkerManagementPort.getWorkerTotalPastRecord(
-                                anyLong(), anyLong()))
+        Mockito.when(workRecordForWorkerManagementPort.getWorkerTotalPastRecord(anyLong()))
                 .thenReturn(workRecordForWorkerManagementList);
         GetWorkerAttitudeScoreResDto result =
                 workerManagementService.getWorkerAttitudeScore(getWorkerAttitudeScoreReqDto);

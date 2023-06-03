@@ -5,5 +5,5 @@ import shop.wazard.application.domain.WorkRecordForWorkerManagement;
 
 public interface WorkRecordForWorkerManagementPort {
 
-    List<WorkRecordForWorkerManagement> getWorkerTotalPastRecord(Long accountId, Long companyId);
+    List<WorkRecordForWorkerManagement> getWorkerTotalPastRecord(Long accountId);
 }

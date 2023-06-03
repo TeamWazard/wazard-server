@@ -2,11 +2,13 @@ package shop.wazard.adapter.out.persistence;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorkerManagement;
 import shop.wazard.application.domain.RosterForWorkerManagement;
 import shop.wazard.application.domain.WaitingInfo;
+import shop.wazard.application.domain.WorkRecordForWorkerManagement;
 import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.entity.account.AccountJpa;
@@ -29,7 +31,8 @@ class WorkerManagementDbAdapter
                 RosterForWorkerManagementPort,
                 WaitingListForWorkerManagementPort,
                 CommuteRecordForWorkerManagementPort,
-                ReplaceForWorkerManagementPort {
+                ReplaceForWorkerManagementPort,
+                WorkRecordForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -180,5 +183,38 @@ class WorkerManagementDbAdapter
     public List<GetAllReplaceRecordResDto> getAllReplaceRecord(
             GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
         return null;
+    }
+
+    @Override
+    public List<WorkRecordForWorkerManagement> getWorkerTotalPastRecord(Long accountId) {
+        List<CompanyJpa> pastCompanies =
+                companyJpaForWorkerManagementRepository.findAllWorkerPastCompaniesByAccountId(
+                        accountId);
+        return pastCompanies.stream()
+                .map(x -> getWorkerPastWorkRecord(accountId, x.getId()))
+                .collect(Collectors.toList());
+    }
+
+    private WorkRecordForWorkerManagement getWorkerPastWorkRecord(Long accountId, Long companyId) {
+        return WorkRecordForWorkerManagement.builder()
+                .tardyCount(getTardyCount(accountId, companyId))
+                .absentCount(getAbsentCount(accountId, companyId))
+                .workDayCount(getWorkDayCount(accountId, companyId))
+                .build();
+    }
+
+    private int getWorkDayCount(Long accountId, Long companyId) {
+        return enterRecordJpaForWorkerManagementRepository.countTotalWorkDayByAccountIdAndCompanyId(
+                accountId, companyId);
+    }
+
+    private int getTardyCount(Long accountId, Long companyId) {
+        return enterRecordJpaForWorkerManagementRepository.countTardyByAccountIdAndCompanyId(
+                accountId, companyId);
+    }
+
+    private int getAbsentCount(Long accountId, Long companyId) {
+        return absentRecordJpaForWorkerManagementRepository.countAbsentByAccountIdAndCompanyId(
+                accountId, companyId);
     }
 }
