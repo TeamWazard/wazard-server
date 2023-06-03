@@ -70,4 +70,14 @@ class WorkerManagementController {
                         getWorkerAttendanceRecordReqDto, year, month);
         return ResponseEntity.ok(getWorkerAttendanceRecordResDto);
     }
+
+    @Certification
+    @GetMapping("/worker-attitude-score/{accountId}")
+    public ResponseEntity<GetWorkerAttitudeScoreResDto> getWorkerAttitudeScore(
+            @PathVariable Long accountId,
+            @Valid @RequestBody GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto) {
+        GetWorkerAttitudeScoreResDto getWorkerAttitudeScoreResDto =
+                workerManagementService.getWorkerAttitudeScore(getWorkerAttitudeScoreReqDto);
+        return ResponseEntity.ok(getWorkerAttitudeScoreResDto);
+    }
 }
