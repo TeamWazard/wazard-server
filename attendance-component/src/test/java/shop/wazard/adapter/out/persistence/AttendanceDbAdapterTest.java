@@ -357,9 +357,12 @@ class AttendanceDbAdapterTest {
     private CompanyJpa setDefaultCompanyJpa() {
         return CompanyJpa.builder()
                 .companyName("companyName")
+                .zipCode(100)
                 .companyAddress("companyAddress")
+                .companyDetailAddress("companyDetailAddress")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test.com")
                 .build();
     }

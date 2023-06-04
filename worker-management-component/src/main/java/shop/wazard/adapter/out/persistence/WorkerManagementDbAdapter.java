@@ -191,7 +191,7 @@ class WorkerManagementDbAdapter
                 companyJpaForWorkerManagementRepository.findAllWorkerPastCompaniesByAccountId(
                         accountId);
         return pastCompanies.stream()
-                .map(x -> getWorkerPastWorkRecord(accountId, x.getId()))
+                .map(company -> getWorkerPastWorkRecord(accountId, company.getId()))
                 .collect(Collectors.toList());
     }
 

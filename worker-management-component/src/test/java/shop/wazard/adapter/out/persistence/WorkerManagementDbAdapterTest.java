@@ -923,9 +923,12 @@ class WorkerManagementDbAdapterTest {
     private CompanyJpa setDefaultCompanyJpa() {
         return CompanyJpa.builder()
                 .companyName("companyName")
+                .zipCode(100)
                 .companyAddress("companyAddress")
+                .companyDetailAddress("companyDeatilAddress")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test.com")
                 .build();
     }
@@ -1170,17 +1173,23 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa companyJpa1 =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         CompanyJpa companyJpa2 =
                 CompanyJpa.builder()
                         .companyName("companyName2")
+                        .zipCode(200)
                         .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
                         .companyContact("02-222-2222")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test2.com")
                         .build();
         CompanyJpa savedCompanyJpa1 = companyJpaForWorkerManagementRepository.save(companyJpa1);

@@ -16,6 +16,4 @@ public class GetWorkerAttitudeScoreReqDto {
     private String email;
 
     @Positive private Long accountId;
-
-    @Positive private Long companyId;
 }
