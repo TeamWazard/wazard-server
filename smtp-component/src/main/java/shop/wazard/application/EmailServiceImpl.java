@@ -41,7 +41,7 @@ class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String sendInviteCode(InviteWorkerReqDto inviteWorkerReqDto) {
+    public String sendInvitationCode(InviteWorkerReqDto inviteWorkerReqDto) {
         MimeMessage emailForm = createInviteCodeForm(inviteWorkerReqDto);
         try {
             log.info(
