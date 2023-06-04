@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BaseStatus {
-
     ACTIVE("ACTIVE"),
     INACTIVE("INACTIVE");
 
     private final String status;
-
 }

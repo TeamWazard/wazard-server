@@ -18,5 +18,4 @@ class FileDbAdapter implements SaveFileRepository {
         LogoImageJpa logoImageJpa = fileJpaRepository.save(fileMapper.toLogoImageJpa(logoImage));
         return fileMapper.toLogoImage(logoImageJpa);
     }
-
 }

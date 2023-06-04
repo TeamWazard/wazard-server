@@ -24,5 +24,4 @@ public class CompanyInfo {
         this.salaryDate = updateCompanyInfoReqDto.getSalaryDate();
         this.logoImageUrl = updateCompanyInfoReqDto.getLogoImageUrl();
     }
-
 }

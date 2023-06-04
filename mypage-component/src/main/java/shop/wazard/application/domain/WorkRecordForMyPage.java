@@ -1,9 +1,8 @@
 package shop.wazard.application.domain;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -14,5 +13,4 @@ public class WorkRecordForMyPage {
     private int workDayCount;
     private LocalDate startWorkingDate;
     private LocalDate endWorkingDate;
-
 }

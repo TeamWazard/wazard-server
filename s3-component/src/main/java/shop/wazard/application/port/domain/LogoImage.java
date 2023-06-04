@@ -10,5 +10,4 @@ public class LogoImage {
     private Long id;
     private String logoImageName;
     private String logoImageUrl;
-
 }

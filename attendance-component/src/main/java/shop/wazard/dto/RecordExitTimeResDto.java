@@ -8,5 +8,4 @@ import lombok.Getter;
 public class RecordExitTimeResDto {
 
     private String message;
-
 }

@@ -1,5 +1,6 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForCompany;
@@ -15,8 +16,6 @@ import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,29 +37,45 @@ class CompanyDbAdapter implements CompanyPort, AccountForCompanyPort, RosterForC
     public void saveCompany(String email, Company company) {
         CompanyJpa companyJpa = companyMapper.toCompanyJpa(company);
         AccountJpa accountJpa = accountJpaForCompanyRepository.findByEmail(email);
-        RosterJpa rosterJpa = companyMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
+        RosterJpa rosterJpa =
+                companyMapper.saveRelationInfo(accountJpa, companyJpa, RosterTypeJpa.EMPLOYER);
         companyJpaRepository.save(companyJpa);
         rosterJpaForCompanyRepository.save(rosterJpa);
     }
 
     @Override
     public Company findCompanyById(Long id) {
-        CompanyJpa companyJpa = companyJpaRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaRepository
+                        .findById(id)
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         return companyMapper.toCompanyDomain(companyJpa);
     }
 
     @Override
     public void updateCompanyInfo(Company company) {
-        CompanyJpa companyJpa = companyJpaRepository.findById(company.getId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaRepository
+                        .findById(company.getId())
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         companyMapper.updateCompanyInfo(companyJpa, company);
     }
 
     @Override
     public void deleteRoster(Long companyId) {
-        CompanyJpa companyJpa = companyJpaRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaRepository
+                        .findById(companyId)
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
         rosterJpaForCompanyRepository.deleteCompanyAccountRel(companyId);
         companyJpaRepository.deleteCompany(companyId);
     }
@@ -73,8 +88,8 @@ class CompanyDbAdapter implements CompanyPort, AccountForCompanyPort, RosterForC
 
     @Override
     public List<GetBelongedCompanyResDto> getBelongedCompanyList(Long accountId) {
-        List<CompanyJpa> ownedCompanyJpaList = companyJpaRepository.findBelongedCompanyList(accountId);
+        List<CompanyJpa> ownedCompanyJpaList =
+                companyJpaRepository.findBelongedCompanyList(accountId);
         return companyMapper.toBelongedCompanyList(ownedCompanyJpaList);
     }
-
 }

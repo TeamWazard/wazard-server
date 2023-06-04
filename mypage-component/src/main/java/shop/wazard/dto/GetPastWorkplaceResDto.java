@@ -12,5 +12,4 @@ public class GetPastWorkplaceResDto {
     private String companyAddress;
     private String companyContact;
     private String logoImageUrl;
-
 }

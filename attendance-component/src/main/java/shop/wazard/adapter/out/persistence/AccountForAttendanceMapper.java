@@ -13,5 +13,4 @@ class AccountForAttendanceMapper {
                 .roles(accountJpa.getRoles())
                 .build();
     }
-
 }

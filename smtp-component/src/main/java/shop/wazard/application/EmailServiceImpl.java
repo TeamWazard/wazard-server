@@ -1,5 +1,7 @@
 package shop.wazard.application;
 
+import java.util.Random;
+import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,19 +14,17 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
 
-import javax.mail.internet.MimeMessage;
-import java.util.Random;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
-    private final SpringTemplateEngine templateEngine;  // 타임리프
+    private final SpringTemplateEngine templateEngine; // 타임리프
 
     @Value("${spring.mail.username}")
     private String senderEmail;
+
     private String authenticationCode;
 
     @Override
@@ -65,7 +65,7 @@ class EmailServiceImpl implements EmailService {
         Random random = new Random();
         StringBuffer code = new StringBuffer();
         for (int i = 0; i < 8; i++) {
-            int idx = random.nextInt(3);  // 0 ~ 2 사이의 난수 발생
+            int idx = random.nextInt(3); // 0 ~ 2 사이의 난수 발생
             switch (idx) {
                 case 0:
                     code.append(Character.toChars(random.nextInt(26) + 97));
@@ -80,5 +80,4 @@ class EmailServiceImpl implements EmailService {
         }
         return authenticationCode = code.toString();
     }
-
 }

@@ -8,5 +8,4 @@ import lombok.Getter;
 public class UpdateMyProfileResDto {
 
     private String message;
-
 }

@@ -25,5 +25,4 @@ public class AccountForMyPage {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
     }
-
 }

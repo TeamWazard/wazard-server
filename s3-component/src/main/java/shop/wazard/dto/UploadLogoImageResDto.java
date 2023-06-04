@@ -10,5 +10,4 @@ public class UploadLogoImageResDto {
     private String message;
     private Long imageId;
     private String imageUrl;
-
 }

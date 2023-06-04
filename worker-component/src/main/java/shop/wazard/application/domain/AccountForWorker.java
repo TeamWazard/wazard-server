@@ -25,5 +25,4 @@ public class AccountForWorker {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
     }
-
 }

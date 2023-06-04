@@ -1,9 +1,8 @@
 package shop.wazard.dto;
 
-import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Builder
@@ -20,5 +19,4 @@ public class GetAllReplaceRecordResDto {
     private LocalDateTime enterTime;
 
     private LocalDateTime exitTime;
-
 }

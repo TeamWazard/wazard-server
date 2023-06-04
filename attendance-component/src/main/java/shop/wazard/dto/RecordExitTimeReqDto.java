@@ -11,5 +11,4 @@ public class RecordExitTimeReqDto {
     private Long accountId;
 
     private Long companyId;
-
 }

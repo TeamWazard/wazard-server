@@ -6,9 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RosterTypeJpa {
-
-    EMPLOYER("EMPLOYER"), EMPLOYEE("EMPLOYEE");
+    EMPLOYER("EMPLOYER"),
+    EMPLOYEE("EMPLOYEE");
 
     public final String roster;
-
 }

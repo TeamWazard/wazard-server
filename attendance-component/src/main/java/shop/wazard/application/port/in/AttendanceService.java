@@ -1,9 +1,8 @@
 package shop.wazard.application.port.in;
 
-import shop.wazard.dto.*;
-
 import java.time.LocalDate;
 import java.util.List;
+import shop.wazard.dto.*;
 
 public interface AttendanceService {
 
@@ -13,8 +12,13 @@ public interface AttendanceService {
 
     RecordExitTimeResDto recordExitTime(RecordExitTimeReqDto recordExitTimeReqDto);
 
-    List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, Long companyId, LocalDate date);
+    List<GetAttendanceByDayOfTheWeekResDto> getAttendancesByDayOfTheWeek(
+            GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto,
+            Long companyId,
+            LocalDate date);
 
-    List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto, Long companyId, LocalDate date);
-
+    List<GetAttendanceByDayOfTheWeekResDto> getMyAttendanceByDayOfTheWeek(
+            GetAttendanceByDayOfTheWeekReqDto getAttendanceByDayOfTheWeekReqDto,
+            Long companyId,
+            LocalDate date);
 }

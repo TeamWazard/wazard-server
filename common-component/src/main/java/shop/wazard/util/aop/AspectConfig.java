@@ -1,5 +1,6 @@
 package shop.wazard.util.aop;
 
+import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,8 +10,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.wazard.util.exception.StatusEnum;
 import shop.wazard.util.jwt.JwtProvider;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Slf4j
@@ -24,12 +23,12 @@ class AspectConfig {
     @Before("@annotation(shop.wazard.util.aop.Certification) && args(accountId,..)")
     public void certificateWithTokenAndAccountId(Long accountId) throws IllegalStateException {
         log.info("============== accountID{}번 회원 본인인증 요청 ==============", accountId);
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        ServletRequestAttributes servletRequestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
         if (!accountId.equals(jwtProvider.getAccountId(request))) {
             log.info("============== 본인인증 실패 ==============");
             throw new IllegalArgumentException(StatusEnum.ACCESS_DENIED.getMessage());
         }
     }
-
 }

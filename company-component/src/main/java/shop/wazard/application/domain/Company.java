@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.RegisterCompanyReqDto;
 
-
 @Getter
 @Builder
 public class Company {

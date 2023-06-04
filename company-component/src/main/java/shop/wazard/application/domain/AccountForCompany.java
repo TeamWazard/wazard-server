@@ -25,5 +25,4 @@ public class AccountForCompany {
             throw new NotAuthorizedException(StatusEnum.NOT_AUTHORIZED.getMessage());
         }
     }
-
 }

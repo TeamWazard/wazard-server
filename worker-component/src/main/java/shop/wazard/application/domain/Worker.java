@@ -10,5 +10,4 @@ public class Worker {
     private LocalDateTime replaceDate;
     private LocalDateTime enterTime;
     private LocalDateTime exitTime;
-
 }

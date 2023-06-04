@@ -13,7 +13,8 @@ public class RosterForWorkerManagement {
     RelationType relationType;
     private BaseStatus baseStatus;
 
-    public static RosterForWorkerManagement createRosterForWorkerManagement(WaitingInfo waitingInfo) {
+    public static RosterForWorkerManagement createRosterForWorkerManagement(
+            WaitingInfo waitingInfo) {
         return RosterForWorkerManagement.builder()
                 .accountId(waitingInfo.getAccountId())
                 .companyId(waitingInfo.getCompanyId())

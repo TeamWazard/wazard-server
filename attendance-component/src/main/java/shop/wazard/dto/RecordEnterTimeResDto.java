@@ -8,5 +8,4 @@ import lombok.Getter;
 public class RecordEnterTimeResDto {
 
     private String message;
-
 }
