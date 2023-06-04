@@ -220,9 +220,12 @@ class CompanyDbAdapterTest {
     private CompanyJpa setDefaultCompanyJpa() {
         return CompanyJpa.builder()
                 .companyName("companyName")
+                .zipCode(100)
                 .companyAddress("companyAddress")
+                .companyDetailAddress("companyDetailAddress")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test.com")
                 .build();
     }
@@ -244,23 +247,32 @@ class CompanyDbAdapterTest {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
         CompanyJpa companyJpa1 = CompanyJpa.builder()
                 .companyName("companyName1")
+                .zipCode(100)
                 .companyAddress("companyAddress1")
+                .companyDetailAddress("companyDetailAddress1")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test1.com")
                 .build();
         CompanyJpa companyJpa2 = CompanyJpa.builder()
                 .companyName("companyName2")
+                .zipCode(200)
                 .companyAddress("companyAddress2")
+                .companyDetailAddress("companyDetailAddress2")
                 .companyContact("02-222-2222")
                 .salaryDate(2)
+                .businessType("type")
                 .logoImageUrl("www.test2.com")
                 .build();
         CompanyJpa companyJpa3 = CompanyJpa.builder()
                 .companyName("companyName3")
+                .zipCode(300)
                 .companyAddress("companyAddress3")
+                .companyDetailAddress("companyDetailAddress3")
                 .companyContact("02-333-3333")
                 .salaryDate(3)
+                .businessType("type")
                 .logoImageUrl("www.test3.com")
                 .build();
 
@@ -292,23 +304,32 @@ class CompanyDbAdapterTest {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
         CompanyJpa companyJpa1 = CompanyJpa.builder()
                 .companyName("companyName1")
+                .zipCode(100)
                 .companyAddress("companyAddress1")
+                .companyDetailAddress("companyDetailAddress1")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test1.com")
                 .build();
         CompanyJpa companyJpa2 = CompanyJpa.builder()
                 .companyName("companyName2")
+                .zipCode(200)
                 .companyAddress("companyAddress2")
+                .companyDetailAddress("companyDetailAddress2")
                 .companyContact("02-222-2222")
                 .salaryDate(2)
+                .businessType("type")
                 .logoImageUrl("www.test2.com")
                 .build();
         CompanyJpa companyJpa3 = CompanyJpa.builder()
                 .companyName("companyName3")
+                .zipCode(300)
                 .companyAddress("companyAddress3")
+                .companyDetailAddress("companyDetailAddress3")
                 .companyContact("02-333-3333")
                 .salaryDate(3)
+                .businessType("type")
                 .logoImageUrl("www.test3.com")
                 .build();
 
