@@ -41,7 +41,7 @@ class EmailServiceImpl implements EmailService {
 
     @Override
     public String sendInvitationCode(InviteWorkerReqDto inviteWorkerReqDto) {
-        MimeMessage emailForm = createInviteCodeForm(inviteWorkerReqDto);
+        MimeMessage emailForm = createInvitationMailForm(inviteWorkerReqDto);
         try {
             log.info(
                     "================== email = {}, 메일 전송 시작 ====================",
@@ -54,7 +54,7 @@ class EmailServiceImpl implements EmailService {
         return createCode();
     }
 
-    private MimeMessage createInviteCodeForm(InviteWorkerReqDto inviteWorkerReqDto) {
+    private MimeMessage createInvitationMailForm(InviteWorkerReqDto inviteWorkerReqDto) {
         String title = "Wazard 업장 초대 인증번호";
         return getMimeMessage(inviteWorkerReqDto, title);
     }
