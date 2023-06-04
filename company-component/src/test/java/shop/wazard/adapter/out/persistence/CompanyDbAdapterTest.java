@@ -24,10 +24,6 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.util.List;
-
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
@@ -55,26 +51,27 @@ class CompanyDbAdapterTest {
     @DisplayName("고용주 - 업장 등록 - CompanyJpa 저장")
     public void saveCompanyJpaSuccess() throws Exception {
         // given
-        AccountForCompany accountForCompany = AccountForCompany.builder()
-                .id(1L)
-                .roles("EMPLOYER")
-                .email("test@email.com")
-                .userName("name")
-                .build();
-        Company company = Company.builder()
-                .companyInfo(
-                        CompanyInfo.builder()
-                                .companyName("companyName")
-                                .zipCode(100)
-                                .companyAddress("companyAddress")
-                                .companyDetailAddress("companyDetailAddress")
-                                .companyContact("02-111-1111")
-                                .salaryDate(1)
-                                .businessType("type")
-                                .logoImageUrl("www.test.com")
-                                .build()
-                )
-                .build();
+        AccountForCompany accountForCompany =
+                AccountForCompany.builder()
+                        .id(1L)
+                        .roles("EMPLOYER")
+                        .email("test@email.com")
+                        .userName("name")
+                        .build();
+        Company company =
+                Company.builder()
+                        .companyInfo(
+                                CompanyInfo.builder()
+                                        .companyName("companyName")
+                                        .zipCode(100)
+                                        .companyAddress("companyAddress")
+                                        .companyDetailAddress("companyDetailAddress")
+                                        .companyContact("02-111-1111")
+                                        .salaryDate(1)
+                                        .businessType("type")
+                                        .logoImageUrl("www.test.com")
+                                        .build())
+                        .build();
 
         // when
         AccountJpa accountJpa =
@@ -84,15 +81,35 @@ class CompanyDbAdapterTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), result.getCompanyName()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getZipCode(), result.getZipCode()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), result.getCompanyAddress()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyDetailAddress(), result.getCompanyDetailAddress()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), result.getCompanyContact()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), result.getSalaryDate()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getBusinessType(), result.getBusinessType()),
-                () -> Assertions.assertEquals(company.getCompanyInfo().getLogoImageUrl(), result.getLogoImageUrl())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getCompanyName(), result.getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getZipCode(), result.getZipCode()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getCompanyAddress(),
+                                result.getCompanyAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getCompanyDetailAddress(),
+                                result.getCompanyDetailAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getCompanyContact(),
+                                result.getCompanyContact()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getSalaryDate(), result.getSalaryDate()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getBusinessType(),
+                                result.getBusinessType()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getLogoImageUrl(),
+                                result.getLogoImageUrl()));
     }
 
     @Test
@@ -265,36 +282,39 @@ class CompanyDbAdapterTest {
 
     private Long setDefaultOwnedCompanyList() {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
-        CompanyJpa companyJpa1 = CompanyJpa.builder()
-                .companyName("companyName1")
-                .zipCode(100)
-                .companyAddress("companyAddress1")
-                .companyDetailAddress("companyDetailAddress1")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .businessType("type")
-                .logoImageUrl("www.test1.com")
-                .build();
-        CompanyJpa companyJpa2 = CompanyJpa.builder()
-                .companyName("companyName2")
-                .zipCode(200)
-                .companyAddress("companyAddress2")
-                .companyDetailAddress("companyDetailAddress2")
-                .companyContact("02-222-2222")
-                .salaryDate(2)
-                .businessType("type")
-                .logoImageUrl("www.test2.com")
-                .build();
-        CompanyJpa companyJpa3 = CompanyJpa.builder()
-                .companyName("companyName3")
-                .zipCode(300)
-                .companyAddress("companyAddress3")
-                .companyDetailAddress("companyDetailAddress3")
-                .companyContact("02-333-3333")
-                .salaryDate(3)
-                .businessType("type")
-                .logoImageUrl("www.test3.com")
-                .build();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .zipCode(100)
+                        .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .businessType("type")
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .zipCode(200)
+                        .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(2)
+                        .businessType("type")
+                        .logoImageUrl("www.test2.com")
+                        .build();
+        CompanyJpa companyJpa3 =
+                CompanyJpa.builder()
+                        .companyName("companyName3")
+                        .zipCode(300)
+                        .companyAddress("companyAddress3")
+                        .companyDetailAddress("companyDetailAddress3")
+                        .companyContact("02-333-3333")
+                        .salaryDate(3)
+                        .businessType("type")
+                        .logoImageUrl("www.test3.com")
+                        .build();
 
         AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa1 = companyJpaRepository.save(companyJpa1);
@@ -325,36 +345,39 @@ class CompanyDbAdapterTest {
 
     private Long setDefaultBelongedCompanyList() {
         AccountJpa accountJpa = setDefaultEmployerAccountJpa();
-        CompanyJpa companyJpa1 = CompanyJpa.builder()
-                .companyName("companyName1")
-                .zipCode(100)
-                .companyAddress("companyAddress1")
-                .companyDetailAddress("companyDetailAddress1")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .businessType("type")
-                .logoImageUrl("www.test1.com")
-                .build();
-        CompanyJpa companyJpa2 = CompanyJpa.builder()
-                .companyName("companyName2")
-                .zipCode(200)
-                .companyAddress("companyAddress2")
-                .companyDetailAddress("companyDetailAddress2")
-                .companyContact("02-222-2222")
-                .salaryDate(2)
-                .businessType("type")
-                .logoImageUrl("www.test2.com")
-                .build();
-        CompanyJpa companyJpa3 = CompanyJpa.builder()
-                .companyName("companyName3")
-                .zipCode(300)
-                .companyAddress("companyAddress3")
-                .companyDetailAddress("companyDetailAddress3")
-                .companyContact("02-333-3333")
-                .salaryDate(3)
-                .businessType("type")
-                .logoImageUrl("www.test3.com")
-                .build();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .zipCode(100)
+                        .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .businessType("type")
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .zipCode(200)
+                        .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(2)
+                        .businessType("type")
+                        .logoImageUrl("www.test2.com")
+                        .build();
+        CompanyJpa companyJpa3 =
+                CompanyJpa.builder()
+                        .companyName("companyName3")
+                        .zipCode(300)
+                        .companyAddress("companyAddress3")
+                        .companyDetailAddress("companyDetailAddress3")
+                        .companyContact("02-333-3333")
+                        .salaryDate(3)
+                        .businessType("type")
+                        .logoImageUrl("www.test3.com")
+                        .build();
 
         AccountJpa savedAccountJpa = accountJpaForCompanyRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa1 = companyJpaRepository.save(companyJpa1);

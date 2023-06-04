@@ -604,16 +604,17 @@ class MyPageDbAdapterTest {
     }
 
     private CompanyJpa setDefaultCompanyJpa() {
-        CompanyJpa companyJpa = CompanyJpa.builder()
-                .companyName("companyName1")
-                .zipCode(100)
-                .companyAddress("companyAddress1")
-                .companyDetailAddress("companyDetailAddress")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .businessType("type")
-                .logoImageUrl("www.test1.com")
-                .build();
+        CompanyJpa companyJpa =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .zipCode(100)
+                        .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .businessType("type")
+                        .logoImageUrl("www.test1.com")
+                        .build();
         return companyJpa;
     }
 
@@ -654,26 +655,28 @@ class MyPageDbAdapterTest {
 
     private List<CompanyJpa> setDefaultCompanyJpaList() {
         List<CompanyJpa> companyJpaList = new ArrayList<>();
-        CompanyJpa companyJpa1 = CompanyJpa.builder()
-                .companyName("companyName1")
-                .zipCode(100)
-                .companyAddress("companyAddress1")
-                .companyDetailAddress("companyDetailAddress1")
-                .companyContact("02-111-1111")
-                .salaryDate(1)
-                .businessType("type")
-                .logoImageUrl("www.test1.com")
-                .build();
-        CompanyJpa companyJpa2 = CompanyJpa.builder()
-                .companyName("companyName2")
-                .zipCode(200)
-                .companyAddress("companyAddress2")
-                .companyDetailAddress("companyDetailAddress2")
-                .companyContact("02-222-2222")
-                .salaryDate(1)
-                .businessType("type")
-                .logoImageUrl("www.test2.com")
-                .build();
+        CompanyJpa companyJpa1 =
+                CompanyJpa.builder()
+                        .companyName("companyName1")
+                        .zipCode(100)
+                        .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
+                        .companyContact("02-111-1111")
+                        .salaryDate(1)
+                        .businessType("type")
+                        .logoImageUrl("www.test1.com")
+                        .build();
+        CompanyJpa companyJpa2 =
+                CompanyJpa.builder()
+                        .companyName("companyName2")
+                        .zipCode(200)
+                        .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
+                        .companyContact("02-222-2222")
+                        .salaryDate(1)
+                        .businessType("type")
+                        .logoImageUrl("www.test2.com")
+                        .build();
         CompanyJpa savedCompanyJpa1 = companyJpaForMyPageRepository.save(companyJpa1);
         CompanyJpa savedCompanyJpa2 = companyJpaForMyPageRepository.save(companyJpa2);
         companyJpaList.add(savedCompanyJpa1);

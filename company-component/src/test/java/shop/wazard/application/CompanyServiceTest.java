@@ -36,16 +36,17 @@ class CompanyServiceTest {
     @DisplayName("고용주 - 업장 등록 - 성공")
     public void registerCompanySuccess() throws Exception {
         // given
-        RegisterCompanyReqDto registerCompanyReqDto = RegisterCompanyReqDto.builder()
-                .email("test@email.com")
-                .companyName("테스트 이름")
-                .zipCode(100)
-                .companyAddress("테스트 주소")
-                .companyDetailAddress("상세 주소")
-                .companyContact("02-123-1234")
-                .businessType("업종")
-                .salaryDate(10)
-                .build();
+        RegisterCompanyReqDto registerCompanyReqDto =
+                RegisterCompanyReqDto.builder()
+                        .email("test@email.com")
+                        .companyName("테스트 이름")
+                        .zipCode(100)
+                        .companyAddress("테스트 주소")
+                        .companyDetailAddress("상세 주소")
+                        .companyContact("02-123-1234")
+                        .businessType("업종")
+                        .salaryDate(10)
+                        .build();
         AccountForCompany accountForCompany = setDefaultEmployerAccountForManagement();
         Company company = setDefaultCompanyForManagement();
 
