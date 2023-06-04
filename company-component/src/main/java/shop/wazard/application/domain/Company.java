@@ -16,9 +16,13 @@ public class Company {
                 .companyInfo(
                         CompanyInfo.builder()
                                 .companyName(registerCompanyReqDto.getCompanyName())
+                                .zipCode(registerCompanyReqDto.getZipCode())
                                 .companyAddress(registerCompanyReqDto.getCompanyAddress())
+                                .companyDetailAddress(
+                                        registerCompanyReqDto.getCompanyDetailAddress())
                                 .companyContact(registerCompanyReqDto.getCompanyContact())
                                 .salaryDate(registerCompanyReqDto.getSalaryDate())
+                                .businessType(registerCompanyReqDto.getBusinessType())
                                 .logoImageUrl(registerCompanyReqDto.getLogoImageUrl())
                                 .build())
                 .build();

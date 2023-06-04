@@ -98,7 +98,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
+    @DisplayName("근무자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
     void getCompanyForGetMyPastWorkRecordAPI() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -134,7 +134,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 지각 횟수 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 총 지각 횟수 조회 - EnterRecordJpa 조회")
     void getTardyCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -154,7 +154,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 결석 횟수 조회 - AbsentJpa 조회")
+    @DisplayName("근무자 - 총 결석 횟수 조회 - AbsentJpa 조회")
     void getAbsentCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -173,7 +173,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 처음 근무 시작한 날 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 처음 근무 시작한 날 조회 - EnterRecordJpa 조회")
     void getStartWorkDate() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -195,7 +195,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 근무 계약 끝난 날짜 조회 - ExitRecordJpa 조회")
+    @DisplayName("근무자 - 근무 계약 끝난 날짜 조회 - ExitRecordJpa 조회")
     void getEndWorkDate() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -224,7 +224,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 근무한 일수 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 총 근무한 일수 조회 - EnterRecordJpa 조회")
     void getWorkDayCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -607,9 +607,12 @@ class MyPageDbAdapterTest {
         CompanyJpa companyJpa =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         return companyJpa;
@@ -655,17 +658,23 @@ class MyPageDbAdapterTest {
         CompanyJpa companyJpa1 =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         CompanyJpa companyJpa2 =
                 CompanyJpa.builder()
                         .companyName("companyName2")
+                        .zipCode(200)
                         .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
                         .companyContact("02-222-2222")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test2.com")
                         .build();
         CompanyJpa savedCompanyJpa1 = companyJpaForMyPageRepository.save(companyJpa1);

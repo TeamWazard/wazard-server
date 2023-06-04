@@ -28,7 +28,6 @@ import shop.wazard.entity.company.RosterTypeJpa;
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
-// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(
         classes = {
             EntityManager.class,
@@ -64,9 +63,12 @@ class CompanyDbAdapterTest {
                         .companyInfo(
                                 CompanyInfo.builder()
                                         .companyName("companyName")
+                                        .zipCode(100)
                                         .companyAddress("companyAddress")
+                                        .companyDetailAddress("companyDetailAddress")
                                         .companyContact("02-111-1111")
                                         .salaryDate(1)
+                                        .businessType("type")
                                         .logoImageUrl("www.test.com")
                                         .build())
                         .build();
@@ -81,22 +83,33 @@ class CompanyDbAdapterTest {
         Assertions.assertAll(
                 () ->
                         Assertions.assertEquals(
-                                result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
+                                company.getCompanyInfo().getCompanyName(), result.getCompanyName()),
                 () ->
                         Assertions.assertEquals(
-                                result.getCompanyAddress(),
-                                company.getCompanyInfo().getCompanyAddress()),
+                                company.getCompanyInfo().getZipCode(), result.getZipCode()),
                 () ->
                         Assertions.assertEquals(
-                                result.getCompanyContact(),
-                                company.getCompanyInfo().getCompanyContact()),
+                                company.getCompanyInfo().getCompanyAddress(),
+                                result.getCompanyAddress()),
                 () ->
                         Assertions.assertEquals(
-                                result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
+                                company.getCompanyInfo().getCompanyDetailAddress(),
+                                result.getCompanyDetailAddress()),
                 () ->
                         Assertions.assertEquals(
-                                result.getLogoImageUrl(),
-                                company.getCompanyInfo().getLogoImageUrl()));
+                                company.getCompanyInfo().getCompanyContact(),
+                                result.getCompanyContact()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getSalaryDate(), result.getSalaryDate()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getBusinessType(),
+                                result.getBusinessType()),
+                () ->
+                        Assertions.assertEquals(
+                                company.getCompanyInfo().getLogoImageUrl(),
+                                result.getLogoImageUrl()));
     }
 
     @Test
@@ -244,9 +257,12 @@ class CompanyDbAdapterTest {
     private CompanyJpa setDefaultCompanyJpa() {
         return CompanyJpa.builder()
                 .companyName("companyName")
+                .zipCode(100)
                 .companyAddress("companyAddress")
+                .companyDetailAddress("companyDetailAddress")
                 .companyContact("02-111-1111")
                 .salaryDate(1)
+                .businessType("type")
                 .logoImageUrl("www.test.com")
                 .build();
     }
@@ -269,25 +285,34 @@ class CompanyDbAdapterTest {
         CompanyJpa companyJpa1 =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         CompanyJpa companyJpa2 =
                 CompanyJpa.builder()
                         .companyName("companyName2")
+                        .zipCode(200)
                         .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
                         .companyContact("02-222-2222")
                         .salaryDate(2)
+                        .businessType("type")
                         .logoImageUrl("www.test2.com")
                         .build();
         CompanyJpa companyJpa3 =
                 CompanyJpa.builder()
                         .companyName("companyName3")
+                        .zipCode(300)
                         .companyAddress("companyAddress3")
+                        .companyDetailAddress("companyDetailAddress3")
                         .companyContact("02-333-3333")
                         .salaryDate(3)
+                        .businessType("type")
                         .logoImageUrl("www.test3.com")
                         .build();
 
@@ -323,25 +348,34 @@ class CompanyDbAdapterTest {
         CompanyJpa companyJpa1 =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         CompanyJpa companyJpa2 =
                 CompanyJpa.builder()
                         .companyName("companyName2")
+                        .zipCode(200)
                         .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
                         .companyContact("02-222-2222")
                         .salaryDate(2)
+                        .businessType("type")
                         .logoImageUrl("www.test2.com")
                         .build();
         CompanyJpa companyJpa3 =
                 CompanyJpa.builder()
                         .companyName("companyName3")
+                        .zipCode(300)
                         .companyAddress("companyAddress3")
+                        .companyDetailAddress("companyDetailAddress3")
                         .companyContact("02-333-3333")
                         .salaryDate(3)
+                        .businessType("type")
                         .logoImageUrl("www.test3.com")
                         .build();
 
