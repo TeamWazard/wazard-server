@@ -1,5 +1,11 @@
 package shop.wazard.adapter.out.persistence;
 
+import static shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,13 +26,6 @@ import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
