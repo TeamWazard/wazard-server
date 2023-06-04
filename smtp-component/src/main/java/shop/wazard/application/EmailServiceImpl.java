@@ -1,7 +1,5 @@
 package shop.wazard.application;
 
-import java.util.Random;
-import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,9 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.dto.InviteWorkerReqDto;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
+
+import javax.mail.internet.MimeMessage;
+import java.util.Random;
 
 @Service
 @Slf4j
