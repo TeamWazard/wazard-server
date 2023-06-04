@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.wazard.application.port.in.EmailService;
 import shop.wazard.dto.EmailAuthReqDto;
 import shop.wazard.dto.EmailAuthResDto;
+import shop.wazard.dto.InviteWorkerReqDto;
+import shop.wazard.dto.InviteWorkerResDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +26,15 @@ class EmailController {
         return ResponseEntity.ok(
                 EmailAuthResDto.builder()
                         .authenticationCode(emailService.sendEmail(emailAuthReqDto.getEmail()))
+                        .build());
+    }
+
+    @PostMapping("/invitation/workers")
+    public ResponseEntity<InviteWorkerResDto> sendInvitationCode(
+            @Valid @RequestBody InviteWorkerReqDto inviteWorkerReqDto) {
+        return ResponseEntity.ok(
+                InviteWorkerResDto.builder()
+                        .invitationCode(emailService.sendInvitationCode(inviteWorkerReqDto))
                         .build());
     }
 }

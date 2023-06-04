@@ -97,7 +97,7 @@ class EmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable("companyName", inviteWorkerReqDto.getCompanyName());
         context.setVariable("code", code);
-        return templateEngine.process("inviteMailForm", context);
+        return templateEngine.process("invitationMailForm", context);
     }
 
     private String setContextForCertification(String code) {
