@@ -19,9 +19,12 @@ class CompanyMapper {
     public CompanyJpa toCompanyJpa(Company company) {
         return CompanyJpa.builder()
                 .companyName(company.getCompanyInfo().getCompanyName())
+                .zipCode(company.getCompanyInfo().getZipCode())
                 .companyAddress(company.getCompanyInfo().getCompanyAddress())
+                .companyDetailAddress(company.getCompanyInfo().getCompanyDetailAddress())
                 .companyContact(company.getCompanyInfo().getCompanyContact())
                 .salaryDate(company.getCompanyInfo().getSalaryDate())
+                .businessType(company.getCompanyInfo().getBusinessType())
                 .logoImageUrl(company.getCompanyInfo().getLogoImageUrl())
                 .build();
     }

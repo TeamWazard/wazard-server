@@ -53,10 +53,13 @@ public class CompanyJpa extends BaseEntity {
 
 
     @Builder
-    public CompanyJpa(String companyName, String companyAddress, String companyContact, int salaryDate, String logoImageUrl) {
+    public CompanyJpa(String companyName, int zipCode, String companyAddress, String companyDetailAddress, String companyContact, String businessType, int salaryDate, String logoImageUrl) {
         this.companyName = companyName;
+        this.zipCode = zipCode;
         this.companyAddress = companyAddress;
+        this.companyDetailAddress = companyDetailAddress;
         this.companyContact = companyContact;
+        this.businessType = businessType;
         this.salaryDate = salaryDate;
         this.logoImageUrl = logoImageUrl;
     }

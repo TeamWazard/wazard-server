@@ -9,9 +9,12 @@ import shop.wazard.dto.UpdateCompanyInfoReqDto;
 public class CompanyInfo {
 
     private String companyName;
+    private int zipCode;
     private String companyAddress;
+    private String companyDetailAddress;
     private String companyContact;
     private int salaryDate;
+    private String businessType;
     private String logoImageUrl;
 
     public void updateCompanyInfo(UpdateCompanyInfoReqDto updateCompanyInfoReqDto) {
