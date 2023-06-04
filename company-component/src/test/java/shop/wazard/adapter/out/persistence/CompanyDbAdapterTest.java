@@ -60,9 +60,12 @@ class CompanyDbAdapterTest {
                 .companyInfo(
                         CompanyInfo.builder()
                                 .companyName("companyName")
+                                .zipCode(100)
                                 .companyAddress("companyAddress")
+                                .companyDetailAddress("companyDetailAddress")
                                 .companyContact("02-111-1111")
                                 .salaryDate(1)
+                                .businessType("type")
                                 .logoImageUrl("www.test.com")
                                 .build()
                 )
@@ -75,11 +78,14 @@ class CompanyDbAdapterTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(result.getCompanyName(), company.getCompanyInfo().getCompanyName()),
-                () -> Assertions.assertEquals(result.getCompanyAddress(), company.getCompanyInfo().getCompanyAddress()),
-                () -> Assertions.assertEquals(result.getCompanyContact(), company.getCompanyInfo().getCompanyContact()),
-                () -> Assertions.assertEquals(result.getSalaryDate(), company.getCompanyInfo().getSalaryDate()),
-                () -> Assertions.assertEquals(result.getLogoImageUrl(), company.getCompanyInfo().getLogoImageUrl())
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyName(), result.getCompanyName()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getZipCode(), result.getZipCode()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyAddress(), result.getCompanyAddress()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyDetailAddress(), result.getCompanyDetailAddress()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getCompanyContact(), result.getCompanyContact()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getSalaryDate(), result.getSalaryDate()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getBusinessType(), result.getBusinessType()),
+                () -> Assertions.assertEquals(company.getCompanyInfo().getLogoImageUrl(), result.getLogoImageUrl())
         );
     }
 
