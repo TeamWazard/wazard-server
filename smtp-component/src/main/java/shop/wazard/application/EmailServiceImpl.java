@@ -1,7 +1,5 @@
 package shop.wazard.application;
 
-import java.util.Random;
-import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,9 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.dto.InviteWorkerReqDto;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
+
+import javax.mail.internet.MimeMessage;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -41,7 +42,7 @@ class EmailServiceImpl implements EmailService {
 
     @Override
     public String sendInvitationCode(InviteWorkerReqDto inviteWorkerReqDto) {
-        MimeMessage emailForm = createInviteCodeForm(inviteWorkerReqDto);
+        MimeMessage emailForm = createInvitationMailForm(inviteWorkerReqDto);
         try {
             log.info(
                     "================== email = {}, 메일 전송 시작 ====================",
@@ -54,7 +55,7 @@ class EmailServiceImpl implements EmailService {
         return createCode();
     }
 
-    private MimeMessage createInviteCodeForm(InviteWorkerReqDto inviteWorkerReqDto) {
+    private MimeMessage createInvitationMailForm(InviteWorkerReqDto inviteWorkerReqDto) {
         String title = "Wazard 업장 초대 인증번호";
         return getMimeMessage(inviteWorkerReqDto, title);
     }
