@@ -1,11 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import static shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +20,13 @@ import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static shop.wazard.entity.common.BaseEntity.BaseStatusJpa;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -98,7 +99,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
+    @DisplayName("근무자 - 과거 근무 기록 상세 조회를 위한 업장 정보 조회 - CompanyJpa 조회")
     void getCompanyForGetMyPastWorkRecordAPI() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -134,7 +135,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 지각 횟수 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 총 지각 횟수 조회 - EnterRecordJpa 조회")
     void getTardyCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -154,7 +155,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 결석 횟수 조회 - AbsentJpa 조회")
+    @DisplayName("근무자 - 총 결석 횟수 조회 - AbsentJpa 조회")
     void getAbsentCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -173,7 +174,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 처음 근무 시작한 날 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 처음 근무 시작한 날 조회 - EnterRecordJpa 조회")
     void getStartWorkDate() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -195,7 +196,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 근무 계약 끝난 날짜 조회 - ExitRecordJpa 조회")
+    @DisplayName("근무자 - 근무 계약 끝난 날짜 조회 - ExitRecordJpa 조회")
     void getEndWorkDate() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
@@ -224,7 +225,7 @@ class MyPageDbAdapterTest {
     }
 
     @Test
-    @DisplayName("근로자 - 총 근무한 일수 조회 - EnterRecordJpa 조회")
+    @DisplayName("근무자 - 총 근무한 일수 조회 - EnterRecordJpa 조회")
     void getWorkDayCount() throws Exception {
         // given
         AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
