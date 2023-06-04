@@ -152,7 +152,7 @@ class MyPageServiceImplTest {
     void getMyAttitudeScore() throws Exception {
         // given
         GetMyAttitudeScoreReqDto getMyAttitudeScoreReqDto =
-                GetMyAttitudeScoreReqDto.builder().email("test@email.com").companyId(2L).build();
+                GetMyAttitudeScoreReqDto.builder().email("test@email.com").build();
         AccountForMyPage accountForAttendance = setDefaultEmployeeAccountForManagement();
         List<WorkRecordForMyPage> workRecordForMyPageList = setDefaultMyPastWorkRecordList();
 
