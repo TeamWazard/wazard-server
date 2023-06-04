@@ -525,7 +525,6 @@ class WorkerManagementServiceTest {
                 GetWorkerAttitudeScoreReqDto.builder()
                         .email("test@email.com")
                         .accountId(1L)
-                        .companyId(2L)
                         .build();
         AccountForWorkerManagement accountForAttendance =
                 setDefaultEmployerAccountForWorkerManagement();
