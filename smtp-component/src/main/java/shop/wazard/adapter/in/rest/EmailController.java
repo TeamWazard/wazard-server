@@ -1,6 +1,5 @@
 package shop.wazard.adapter.in.rest;
 
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +11,8 @@ import shop.wazard.dto.EmailAuthReqDto;
 import shop.wazard.dto.EmailAuthResDto;
 import shop.wazard.dto.InviteWorkerReqDto;
 import shop.wazard.dto.InviteWorkerResDto;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ class EmailController {
     }
 
     @PostMapping("/invitation/workers")
-    public ResponseEntity<InviteWorkerResDto> dd(
+    public ResponseEntity<InviteWorkerResDto> sendInvitationCode(
             @Valid @RequestBody InviteWorkerReqDto inviteWorkerReqDto) {
         return ResponseEntity.ok(
                 InviteWorkerResDto.builder()
