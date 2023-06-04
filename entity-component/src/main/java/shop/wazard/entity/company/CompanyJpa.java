@@ -25,7 +25,13 @@ public class CompanyJpa extends BaseEntity {
     private String companyName;
 
     @Column(nullable = false)
+    private int zipCode;
+
+    @Column(nullable = false)
     private String companyAddress;
+
+    @Column(unique = false)
+    private String companyDetailAddress;
 
     @Column(nullable = false)
     private String companyContact;
