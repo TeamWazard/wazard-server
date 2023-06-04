@@ -1,7 +1,5 @@
 package shop.wazard.application;
 
-import java.util.Random;
-import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,9 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.dto.InviteWorkerReqDto;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
+
+import javax.mail.internet.MimeMessage;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -97,7 +98,7 @@ class EmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable("companyName", inviteWorkerReqDto.getCompanyName());
         context.setVariable("code", code);
-        return templateEngine.process("inviteMailForm", context);
+        return templateEngine.process("invitationMailForm", context);
     }
 
     private String setContextForCertification(String code) {
