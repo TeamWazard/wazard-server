@@ -7,5 +7,4 @@ public interface EmailService {
     String sendEmail(String email);
 
     String sendInviteCode(InviteWorkerReqDto inviteWorkerReqDto);
-
 }

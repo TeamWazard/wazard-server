@@ -1,5 +1,7 @@
 package shop.wazard.application;
 
+import java.util.Random;
+import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +14,6 @@ import shop.wazard.application.port.in.EmailService;
 import shop.wazard.dto.InviteWorkerReqDto;
 import shop.wazard.exception.FailCreateEmailForm;
 import shop.wazard.exception.FailSendEmail;
-
-import javax.mail.internet.MimeMessage;
-import java.util.Random;
 
 @Service
 @Slf4j
@@ -44,7 +43,9 @@ class EmailServiceImpl implements EmailService {
     public String sendInviteCode(InviteWorkerReqDto inviteWorkerReqDto) {
         MimeMessage emailForm = createInviteCodeForm(inviteWorkerReqDto);
         try {
-            log.info("================== email = {}, 메일 전송 시작 ====================", inviteWorkerReqDto.getEmail());
+            log.info(
+                    "================== email = {}, 메일 전송 시작 ====================",
+                    inviteWorkerReqDto.getEmail());
             emailSender.send(emailForm);
         } catch (MailException e) {
             log.info("메일 전송에 실패, message = {}", e.getMessage(), e);
@@ -69,7 +70,8 @@ class EmailServiceImpl implements EmailService {
             message.addRecipients(MimeMessage.RecipientType.TO, inviteWorkerReqDto.getEmail());
             message.setSubject(title);
             message.setFrom(senderEmail);
-            message.setText(setContextForInviteWorker(inviteWorkerReqDto, createCode()), "utf-8", "html");
+            message.setText(
+                    setContextForInviteWorker(inviteWorkerReqDto, createCode()), "utf-8", "html");
         } catch (Exception e) {
             log.info("메일 폼 작성에 실패, message = {}", e.getMessage(), e);
             throw new FailCreateEmailForm("메일 폼 작성에 실패했습니다.");
