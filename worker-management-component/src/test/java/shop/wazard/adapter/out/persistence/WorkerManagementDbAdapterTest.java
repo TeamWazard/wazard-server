@@ -1,10 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +21,12 @@ import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.*;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -1173,17 +1174,23 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa companyJpa1 =
                 CompanyJpa.builder()
                         .companyName("companyName1")
+                        .zipCode(100)
                         .companyAddress("companyAddress1")
+                        .companyDetailAddress("companyDetailAddress1")
                         .companyContact("02-111-1111")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test1.com")
                         .build();
         CompanyJpa companyJpa2 =
                 CompanyJpa.builder()
                         .companyName("companyName2")
+                        .zipCode(200)
                         .companyAddress("companyAddress2")
+                        .companyDetailAddress("companyDetailAddress2")
                         .companyContact("02-222-2222")
                         .salaryDate(1)
+                        .businessType("type")
                         .logoImageUrl("www.test2.com")
                         .build();
         CompanyJpa savedCompanyJpa1 = companyJpaForWorkerManagementRepository.save(companyJpa1);
