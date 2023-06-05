@@ -58,5 +58,5 @@ class WorkerManagementController {
         List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList = workerManagementService.getAllReplaceRecord(getAllReplaceRecordReqDto);
         return ResponseEntity.ok(getAllReplaceRecordResDtoList);
     }
-
+  
 }
