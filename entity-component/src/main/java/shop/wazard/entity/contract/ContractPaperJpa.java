@@ -1,12 +1,11 @@
 package shop.wazard.entity.contract;
 
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
