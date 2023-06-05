@@ -14,6 +14,7 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.RosterTypeJpa;
 import shop.wazard.entity.company.WaitingListJpa;
+import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.exception.RosterNotFoundException;
@@ -36,6 +37,7 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
     private final EnterRecordJpaForWorkerManagementRepository enterRecordJpaForWorkerManagementRepository;
     private final AbsentRecordJpaForWorkerManagementRepository absentRecordJpaForWorkerManagementRepository;
     private final ExitRecordJpaForWorkerManagementRepository exitRecordJpaForWorkerManagementRepository;
+    private final ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
@@ -109,6 +111,10 @@ class WorkerManagementDbAdapter implements AccountForWorkerManagementPort, Roste
 
     @Override
     public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
-        return null;
+        CompanyJpa companyJpa = companyJpaForWorkerManagementRepository.findById(getAllReplaceRecordReqDto.getCompanyId())
+                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
+        return workerForManagementMapper.toAllReplaceRecord(replaceWorkerJpaList);
     }
+
 }

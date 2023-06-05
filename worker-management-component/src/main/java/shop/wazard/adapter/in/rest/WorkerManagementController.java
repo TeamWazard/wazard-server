@@ -45,4 +45,11 @@ class WorkerManagementController {
         return ResponseEntity.ok(waitingWorkerList);
     }
 
+    @Certification
+    @GetMapping("/workers/replace/{accountId}")
+    public ResponseEntity<List<GetAllReplaceRecordResDto>> getAllReplaceRecord(@PathVariable Long accountId, @Valid @RequestBody GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList = workerManagementService.getAllReplaceRecord(getAllReplaceRecordReqDto);
+        return ResponseEntity.ok(getAllReplaceRecordResDtoList);
+    }
+
 }
