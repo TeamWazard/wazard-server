@@ -11,6 +11,7 @@ import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.company.RosterJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
+import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,6 +87,18 @@ class WorkerManagementMapper {
                 .commuteRecordResDtoList(commuteRecordDtoList)
                 .absentRecordResDtoList(absentRecordDtoList)
                 .build();
+    }
+
+    public List<GetAllReplaceRecordResDto> toAllReplaceRecord(List<ReplaceWorkerJpa> replaceWorkerJpaList) {
+        return replaceWorkerJpaList.stream()
+                .map(ReplaceWorkerJpa -> GetAllReplaceRecordResDto.builder()
+                        .userName(ReplaceWorkerJpa.getAccountJpa().getUserName())
+                        .replaceWorkerName(ReplaceWorkerJpa.getReplaceWorkerName())
+                        .replaceDate(ReplaceWorkerJpa.getReplaceDate())
+                        .enterTime(ReplaceWorkerJpa.getEnterTime())
+                        .exitTime(ReplaceWorkerJpa.getExitTime())
+                        .build()
+                ).collect(Collectors.toList());
     }
 
 }
