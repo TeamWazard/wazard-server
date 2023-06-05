@@ -15,6 +15,7 @@ import shop.wazard.application.port.out.*;
 import shop.wazard.dto.*;
 import shop.wazard.exception.JoinWorkerDeniedException;
 import shop.wazard.exception.NotAuthorizedException;
+import shop.wazard.exception.UnsupportedDateException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -302,8 +303,8 @@ class WorkerManagementServiceTest {
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 1999, 1)),
-                () -> Assertions.assertThrows(IllegalArgumentException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2024, 1))
+                () -> Assertions.assertThrows(UnsupportedDateException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 1999, 1)),
+                () -> Assertions.assertThrows(UnsupportedDateException.class, () -> workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, 2024, 1))
         );
     }
 

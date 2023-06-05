@@ -46,6 +46,13 @@ class WorkerManagementController {
     }
 
     @Certification
+    @GetMapping("/attendance/{accountId}/{year}/{month}")
+    public ResponseEntity<GetWorkerAttendanceRecordResDto> getWorkerAttendanceRecord(@PathVariable Long accountId, @PathVariable int year, @PathVariable int month, @Valid GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto) {
+        GetWorkerAttendanceRecordResDto getWorkerAttendanceRecordResDto = workerManagementService.getWorkerAttendanceRecord(getWorkerAttendanceRecordReqDto, year, month);
+        return ResponseEntity.ok(getWorkerAttendanceRecordResDto);
+    }
+
+    @Certification
     @GetMapping("/workers/replace/{accountId}")
     public ResponseEntity<List<GetAllReplaceRecordResDto>> getAllReplaceRecord(@PathVariable Long accountId, @Valid @RequestBody GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
         List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList = workerManagementService.getAllReplaceRecord(getAllReplaceRecordReqDto);
