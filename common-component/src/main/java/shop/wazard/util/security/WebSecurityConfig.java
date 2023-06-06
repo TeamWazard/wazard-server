@@ -30,17 +30,17 @@ public class WebSecurityConfig {
     }
 
     private static final String[] PERMIT_URL_ARRAY = {
-            /* swagger v2 */
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            /* swagger v3 */
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
+        /* swagger v2 */
+        "/v2/api-docs",
+        "/swagger-resources",
+        "/swagger-resources/**",
+        "/configuration/ui",
+        "/configuration/security",
+        "/swagger-ui.html",
+        "/webjars/**",
+        /* swagger v3 */
+        "/v3/api-docs/**",
+        "/swagger-ui/**"
     };
 
     @Bean
@@ -56,15 +56,23 @@ public class WebSecurityConfig {
         // permitAll() -> 검증 없이 허용할 요청 경로
         // authenticated() -> 반드시 인증을 거쳐야 하는 요청 경로
         http.authorizeRequests()
-                .antMatchers("/account/join", "/account/login").permitAll()
-                .antMatchers("/account/**").authenticated()
-                .antMatchers("/upload/**").authenticated()
-                .antMatchers("/mail/**").permitAll()
-                .antMatchers("/test/**").authenticated()
-                .antMatchers(PERMIT_URL_ARRAY).permitAll()
-                .anyRequest().permitAll()
+                .antMatchers("/account/join", "/account/login")
+                .permitAll()
+                .antMatchers("/account/**")
+                .authenticated()
+                .antMatchers("/upload/**")
+                .authenticated()
+                .antMatchers("/mail/**")
+                .permitAll()
+                .antMatchers("/test/**")
+                .authenticated()
+                .antMatchers(PERMIT_URL_ARRAY)
+                .permitAll()
+                .anyRequest()
+                .permitAll()
                 .and()
-                .addFilterBefore(new JwtAuthFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        new JwtAuthFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -83,6 +91,4 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
-

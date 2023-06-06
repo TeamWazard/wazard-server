@@ -4,6 +4,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.10' apply false
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "com.diffplug.spotless" version '5.0.0'
+}
+
+spotless {
+    java {
+        removeUnusedImports()
+        googleJavaFormat().aosp()
+    }
 }
 
 group = 'shop.wazard'

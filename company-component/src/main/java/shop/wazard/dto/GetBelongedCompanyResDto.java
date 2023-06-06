@@ -13,5 +13,4 @@ public class GetBelongedCompanyResDto {
     private String companyContact;
     private String logoImageUrl;
     private int salaryDate;
-
 }

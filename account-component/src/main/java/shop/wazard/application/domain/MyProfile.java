@@ -1,10 +1,9 @@
 package shop.wazard.application.domain;
 
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.UpdateMyProfileReqDto;
-
-import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -28,5 +27,4 @@ public class MyProfile {
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }
-
 }

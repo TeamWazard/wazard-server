@@ -1,12 +1,11 @@
 package shop.wazard.entity.worker;
 
+import java.time.LocalDateTime;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -30,5 +29,4 @@ public class WorkerJpa {
     private LocalDateTime enterTime;
 
     private LocalDateTime exitTime;
-
 }

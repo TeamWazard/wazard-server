@@ -5,5 +5,4 @@ import shop.wazard.application.domain.AccountForWorker;
 public interface AccountForWorkerPort {
 
     AccountForWorker findAccountByEmail(String email);
-
 }

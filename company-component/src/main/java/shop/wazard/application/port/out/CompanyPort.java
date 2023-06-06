@@ -9,5 +9,4 @@ public interface CompanyPort {
     void saveCompany(String email, Company company);
 
     void updateCompanyInfo(Company company);
-
 }

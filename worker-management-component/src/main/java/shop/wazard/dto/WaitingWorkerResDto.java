@@ -12,5 +12,4 @@ public class WaitingWorkerResDto {
     private String email;
     private String userName;
     private WaitingStatus waitingStatus;
-
 }

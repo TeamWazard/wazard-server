@@ -1,5 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.*;
@@ -13,9 +15,6 @@ import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 @Slf4j
 class WorkerManagementMapper {
@@ -25,23 +24,30 @@ class WorkerManagementMapper {
                 .waitingListId(waitingListJpa.getId())
                 .companyId(waitingListJpa.getCompanyJpa().getId())
                 .accountId(waitingListJpa.getAccountJpa().getId())
-                .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
+                .waitingStatus(
+                        WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
                 .build();
     }
 
     public void updateWaitingStatus(WaitingListJpa waitingListJpa, WaitingInfo waitingInfo) {
-        waitingListJpa.updateWaitingStatus(WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
+        waitingListJpa.updateWaitingStatus(
+                WaitingStatusJpa.valueOf(waitingInfo.getWaitingStatus().getStatus()));
     }
 
-    public List<WorkerBelongedToCompanyResDto> toWorkersBelongedToCompany(List<AccountJpa> workersBelongedCompany) {
+    public List<WorkerBelongedToCompanyResDto> toWorkersBelongedToCompany(
+            List<AccountJpa> workersBelongedCompany) {
         return workersBelongedCompany.stream()
-                .map(accountJpa -> WorkerBelongedToCompanyResDto.builder()
-                        .accountId(accountJpa.getId())
-                        .userName(accountJpa.getUserName())
-                        .birth(accountJpa.getBirth())
-                        .genderType(GenderType.valueOf(accountJpa.getGender().getGender()))
-                        .build()
-                ).collect(Collectors.toList());
+                .map(
+                        accountJpa ->
+                                WorkerBelongedToCompanyResDto.builder()
+                                        .accountId(accountJpa.getId())
+                                        .userName(accountJpa.getUserName())
+                                        .birth(accountJpa.getBirth())
+                                        .genderType(
+                                                GenderType.valueOf(
+                                                        accountJpa.getGender().getGender()))
+                                        .build())
+                .collect(Collectors.toList());
     }
 
     public RosterForWorkerManagement toRosterDomain(RosterJpa rosterJpa) {
@@ -53,35 +59,56 @@ class WorkerManagementMapper {
                 .build();
     }
 
-    public void updateRosterStateForExile(RosterJpa rosterJpa, RosterForWorkerManagement rosterForWorkerManagement) {
-        rosterJpa.updateRosterStateForExile(BaseStatusJpa.valueOf(rosterForWorkerManagement.getBaseStatus().getStatus()));
+    public void updateRosterStateForExile(
+            RosterJpa rosterJpa, RosterForWorkerManagement rosterForWorkerManagement) {
+        rosterJpa.updateRosterStateForExile(
+                BaseStatusJpa.valueOf(rosterForWorkerManagement.getBaseStatus().getStatus()));
     }
 
-    public List<WaitingWorkerResDto> toWaitingWorkerList(List<WaitingListJpa> waitingWorkerJpaList) {
+    public List<WaitingWorkerResDto> toWaitingWorkerList(
+            List<WaitingListJpa> waitingWorkerJpaList) {
         return waitingWorkerJpaList.stream()
-                .map(waitingListJpa -> WaitingWorkerResDto.builder()
-                        .accountId(waitingListJpa.getAccountJpa().getId())
-                        .email(waitingListJpa.getAccountJpa().getEmail())
-                        .userName(waitingListJpa.getAccountJpa().getUserName())
-                        .waitingStatus(WaitingStatus.valueOf(waitingListJpa.getWaitingStatusJpa().getStatus()))
-                        .build())
+                .map(
+                        waitingListJpa ->
+                                WaitingWorkerResDto.builder()
+                                        .accountId(waitingListJpa.getAccountJpa().getId())
+                                        .email(waitingListJpa.getAccountJpa().getEmail())
+                                        .userName(waitingListJpa.getAccountJpa().getUserName())
+                                        .waitingStatus(
+                                                WaitingStatus.valueOf(
+                                                        waitingListJpa
+                                                                .getWaitingStatusJpa()
+                                                                .getStatus()))
+                                        .build())
                 .collect(Collectors.toList());
     }
 
-    public GetWorkerAttendanceRecordResDto toWorkerAttendaceRecord(AccountJpa accountJpa, List<EnterRecordJpa> enterRecordJpaList, List<AbsentJpa> absentJpaList) {
-        List<CommuteRecordDto> commuteRecordDtoList = enterRecordJpaList.stream()
-                .map(enterRecordJpa -> CommuteRecordDto.builder()
-                        .commuteDate(enterRecordJpa.getEnterDate())
-                        .enterTime(enterRecordJpa.getEnterTime())
-                        .exitTime(enterRecordJpa.getExitRecordJpa().getExitTime())
-                        .tardy(enterRecordJpa.isTardy())
-                        .build())
-                .collect(Collectors.toList());
-        List<AbsentRecordDto> absentRecordDtoList = absentJpaList.stream()
-                .map(absentJpa -> AbsentRecordDto.builder()
-                        .absentDate(absentJpa.getAbsentDate())
-                        .build())
-                .collect(Collectors.toList());
+    public GetWorkerAttendanceRecordResDto toWorkerAttendaceRecord(
+            AccountJpa accountJpa,
+            List<EnterRecordJpa> enterRecordJpaList,
+            List<AbsentJpa> absentJpaList) {
+        List<CommuteRecordDto> commuteRecordDtoList =
+                enterRecordJpaList.stream()
+                        .map(
+                                enterRecordJpa ->
+                                        CommuteRecordDto.builder()
+                                                .commuteDate(enterRecordJpa.getEnterDate())
+                                                .enterTime(enterRecordJpa.getEnterTime())
+                                                .exitTime(
+                                                        enterRecordJpa
+                                                                .getExitRecordJpa()
+                                                                .getExitTime())
+                                                .tardy(enterRecordJpa.isTardy())
+                                                .build())
+                        .collect(Collectors.toList());
+        List<AbsentRecordDto> absentRecordDtoList =
+                absentJpaList.stream()
+                        .map(
+                                absentJpa ->
+                                        AbsentRecordDto.builder()
+                                                .absentDate(absentJpa.getAbsentDate())
+                                                .build())
+                        .collect(Collectors.toList());
         return GetWorkerAttendanceRecordResDto.builder()
                 .userName(accountJpa.getUserName())
                 .commuteRecordResDtoList(commuteRecordDtoList)

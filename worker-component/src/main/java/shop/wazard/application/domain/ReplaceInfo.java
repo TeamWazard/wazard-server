@@ -1,11 +1,10 @@
 package shop.wazard.application.domain;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import shop.wazard.dto.RegisterReplaceReqDto;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -26,5 +25,4 @@ public class ReplaceInfo {
                 .exitTime(registerReplaceReqDto.getExitTime())
                 .build();
     }
-
 }

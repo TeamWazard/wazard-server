@@ -8,5 +8,4 @@ import lombok.Getter;
 public class UpdateCompanyInfoResDto {
 
     private String message;
-
 }

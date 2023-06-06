@@ -38,9 +38,7 @@ class AccountServiceImpl implements AccountService {
         Account account = Account.createAccount(joinReqDto);
         account.getMyProfile().setEncodedPassword(passwordEncoder.encode(joinReqDto.getPassword()));
         accountPort.save(account);
-        return JoinResDto.builder()
-                .message("회원가입에 성공하였습니다.")
-                .build();
+        return JoinResDto.builder().message("회원가입에 성공하였습니다.").build();
     }
 
     @Override
@@ -49,11 +47,11 @@ class AccountServiceImpl implements AccountService {
         if (!passwordEncoder.matches(loginReqDto.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException(StatusEnum.ACCESS_DENIED.getMessage());
         }
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(),
-                userDetails.getPassword(),
-                userDetails.getAuthorities()
-        );
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails.getUsername(),
+                        userDetails.getPassword(),
+                        userDetails.getAuthorities());
         Account account = accountPort.findAccountByEmail(loginReqDto.getEmail());
         return LoginResDto.builder()
                 .accountId(account.getId())
@@ -70,20 +68,17 @@ class AccountServiceImpl implements AccountService {
         Account account = accountPort.findAccountByEmail(updateMyProfileReqDto.getEmail());
         account.getMyProfile().updateMyProfile(updateMyProfileReqDto);
         accountPort.updateMyProfile(account);
-        return UpdateMyProfileResDto.builder()
-                .message("수정 완료되었습니다.")
-                .build();
+        return UpdateMyProfileResDto.builder().message("수정 완료되었습니다.").build();
     }
 
     @Override
     public CheckPasswordResDto checkPassword(CheckPasswordReqDto checkPasswordReqDto) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(checkPasswordReqDto.getEmail());
-        if (!passwordEncoder.matches(checkPasswordReqDto.getPassword(), userDetails.getPassword())) {
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(checkPasswordReqDto.getEmail());
+        if (!passwordEncoder.matches(
+                checkPasswordReqDto.getPassword(), userDetails.getPassword())) {
             throw new BadCredentialsException(StatusEnum.ACCESS_DENIED.getMessage());
         }
-        return CheckPasswordResDto.builder()
-                .message("인증되었습니다.")
-                .build();
+        return CheckPasswordResDto.builder().message("인증되었습니다.").build();
     }
-
 }

@@ -11,22 +11,21 @@ public class EmailExceptionHandler {
 
     @ExceptionHandler(FailSendEmail.class)
     public ResponseEntity<ErrorMessage> failSendEmail(Exception e) {
-        return ResponseEntity.badRequest().body(
-                ErrorMessage.builder()
-                        .errorCode(StatusEnum.FAIL_TO_SEND_MAIL.getStatusCode())
-                        .errorMessage(StatusEnum.FAIL_TO_SEND_MAIL.getMessage())
-                        .build()
-        );
+        return ResponseEntity.badRequest()
+                .body(
+                        ErrorMessage.builder()
+                                .errorCode(StatusEnum.FAIL_TO_SEND_MAIL.getStatusCode())
+                                .errorMessage(StatusEnum.FAIL_TO_SEND_MAIL.getMessage())
+                                .build());
     }
 
     @ExceptionHandler(FailCreateEmailForm.class)
     public ResponseEntity<ErrorMessage> failCreateEmailForm(Exception e) {
-        return ResponseEntity.badRequest().body(
-                ErrorMessage.builder()
-                        .errorCode(StatusEnum.FAIL_TO_CREATE_MAIL_FROM.getStatusCode())
-                        .errorMessage(StatusEnum.FAIL_TO_CREATE_MAIL_FROM.getMessage())
-                        .build()
-        );
+        return ResponseEntity.badRequest()
+                .body(
+                        ErrorMessage.builder()
+                                .errorCode(StatusEnum.FAIL_TO_CREATE_MAIL_FROM.getStatusCode())
+                                .errorMessage(StatusEnum.FAIL_TO_CREATE_MAIL_FROM.getMessage())
+                                .build());
     }
-
 }

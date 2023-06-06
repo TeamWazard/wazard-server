@@ -31,5 +31,4 @@ public class AccountForAttendance {
     private boolean isEmployee() {
         return this.roles.equals("EMPLOYEE");
     }
-
 }

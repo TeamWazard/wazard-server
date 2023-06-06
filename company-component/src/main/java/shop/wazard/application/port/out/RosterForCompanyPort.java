@@ -1,9 +1,8 @@
 package shop.wazard.application.port.out;
 
+import java.util.List;
 import shop.wazard.dto.GetBelongedCompanyResDto;
 import shop.wazard.dto.GetOwnedCompanyResDto;
-
-import java.util.List;
 
 public interface RosterForCompanyPort {
 
@@ -12,5 +11,4 @@ public interface RosterForCompanyPort {
     List<GetOwnedCompanyResDto> getOwnedCompanyList(Long accountId);
 
     List<GetBelongedCompanyResDto> getBelongedCompanyList(Long accountId);
-
 }

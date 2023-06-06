@@ -1,12 +1,11 @@
 package shop.wazard.entity.company;
 
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.wazard.entity.common.BaseEntity;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
@@ -25,5 +24,4 @@ public class LogoImageJpa extends BaseEntity {
     public LogoImageJpa(String logoImageUrl) {
         this.logoImageUrl = logoImageUrl;
     }
-
 }

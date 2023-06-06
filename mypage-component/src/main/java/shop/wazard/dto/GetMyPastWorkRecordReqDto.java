@@ -10,5 +10,4 @@ public class GetMyPastWorkRecordReqDto {
 
     private String email;
     private Long companyId;
-
 }

@@ -18,5 +18,4 @@ class AccountForCompanyMapper {
                 .roles(accountJpa.getRoles())
                 .build();
     }
-
 }

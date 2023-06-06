@@ -1,8 +1,7 @@
 package shop.wazard.application.port.out;
 
-import shop.wazard.application.domain.Account;
-
 import java.util.Optional;
+import shop.wazard.application.domain.Account;
 
 public interface AccountPort {
 
@@ -17,5 +16,4 @@ public interface AccountPort {
     void save(Account account);
 
     void updateMyProfile(Account account);
-
 }
