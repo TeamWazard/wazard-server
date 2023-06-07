@@ -116,16 +116,18 @@ class WorkerManagementMapper {
                 .build();
     }
 
-    public List<GetAllReplaceRecordResDto> toAllReplaceRecord(List<ReplaceWorkerJpa> replaceWorkerJpaList) {
+    public List<GetAllReplaceRecordResDto> toAllReplaceRecord(
+            List<ReplaceWorkerJpa> replaceWorkerJpaList) {
         return replaceWorkerJpaList.stream()
-                .map(ReplaceWorkerJpa -> GetAllReplaceRecordResDto.builder()
-                        .userName(ReplaceWorkerJpa.getAccountJpa().getUserName())
-                        .replaceWorkerName(ReplaceWorkerJpa.getReplaceWorkerName())
-                        .replaceDate(ReplaceWorkerJpa.getReplaceDate())
-                        .enterTime(ReplaceWorkerJpa.getEnterTime())
-                        .exitTime(ReplaceWorkerJpa.getExitTime())
-                        .build()
-                ).collect(Collectors.toList());
+                .map(
+                        ReplaceWorkerJpa ->
+                                GetAllReplaceRecordResDto.builder()
+                                        .userName(ReplaceWorkerJpa.getAccountJpa().getUserName())
+                                        .replaceWorkerName(ReplaceWorkerJpa.getReplaceWorkerName())
+                                        .replaceDate(ReplaceWorkerJpa.getReplaceDate())
+                                        .enterTime(ReplaceWorkerJpa.getEnterTime())
+                                        .exitTime(ReplaceWorkerJpa.getExitTime())
+                                        .build())
+                .collect(Collectors.toList());
     }
-
 }

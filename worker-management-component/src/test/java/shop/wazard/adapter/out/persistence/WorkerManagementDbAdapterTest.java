@@ -32,19 +32,21 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
 @EntityScan(basePackages = {"shop.wazard.entity.*"})
-@ContextConfiguration(classes = {EntityManager.class,
-        WorkerManagementDbAdapter.class,
-        AccountForWorkerManagementMapper.class,
-        WorkerManagementMapper.class,
-        RosterJpaForWorkerManagementRepository.class,
-        WaitingListJpaForWorkerManagementRepository.class,
-        AccountJpaForWorkerManagementRepository.class,
-        EnterRecordJpaForWorkerManagementRepository.class,
-        AbsentRecordJpaForWorkerManagementRepository.class,
-        EnterRecordJpaForWorkerManagementRepository.class,
-        CompanyJpaForWorkerManagementRepository.class,
-        ReplaceJpaForWorkerManagementRepository.class})
-
+@ContextConfiguration(
+        classes = {
+            EntityManager.class,
+            WorkerManagementDbAdapter.class,
+            AccountForWorkerManagementMapper.class,
+            WorkerManagementMapper.class,
+            RosterJpaForWorkerManagementRepository.class,
+            WaitingListJpaForWorkerManagementRepository.class,
+            AccountJpaForWorkerManagementRepository.class,
+            EnterRecordJpaForWorkerManagementRepository.class,
+            AbsentRecordJpaForWorkerManagementRepository.class,
+            EnterRecordJpaForWorkerManagementRepository.class,
+            CompanyJpaForWorkerManagementRepository.class,
+            ReplaceJpaForWorkerManagementRepository.class
+        })
 class WorkerManagementDbAdapterTest {
 
     @Autowired private WorkerManagementMapper workerManagementMapper;
@@ -77,7 +79,6 @@ class WorkerManagementDbAdapterTest {
     private ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
 
     @Autowired private EntityManager em;
-
 
     @Test
     @DisplayName("고용주 - 업장 초대 대기목록에서 근무자 존재 유무 확인 - WaitingListJpa 조회")
@@ -551,26 +552,57 @@ class WorkerManagementDbAdapterTest {
         CompanyJpa companyJpa = setDefaultCompanyJpa();
         List<AccountJpa> accountJpaList = setDefaultAccountJpaList();
 
-        //when
+        // when
         CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
-        List<ReplaceWorkerJpa> replaceWorkerJpaList = setDefaultReplaceWorkerJpaList(accountJpaList, savedCompanyJpa);
+        List<ReplaceWorkerJpa> replaceWorkerJpaList =
+                setDefaultReplaceWorkerJpaList(accountJpaList, savedCompanyJpa);
         em.flush();
         em.clear();
-        List<ReplaceWorkerJpa> result = replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
+        List<ReplaceWorkerJpa> result =
+                replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
 
-        //then
+        // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getAccountJpa().getUserName(), result.get(0).getAccountJpa().getUserName()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getReplaceWorkerName(), result.get(0).getReplaceWorkerName()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getReplaceDate(), result.get(0).getReplaceDate()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getEnterTime(), result.get(0).getEnterTime()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(0).getExitTime(), result.get(0).getExitTime()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getAccountJpa().getUserName(), result.get(1).getAccountJpa().getUserName()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getReplaceWorkerName(), result.get(1).getReplaceWorkerName()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getReplaceDate(), result.get(1).getReplaceDate()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getEnterTime(), result.get(1).getEnterTime()),
-                () -> Assertions.assertEquals(replaceWorkerJpaList.get(1).getExitTime(), result.get(1).getExitTime())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getAccountJpa().getUserName(),
+                                result.get(0).getAccountJpa().getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getReplaceWorkerName(),
+                                result.get(0).getReplaceWorkerName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getReplaceDate(),
+                                result.get(0).getReplaceDate()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getEnterTime(),
+                                result.get(0).getEnterTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getExitTime(),
+                                result.get(0).getExitTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getAccountJpa().getUserName(),
+                                result.get(1).getAccountJpa().getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getReplaceWorkerName(),
+                                result.get(1).getReplaceWorkerName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getReplaceDate(),
+                                result.get(1).getReplaceDate()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getEnterTime(),
+                                result.get(1).getEnterTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getExitTime(),
+                                result.get(1).getExitTime()));
     }
 
     private List<LocalDate> setDefaultAbsentDate() {
@@ -969,21 +1001,32 @@ class WorkerManagementDbAdapterTest {
 
     private List<AccountJpa> setDefaultAccountJpaList() {
         List<AccountJpa> accountJpaList = new ArrayList<>();
-        AccountJpa accountJpa1 = AccountJpa.builder()
-                .email("testEmployee1@email.com")
-                .password("testPwd")
-                .userName("testName1")
-                .phoneNumber("010-2222-2222")
-                .gender(GenderTypeJpa.MALE.getGender())
-                .birth(LocalDate.of(2023, 1, 1))
-                .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
-                .roles("EMPLOYEE")
-                .build();
-        AccountJpa accountJpa2 = AccountJpa.builder()
-                .email("testEmployee2@email.com")
-                .password("testPwd")
-                .userName("testName2")
-                .phoneNumber("010-3333-3333")
+        AccountJpa accountJpa1 =
+                AccountJpa.builder()
+                        .email("testEmployee1@email.com")
+                        .password("testPwd")
+                        .userName("testName1")
+                        .phoneNumber("010-2222-2222")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 1, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        AccountJpa accountJpa2 =
+                AccountJpa.builder()
+                        .email("testEmployee2@email.com")
+                        .password("testPwd")
+                        .userName("testName2")
+                        .phoneNumber("010-3333-3333")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 1, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa1));
+        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa2));
+        return accountJpaList;
+    }
 
     private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
         List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
@@ -1218,29 +1261,29 @@ class WorkerManagementDbAdapterTest {
                 .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
-        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa1));
-        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa2));
-        return accountJpaList;
     }
 
-    private List<ReplaceWorkerJpa> setDefaultReplaceWorkerJpaList(List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
+    private List<ReplaceWorkerJpa> setDefaultReplaceWorkerJpaList(
+            List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
         List<ReplaceWorkerJpa> replaceWorkerJpaList = new ArrayList<>();
-        ReplaceWorkerJpa replaceWorkerJpa1 = ReplaceWorkerJpa.builder()
-                .accountJpa(accountJpaList.get(0))
-                .companyJpa(companyJpa)
-                .replaceWorkerName("test1")
-                .replaceDate(LocalDate.of(2023,5,29))
-                .enterTime(LocalDateTime.of(2023,5,29,18,0))
-                .exitTime(LocalDateTime.of(2023,5,29,20,0))
-                .build();
-        ReplaceWorkerJpa replaceWorkerJpa2 = ReplaceWorkerJpa.builder()
-                .accountJpa(accountJpaList.get(1))
-                .companyJpa(companyJpa)
-                .replaceWorkerName("test1")
-                .replaceDate(LocalDate.of(2023,5,29))
-                .enterTime(LocalDateTime.of(2023,5,29,18,0))
-                .exitTime(LocalDateTime.of(2023,5,29,20,0))
-                .build();
+        ReplaceWorkerJpa replaceWorkerJpa1 =
+                ReplaceWorkerJpa.builder()
+                        .accountJpa(accountJpaList.get(0))
+                        .companyJpa(companyJpa)
+                        .replaceWorkerName("test1")
+                        .replaceDate(LocalDate.of(2023, 5, 29))
+                        .enterTime(LocalDateTime.of(2023, 5, 29, 18, 0))
+                        .exitTime(LocalDateTime.of(2023, 5, 29, 20, 0))
+                        .build();
+        ReplaceWorkerJpa replaceWorkerJpa2 =
+                ReplaceWorkerJpa.builder()
+                        .accountJpa(accountJpaList.get(1))
+                        .companyJpa(companyJpa)
+                        .replaceWorkerName("test1")
+                        .replaceDate(LocalDate.of(2023, 5, 29))
+                        .enterTime(LocalDateTime.of(2023, 5, 29, 18, 0))
+                        .exitTime(LocalDateTime.of(2023, 5, 29, 20, 0))
+                        .build();
         replaceWorkerJpaList.add(replaceJpaForWorkerManagementRepository.save(replaceWorkerJpa1));
         replaceWorkerJpaList.add(replaceJpaForWorkerManagementRepository.save(replaceWorkerJpa2));
         return replaceWorkerJpaList;
@@ -1276,5 +1319,4 @@ class WorkerManagementDbAdapterTest {
         companyJpaList.add(savedCompanyJpa2);
         return companyJpaList;
     }
-
 }

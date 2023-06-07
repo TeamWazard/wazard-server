@@ -40,10 +40,14 @@ class WorkerManagementDbAdapter
     private final AccountJpaForWorkerManagementRepository accountJpaForWorkerManagementRepository;
     private final CompanyJpaForWorkerManagementRepository companyJpaForWorkerManagementRepository;
     private final RosterJpaForWorkerManagementRepository rosterJpaForWorkerManagementRepository;
-    private final WaitingListJpaForWorkerManagementRepository waitingListJpaForWorkerManagementRepository;
-    private final EnterRecordJpaForWorkerManagementRepository enterRecordJpaForWorkerManagementRepository;
-    private final AbsentRecordJpaForWorkerManagementRepository absentRecordJpaForWorkerManagementRepository;
-    private final ExitRecordJpaForWorkerManagementRepository exitRecordJpaForWorkerManagementRepository;
+    private final WaitingListJpaForWorkerManagementRepository
+            waitingListJpaForWorkerManagementRepository;
+    private final EnterRecordJpaForWorkerManagementRepository
+            enterRecordJpaForWorkerManagementRepository;
+    private final AbsentRecordJpaForWorkerManagementRepository
+            absentRecordJpaForWorkerManagementRepository;
+    private final ExitRecordJpaForWorkerManagementRepository
+            exitRecordJpaForWorkerManagementRepository;
     private final ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
 
     @Override
@@ -178,10 +182,17 @@ class WorkerManagementDbAdapter
     }
 
     @Override
-    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
-        CompanyJpa companyJpa = companyJpaForWorkerManagementRepository.findById(getAllReplaceRecordReqDto.getCompanyId())
-                .orElseThrow(() -> new CompanyNotFoundException(StatusEnum.COMPANY_NOT_FOUND.getMessage()));
-        List<ReplaceWorkerJpa> replaceWorkerJpaList = replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
+    public List<GetAllReplaceRecordResDto> getAllReplaceRecord(
+            GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        CompanyJpa companyJpa =
+                companyJpaForWorkerManagementRepository
+                        .findById(getAllReplaceRecordReqDto.getCompanyId())
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        List<ReplaceWorkerJpa> replaceWorkerJpaList =
+                replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
         return workerForManagementMapper.toAllReplaceRecord(replaceWorkerJpaList);
     }
 
@@ -217,5 +228,4 @@ class WorkerManagementDbAdapter
         return absentRecordJpaForWorkerManagementRepository.countAbsentByAccountIdAndCompanyId(
                 accountId, companyId);
     }
-                  
 }
