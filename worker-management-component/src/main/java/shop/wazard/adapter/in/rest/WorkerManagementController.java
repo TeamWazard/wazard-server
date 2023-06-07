@@ -72,6 +72,15 @@ class WorkerManagementController {
     }
 
     @Certification
+    @GetMapping("/workers/replace/{accountId}")
+    public ResponseEntity<List<GetAllReplaceRecordResDto>> getAllReplaceRecord(
+            @PathVariable Long accountId,
+            @Valid @RequestBody GetAllReplaceRecordReqDto getAllReplaceRecordReqDto) {
+        List<GetAllReplaceRecordResDto> getAllReplaceRecordResDtoList =
+                workerManagementService.getAllReplaceRecord(getAllReplaceRecordReqDto);
+        return ResponseEntity.ok(getAllReplaceRecordResDtoList);
+    }
+
     @GetMapping("/worker-attitude-score/{accountId}")
     public ResponseEntity<GetWorkerAttitudeScoreResDto> getWorkerAttitudeScore(
             @PathVariable Long accountId,

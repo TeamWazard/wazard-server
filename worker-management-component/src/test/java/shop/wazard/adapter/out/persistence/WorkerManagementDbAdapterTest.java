@@ -26,6 +26,7 @@ import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.*;
+import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -42,7 +43,9 @@ import shop.wazard.entity.company.*;
             AccountJpaForWorkerManagementRepository.class,
             EnterRecordJpaForWorkerManagementRepository.class,
             AbsentRecordJpaForWorkerManagementRepository.class,
-            EnterRecordJpaForWorkerManagementRepository.class
+            EnterRecordJpaForWorkerManagementRepository.class,
+            CompanyJpaForWorkerManagementRepository.class,
+            ReplaceJpaForWorkerManagementRepository.class
         })
 class WorkerManagementDbAdapterTest {
 
@@ -71,6 +74,9 @@ class WorkerManagementDbAdapterTest {
 
     @Autowired
     private ExitRecordJpaForWorkerManagementRepository exitRecordJpaForWorkerManagementRepository;
+
+    @Autowired
+    private ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
 
     @Autowired private EntityManager em;
 
@@ -539,6 +545,66 @@ class WorkerManagementDbAdapterTest {
                 () -> Assertions.assertEquals(5, workRecordForMyPage.get(1).getWorkDayCount()));
     }
 
+    @Test
+    @DisplayName("고용주 - 전체 대타기록 조회 - List<ReplaceWorkerJpa> 조회")
+    public void getAllReplaceRecordSuccess() throws Exception {
+        // given
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+        List<AccountJpa> accountJpaList = setDefaultAccountJpaList();
+
+        // when
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        List<ReplaceWorkerJpa> replaceWorkerJpaList =
+                setDefaultReplaceWorkerJpaList(accountJpaList, savedCompanyJpa);
+        em.flush();
+        em.clear();
+        List<ReplaceWorkerJpa> result =
+                replaceJpaForWorkerManagementRepository.findAllReplaceRecord(companyJpa.getId());
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getAccountJpa().getUserName(),
+                                result.get(0).getAccountJpa().getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getReplaceWorkerName(),
+                                result.get(0).getReplaceWorkerName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getReplaceDate(),
+                                result.get(0).getReplaceDate()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getEnterTime(),
+                                result.get(0).getEnterTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(0).getExitTime(),
+                                result.get(0).getExitTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getAccountJpa().getUserName(),
+                                result.get(1).getAccountJpa().getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getReplaceWorkerName(),
+                                result.get(1).getReplaceWorkerName()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getReplaceDate(),
+                                result.get(1).getReplaceDate()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getEnterTime(),
+                                result.get(1).getEnterTime()),
+                () ->
+                        Assertions.assertEquals(
+                                replaceWorkerJpaList.get(1).getExitTime(),
+                                result.get(1).getExitTime()));
+    }
+
     private List<LocalDate> setDefaultAbsentDate() {
         LocalDate ABSENTDATE_5_1 = LocalDate.of(2023, 5, 1);
         LocalDate ABSENTDATE_5_20 = LocalDate.of(2023, 5, 20);
@@ -933,6 +999,35 @@ class WorkerManagementDbAdapterTest {
                 .build();
     }
 
+    private List<AccountJpa> setDefaultAccountJpaList() {
+        List<AccountJpa> accountJpaList = new ArrayList<>();
+        AccountJpa accountJpa1 =
+                AccountJpa.builder()
+                        .email("testEmployee1@email.com")
+                        .password("testPwd")
+                        .userName("testName1")
+                        .phoneNumber("010-2222-2222")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 1, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        AccountJpa accountJpa2 =
+                AccountJpa.builder()
+                        .email("testEmployee2@email.com")
+                        .password("testPwd")
+                        .userName("testName2")
+                        .phoneNumber("010-3333-3333")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 1, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa1));
+        accountJpaList.add(accountJpaForWorkerManagementRepository.save(accountJpa2));
+        return accountJpaList;
+    }
+
     private List<ExitRecordJpa> setDefaultExitRecordJpa(List<EnterRecordJpa> enterRecordJpaList) {
         List<ExitRecordJpa> exitRecordJpaList = new ArrayList<>();
         ExitRecordJpa exitRecordJpa1 =
@@ -1166,6 +1261,32 @@ class WorkerManagementDbAdapterTest {
                 .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
                 .roles("EMPLOYEE")
                 .build();
+    }
+
+    private List<ReplaceWorkerJpa> setDefaultReplaceWorkerJpaList(
+            List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
+        List<ReplaceWorkerJpa> replaceWorkerJpaList = new ArrayList<>();
+        ReplaceWorkerJpa replaceWorkerJpa1 =
+                ReplaceWorkerJpa.builder()
+                        .accountJpa(accountJpaList.get(0))
+                        .companyJpa(companyJpa)
+                        .replaceWorkerName("test1")
+                        .replaceDate(LocalDate.of(2023, 5, 29))
+                        .enterTime(LocalDateTime.of(2023, 5, 29, 18, 0))
+                        .exitTime(LocalDateTime.of(2023, 5, 29, 20, 0))
+                        .build();
+        ReplaceWorkerJpa replaceWorkerJpa2 =
+                ReplaceWorkerJpa.builder()
+                        .accountJpa(accountJpaList.get(1))
+                        .companyJpa(companyJpa)
+                        .replaceWorkerName("test1")
+                        .replaceDate(LocalDate.of(2023, 5, 29))
+                        .enterTime(LocalDateTime.of(2023, 5, 29, 18, 0))
+                        .exitTime(LocalDateTime.of(2023, 5, 29, 20, 0))
+                        .build();
+        replaceWorkerJpaList.add(replaceJpaForWorkerManagementRepository.save(replaceWorkerJpa1));
+        replaceWorkerJpaList.add(replaceJpaForWorkerManagementRepository.save(replaceWorkerJpa2));
+        return replaceWorkerJpaList;
     }
 
     private List<CompanyJpa> setDefaultCompanyJpaList() {
