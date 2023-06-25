@@ -34,6 +34,7 @@ class WorkerManagementServiceTest {
     @MockBean private CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
     @MockBean private ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
     @MockBean private WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
+    @MockBean private ContractForWorkerManagementPort contractForWorkerManagementPort;
 
     @Test
     @DisplayName("고용주 - 근무자 가입 수락 - 성공")
@@ -542,6 +543,36 @@ class WorkerManagementServiceTest {
         // then
         // + 값 직접 확인
         Assertions.assertAll(() -> Assertions.assertEquals(5.8, result.getWorkerAttitudeScore()));
+    }
+
+    @Test
+    @DisplayName("고용주 - 초기 계약 정보 저장 - 성공")
+    void registerContractInfo() throws Exception {
+        // given
+        RegisterContractInfoReqDto registerContractInfoReqDto =
+                RegisterContractInfoReqDto.builder()
+                        .accountId(1L)
+                        .companyId(2L)
+                        .invitationCode("code")
+                        .startDate(LocalDate.of(2023, 1, 1))
+                        .endDate(LocalDate.of(2023, 2, 1))
+                        .address("companyAddress")
+                        .workingTime("9:00 - 12:00")
+                        .wage(10000)
+                        .contractInfoAgreement(false)
+                        .build();
+
+        // when
+        Mockito.doNothing()
+                .when(contractForWorkerManagementPort)
+                .registerContractInfo(registerContractInfoReqDto);
+        Mockito.doNothing()
+                .when(waitingListForWorkerManagementPort)
+                .addWaitingInfo(anyLong(), anyLong());
+
+        // then
+        Assertions.assertDoesNotThrow(
+                () -> workerManagementService.registerContractInfo(registerContractInfoReqDto));
     }
 
     private List<WorkRecordForWorkerManagement> setDefaultWorkerPastWorkRecordList() {
