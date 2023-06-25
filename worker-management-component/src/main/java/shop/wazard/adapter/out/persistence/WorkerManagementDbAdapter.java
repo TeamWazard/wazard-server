@@ -154,6 +154,9 @@ class WorkerManagementDbAdapter
     }
 
     @Override
+    public void addWaitingInfo(Long accountId, Long companyId) {}
+
+    @Override
     public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(
             GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto,
             LocalDate startDate,
