@@ -3,8 +3,10 @@ package shop.wazard.dto;
 import java.time.LocalDate;
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @AllArgsConstructor
@@ -23,10 +25,12 @@ public class RegisterContractInfoReqDto {
     @NotBlank(message = "초대 코드는 필수 입력 값입니다.")
     private String invitationCode;
 
-    @NotBlank(message = "계약 시작 날짜는 필수 입력 값입니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "계약 시작 날짜는 필수 입력 값입니다.")
     private LocalDate startDate;
 
-    @NotBlank(message = "계약 종료 날짜는 필수 입력 값입니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "계약 종료 날짜는 필수 입력 값입니다.")
     private LocalDate endDate;
 
     @NotBlank(message = "업장 주소는 필수 입력 값입니다.")
