@@ -89,4 +89,14 @@ class WorkerManagementController {
                 workerManagementService.getWorkerAttitudeScore(getWorkerAttitudeScoreReqDto);
         return ResponseEntity.ok(getWorkerAttitudeScoreResDto);
     }
+
+    @Certification
+    @PostMapping("/contract/registeration/{accountId}")
+    public ResponseEntity<RegisterContractInfoResDto> registerContractInfo(
+            @PathVariable Long accountId,
+            @Valid @RequestBody RegisterContractInfoReqDto registerContractInfoReqDto) {
+        RegisterContractInfoResDto registerContractInfoResDto =
+                workerManagementService.registerContractInfo(registerContractInfoReqDto);
+        return ResponseEntity.ok(registerContractInfoResDto);
+    }
 }
