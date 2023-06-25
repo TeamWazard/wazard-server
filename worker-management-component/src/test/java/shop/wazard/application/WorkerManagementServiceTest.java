@@ -547,7 +547,7 @@ class WorkerManagementServiceTest {
 
     @Test
     @DisplayName("고용주 - 초기 계약 정보 저장 - 성공")
-    void registerContractInfo() throws Exception {
+    void registerContractInfoSuccess() throws Exception {
         // given
         RegisterContractInfoReqDto registerContractInfoReqDto =
                 RegisterContractInfoReqDto.builder()
