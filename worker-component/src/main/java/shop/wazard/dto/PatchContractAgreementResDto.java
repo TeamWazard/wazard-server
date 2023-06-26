@@ -1,11 +1,10 @@
 package shop.wazard.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PatchContractAgreementResDto {
 
     private String message;
