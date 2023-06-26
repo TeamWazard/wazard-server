@@ -15,11 +15,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 @ExtendWith(SpringExtension.class)
@@ -32,18 +34,54 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
             WorkerDbAdapter.class,
             WorkerMapper.class,
             AccountForWorkerMapper.class,
+            ContractInfoForWorkerMapper.class,
             AccountJpaForWorkerRepository.class,
             CompanyJpaForWorkerRepository.class,
-            ReplaceJpaForWorkerRepository.class
+            ReplaceJpaForWorkerRepository.class,
+            ContractJpaForWorkerRepository.class
         })
 class WorkerDbAdapterTest {
 
     @Autowired private WorkerMapper workerMapper;
     @Autowired private AccountForWorkerMapper accountForWorkerMapper;
+    @Autowired private ContractInfoForWorkerMapper contractInfoForWorkerMapper;
     @Autowired private AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     @Autowired private CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
     @Autowired private ReplaceJpaForWorkerRepository replaceJpaForWorkerRepository;
+    @Autowired private ContractJpaForWorkerRepository contractJpaForWorkerRepository;
     @Autowired private EntityManager em;
+
+    @Test
+    @DisplayName("근무자 - 초기 계약정보 동의/비동의에서 계약정보 조회 - ContractJpa 조회")
+    void findContractInfoByContractId() throws Exception {
+        // given
+        ContractJpa contractJpa = ContractJpa.builder().contractInfoAgreement(false).build();
+
+        // when
+        ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
+        ContractInfo contractInfo =
+                contractInfoForWorkerMapper.contractJpaToContractInfo(savedContractJpa);
+
+        // then
+        Assertions.assertEquals(
+                savedContractJpa.isContractInfoAgreement(), contractInfo.isContractInfoAgreement());
+    }
+
+    @Test
+    @DisplayName("근무자 - 초기 계약정보 동의/비동의에서 동의 여부 변경 및 입력 - ContractJpa 수정")
+    void checkContractAgreement() throws Exception {
+        // given
+        ContractInfo contractInfo = ContractInfo.builder().contractInfoAgreement(true).build();
+        ContractJpa contractJpa = ContractJpa.builder().contractInfoAgreement(false).build();
+
+        // when
+        ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
+        contractInfoForWorkerMapper.changeContractAgreement(savedContractJpa, contractInfo);
+
+        // then
+        Assertions.assertEquals(
+                contractInfo.isContractInfoAgreement(), savedContractJpa.isContractInfoAgreement());
+    }
 
     @Test
     @DisplayName("근무자 - 대타 등록 - ReplaceWorkerJpa 저장")

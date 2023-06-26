@@ -23,6 +23,7 @@ public enum StatusEnum {
     ENTER_RECORD_NOT_FOUND(413, "출근 기록이 존재하지 않습니다."),
     ROSTER_NOT_FOUND(414, "업장과 근로자의 관계를 찾을 수 없습니다."),
     UNSUPPORTED_DATE_RANGE(415, "지원되지 않는 날짜입니다."),
+    CONTRACT_NOT_FOUND(416, "존재하지 않는 계약정보입니다."),
     ;
 
     private int statusCode;
