@@ -23,4 +23,7 @@ public interface WorkerManagementService {
 
     GetWorkerAttitudeScoreResDto getWorkerAttitudeScore(
             GetWorkerAttitudeScoreReqDto getWorkerAttitudeScoreReqDto);
+
+    RegisterContractInfoResDto registerContractInfo(
+            RegisterContractInfoReqDto registerContractInfoReqDto);
 }
