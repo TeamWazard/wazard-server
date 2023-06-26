@@ -79,7 +79,8 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
     }
 
     @Override
-    public GetEarlyContractInfoResDto getEarlyContractInfo(GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+    public GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
         return null;
     }
 

@@ -1,8 +1,7 @@
 package shop.wazard.dto;
 
-import lombok.*;
-
 import java.time.LocalDate;
+import lombok.*;
 
 @Getter
 @Builder
@@ -23,5 +22,4 @@ public class GetEarlyContractInfoResDto {
     private String workingTime;
 
     private int wage;
-
 }

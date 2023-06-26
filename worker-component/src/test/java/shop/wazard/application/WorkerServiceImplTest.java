@@ -1,5 +1,11 @@
 package shop.wazard.application;
 
+import static org.mockito.ArgumentMatchers.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +21,6 @@ import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerServiceImpl.class})
@@ -145,10 +144,11 @@ class WorkerServiceImplTest {
     @DisplayName("근무자 - 초기 계약정보 조회- 성공")
     public void getEarlyContractInfoSuccess() throws Exception {
         // given
-        GetEarlyContractInfoReqDto getEarlyContractInfoReqDto = GetEarlyContractInfoReqDto.builder()
-                .email("test@email.com")
-                .invitationCode("abc")
-                .build();
+        GetEarlyContractInfoReqDto getEarlyContractInfoReqDto =
+                GetEarlyContractInfoReqDto.builder()
+                        .email("test@email.com")
+                        .invitationCode("abc")
+                        .build();
         AccountForWorker accountForWorker = setDefaultEmployeeAccountForWorker();
         GetEarlyContractInfoResDto getEarlyContractInfoResDto = setDefaultEarlyContractInfo();
 
@@ -157,18 +157,34 @@ class WorkerServiceImplTest {
                 .thenReturn(accountForWorker);
         Mockito.when(contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto))
                 .thenReturn(getEarlyContractInfoResDto);
-        GetEarlyContractInfoResDto result = workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
+        GetEarlyContractInfoResDto result =
+                workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getUserName(), result.getUserName()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getCompanyName(), result.getCompanyName()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getAddress(), result.getAddress()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getStartDate(), result.getStartDate()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getEndDate(), result.getEndDate()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getWorkingTime(), result.getWorkingTime()),
-                () -> Assertions.assertEquals(getEarlyContractInfoResDto.getWage(), result.getWage())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getUserName(), result.getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getCompanyName(),
+                                result.getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getAddress(), result.getAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getStartDate(), result.getStartDate()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getEndDate(), result.getEndDate()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getWorkingTime(),
+                                result.getWorkingTime()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getWage(), result.getWage()));
     }
 
     private AccountForWorker setDefaultEmployeeAccountForWorker() {
@@ -223,5 +239,4 @@ class WorkerServiceImplTest {
                 .wage(10000)
                 .build();
     }
-
 }

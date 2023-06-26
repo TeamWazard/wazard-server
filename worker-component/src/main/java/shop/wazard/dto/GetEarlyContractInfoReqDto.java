@@ -1,9 +1,8 @@
 package shop.wazard.dto;
 
-import lombok.*;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.*;
 
 @Getter
 @Builder
@@ -17,5 +16,4 @@ public class GetEarlyContractInfoReqDto {
 
     @NotBlank(message = "초대 코드는 필수 입력 값입니다.")
     private String invitationCode;
-
 }

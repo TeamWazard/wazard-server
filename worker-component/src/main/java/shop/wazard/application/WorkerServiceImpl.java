@@ -1,5 +1,6 @@
 package shop.wazard.application;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +11,6 @@ import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -44,10 +43,11 @@ class WorkerServiceImpl implements WorkerService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetEarlyContractInfoResDto getEarlyContractInfo(GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
-        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getEarlyContractInfoReqDto.getEmail());
+    public GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        AccountForWorker accountForWorker =
+                accountForWorkerPort.findAccountByEmail(getEarlyContractInfoReqDto.getEmail());
         accountForWorker.checkIsEmployee();
         return contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto);
     }
-
 }

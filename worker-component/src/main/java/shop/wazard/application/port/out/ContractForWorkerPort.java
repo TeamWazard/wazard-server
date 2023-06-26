@@ -5,6 +5,6 @@ import shop.wazard.dto.GetEarlyContractInfoResDto;
 
 public interface ContractForWorkerPort {
 
-    GetEarlyContractInfoResDto getEarlyContractInfo(GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
-
+    GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
 }
