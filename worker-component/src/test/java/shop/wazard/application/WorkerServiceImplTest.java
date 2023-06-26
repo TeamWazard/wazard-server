@@ -20,6 +20,7 @@ import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
+import shop.wazard.application.port.out.WaitingListForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
 
@@ -31,26 +32,29 @@ class WorkerServiceImplTest {
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
     @MockBean private ContractForWorkerPort contractForWorkerPort;
+    @MockBean private WaitingListForWorkerPort waitingListForWorkerPort;
 
     @Test
     @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
     void checkAgreementSuccess() throws Exception {
         // given
-        CheckAgreementReqDto checkAgreementReqDto =
-                CheckAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
+        PatchContractAgreementReqDto patchContractAgreementReqDto =
+                PatchContractAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
         ContractInfo contractInfo =
                 ContractInfo.builder().contractId(1L).contractInfoAgreement(false).build();
 
         // when
         Mockito.when(contractForWorkerPort.findContractJpaByContractId(anyLong()))
                 .thenReturn(contractInfo);
-        CheckAgreementResDto result = workerService.checkAgreement(checkAgreementReqDto);
+        Mockito.doNothing().when(waitingListForWorkerPort).modifyWaitingListState(contractInfo);
+        PatchContractAgreementResDto result =
+                workerService.modifyContractAgreement(patchContractAgreementReqDto);
 
         // then
         Assertions.assertAll(
                 () ->
                         Assertions.assertEquals(
-                                checkAgreementReqDto.isAgreementCheck(),
+                                patchContractAgreementReqDto.isAgreementCheck(),
                                 contractInfo.isContractInfoAgreement()),
                 () -> Assertions.assertEquals("동의하였습니다.", result.getMessage()));
     }

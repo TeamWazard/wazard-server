@@ -49,7 +49,7 @@ public class ContractJpa extends BaseEntity {
     @Column(nullable = false)
     private boolean contractInfoAgreement; // 계약정보 조회 동의 여부
 
-    public void changeContractAgreement(boolean contractInfoAgreement) {
+    public void modifyContractAgreement(boolean contractInfoAgreement) {
         this.contractInfoAgreement = contractInfoAgreement;
     }
 

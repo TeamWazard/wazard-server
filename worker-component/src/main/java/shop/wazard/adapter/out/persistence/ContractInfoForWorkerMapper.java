@@ -10,11 +10,13 @@ class ContractInfoForWorkerMapper {
     public ContractInfo contractJpaToContractInfo(ContractJpa contractJpa) {
         return ContractInfo.builder()
                 .contractId(contractJpa.getId())
+                .accountId(contractJpa.getAccountJpa().getId())
+                .companyId(contractJpa.getCompanyJpa().getId())
                 .contractInfoAgreement(contractJpa.isContractInfoAgreement())
                 .build();
     }
 
-    public void changeContractAgreement(ContractJpa contractJpa, ContractInfo contractInfo) {
-        contractJpa.changeContractAgreement(contractInfo.isContractInfoAgreement());
+    public void modifyContractAgreement(ContractJpa contractJpa, ContractInfo contractInfo) {
+        contractJpa.modifyContractAgreement(contractInfo.isContractInfoAgreement());
     }
 }

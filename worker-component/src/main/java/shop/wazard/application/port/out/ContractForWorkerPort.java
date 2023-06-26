@@ -11,5 +11,5 @@ public interface ContractForWorkerPort {
 
     ContractInfo findContractJpaByContractId(Long contractId);
 
-    void checkContractAgreement(ContractInfo contractInfo);
+    void modifyContractAgreement(ContractInfo contractInfo);
 }
