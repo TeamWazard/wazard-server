@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerService;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.RegisterReplaceReqDto;
-import shop.wazard.dto.RegisterReplaceResDto;
+import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
 
 @RestController
@@ -38,5 +35,15 @@ class WorkerController {
         List<GetMyReplaceRecordResDto> getMyReplaceRecordResDtoList =
                 workerService.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
         return ResponseEntity.ok(getMyReplaceRecordResDtoList);
+    }
+
+    @Certification
+    @GetMapping("/contract/{accountId}")
+    public ResponseEntity<GetEarlyContractInfoResDto> getEarlyContractInfo(
+            @PathVariable Long accountId,
+            @Valid @RequestBody GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        GetEarlyContractInfoResDto getEarlyContractInfoResDto =
+                workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
+        return ResponseEntity.ok(getEarlyContractInfoResDto);
     }
 }

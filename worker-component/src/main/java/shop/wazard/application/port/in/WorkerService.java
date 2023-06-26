@@ -10,5 +10,8 @@ public interface WorkerService {
     List<GetMyReplaceRecordResDto> getMyReplaceRecord(
             GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId);
 
+    GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
+
     CheckAgreementResDto checkAgreement(CheckAgreementReqDto checkAgreementReqDto);
 }
