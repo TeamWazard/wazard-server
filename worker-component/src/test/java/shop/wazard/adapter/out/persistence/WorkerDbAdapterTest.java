@@ -1,10 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +20,12 @@ import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -406,7 +407,7 @@ class WorkerDbAdapterTest {
         WaitingListJpa savedWaitingJpa1 = waitingListJpaForWorkerRepository.save(waitingListJpa1);
         WaitingListJpa waitingListJpa2 =
                 WaitingListJpa.builder()
-                        .accountJpa(accountJpaList.get(0))
+                        .accountJpa(accountJpaList.get(1))
                         .companyJpa(companyJpa)
                         .waitingStatusJpa(WaitingStatusJpa.INVITED)
                         .build();
