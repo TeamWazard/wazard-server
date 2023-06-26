@@ -10,6 +10,7 @@ import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
+import shop.wazard.application.port.out.WaitingListForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
 
@@ -21,6 +22,7 @@ class WorkerServiceImpl implements WorkerService {
     private final WorkerPort workerPort;
     private final AccountForWorkerPort accountForWorkerPort;
     private final ContractForWorkerPort contractForWorkerPort;
+    private final WaitingListForWorkerPort waitingListForWorkerPort;
 
     @Override
     public RegisterReplaceResDto registerReplace(RegisterReplaceReqDto registerReplaceReqDto) {
@@ -60,6 +62,7 @@ class WorkerServiceImpl implements WorkerService {
                         patchContractAgreementReqDto.getContractId());
         contractInfo.modifyContractAgreement(patchContractAgreementReqDto);
         contractForWorkerPort.modifyContractAgreement(contractInfo);
+        waitingListForWorkerPort.modifyWaitingListState(contractInfo);
         return PatchContractAgreementResDto.builder()
                 .message(patchContractAgreementReqDto.isAgreementCheck() ? "동의하였습니다." : "비동의하였습니다.")
                 .build();

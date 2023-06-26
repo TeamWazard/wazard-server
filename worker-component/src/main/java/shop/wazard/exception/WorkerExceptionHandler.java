@@ -48,4 +48,15 @@ public class WorkerExceptionHandler {
                                 .errorMessage(e.getMessage())
                                 .build());
     }
+
+    @ExceptionHandler(WaitingListNotFoundException.class)
+    public ResponseEntity<ErrorMessage> waitingListNotFoundException(
+            WaitingListNotFoundException e) {
+        return ResponseEntity.badRequest()
+                .body(
+                        ErrorMessage.builder()
+                                .errorCode(StatusEnum.WAITING_LIST_NOT_FOUND.getStatusCode())
+                                .errorMessage(e.getMessage())
+                                .build());
+    }
 }

@@ -9,6 +9,8 @@ import shop.wazard.dto.PatchContractAgreementReqDto;
 public class ContractInfo {
 
     private Long contractId;
+    private Long accountId;
+    private Long companyId;
     private boolean contractInfoAgreement;
 
     public void modifyContractAgreement(PatchContractAgreementReqDto patchContractAgreementReqDto) {

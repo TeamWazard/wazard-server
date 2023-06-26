@@ -20,6 +20,7 @@ import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
+import shop.wazard.application.port.out.WaitingListForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
 
@@ -31,6 +32,7 @@ class WorkerServiceImplTest {
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
     @MockBean private ContractForWorkerPort contractForWorkerPort;
+    @MockBean private WaitingListForWorkerPort waitingListForWorkerPort;
 
     @Test
     @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
@@ -44,6 +46,7 @@ class WorkerServiceImplTest {
         // when
         Mockito.when(contractForWorkerPort.findContractJpaByContractId(anyLong()))
                 .thenReturn(contractInfo);
+        Mockito.doNothing().when(waitingListForWorkerPort).modifyWaitingListState(contractInfo);
         PatchContractAgreementResDto result =
                 workerService.modifyContractAgreement(patchContractAgreementReqDto);
 

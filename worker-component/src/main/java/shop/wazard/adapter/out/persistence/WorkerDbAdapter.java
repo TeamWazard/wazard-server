@@ -8,6 +8,7 @@ import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
+import shop.wazard.application.port.out.WaitingListForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.GetEarlyContractInfoReqDto;
 import shop.wazard.dto.GetEarlyContractInfoResDto;
@@ -15,24 +16,32 @@ import shop.wazard.dto.GetMyReplaceRecordReqDto;
 import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.exception.ContractNotFoundException;
+import shop.wazard.exception.WaitingListNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWorkerPort {
+class WorkerDbAdapter
+        implements WorkerPort,
+                AccountForWorkerPort,
+                ContractForWorkerPort,
+                WaitingListForWorkerPort {
 
     private final WorkerMapper workerMapper;
     private final AccountForWorkerMapper accountForWorkerMapper;
     private final ContractInfoForWorkerMapper contractInfoForWorkerMapper;
+    private final WaitingListForWorkerMapper waitingListForWorkerMapper;
     private final ReplaceJpaForWorkerRepository replaceJpaForWorkerRepository;
     private final AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     private final CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
     private final ContractJpaForWorkerRepository contractJpaForWorkerRepository;
+    private final WaitingListJpaForWorkerRepository waitingListJpaForWorkerRepository;
 
     @Override
     public AccountForWorker findAccountByEmail(String email) {
@@ -120,5 +129,18 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
                                         new ContractNotFoundException(
                                                 StatusEnum.CONTRACT_NOT_FOUND.getMessage()));
         contractInfoForWorkerMapper.modifyContractAgreement(contractJpa, contractInfo);
+    }
+
+    @Override
+    public void modifyWaitingListState(ContractInfo contractInfo) {
+        WaitingListJpa waitingListJpa =
+                waitingListJpaForWorkerRepository
+                        .findWaitingListByAccountIdAndCompanyId(
+                                contractInfo.getAccountId(), contractInfo.getCompanyId())
+                        .orElseThrow(
+                                () ->
+                                        new WaitingListNotFoundException(
+                                                StatusEnum.WAITING_LIST_NOT_FOUND.getMessage()));
+        waitingListForWorkerMapper.modifyWaitingListState(waitingListJpa, contractInfo);
     }
 }
