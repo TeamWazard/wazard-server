@@ -1,13 +1,14 @@
 package shop.wazard.adapter.in.rest;
 
-import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerManagementService;
 import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -91,7 +92,7 @@ class WorkerManagementController {
     }
 
     @Certification
-    @PostMapping("/contract/registeration/{accountId}")
+    @PostMapping("/contract/register/{accountId}")
     public ResponseEntity<RegisterContractInfoResDto> registerContractInfo(
             @PathVariable Long accountId,
             @Valid @RequestBody RegisterContractInfoReqDto registerContractInfoReqDto) {
