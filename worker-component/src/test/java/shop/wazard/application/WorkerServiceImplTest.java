@@ -16,9 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForWorker;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
+import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
+import shop.wazard.dto.CheckAgreementReqDto;
 import shop.wazard.dto.GetMyReplaceRecordReqDto;
 import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.dto.RegisterReplaceReqDto;
@@ -30,6 +33,33 @@ class WorkerServiceImplTest {
     @Autowired private WorkerService workerService;
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
+    @MockBean private ContractForWorkerPort contractForWorkerPort;
+
+    @Test
+    @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
+    void checkAgreementSuccess() throws Exception {
+        // given
+        CheckAgreementReqDto checkAgreementReqDto =
+                CheckAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
+        ContractInfo contractInfo =
+                ContractInfo.builder().contractId(1L).contractInfoAgreement(false).build();
+
+        // when
+        Mockito.when(contractForWorkerPort.findContractInfoByContractId(anyLong()))
+                .thenReturn(contractInfo);
+        contractInfo.changeContractAgreementState(checkAgreementReqDto);
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                checkAgreementReqDto.isAgreementCheck(),
+                                contractInfo.isContractInfoAgreement()),
+                () ->
+                        Assertions.assertEquals(
+                                "동의하였습니다.",
+                                workerService.checkAgreement(checkAgreementReqDto).getMessage()));
+    }
 
     @Test
     @DisplayName("근무자 - 대타 등록 - 성공")

@@ -5,14 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForWorker;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
+import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.RegisterReplaceReqDto;
-import shop.wazard.dto.RegisterReplaceResDto;
+import shop.wazard.dto.*;
 
 @Service
 @Transactional
@@ -21,6 +20,7 @@ class WorkerServiceImpl implements WorkerService {
 
     private final WorkerPort workerPort;
     private final AccountForWorkerPort accountForWorkerPort;
+    private final ContractForWorkerPort contractForWorkerPort;
 
     @Override
     public RegisterReplaceResDto registerReplace(RegisterReplaceReqDto registerReplaceReqDto) {
@@ -40,5 +40,17 @@ class WorkerServiceImpl implements WorkerService {
                 accountForWorkerPort.findAccountByEmail(getMyReplaceRecordReqDto.getEmail());
         accountForWorker.checkIsEmployee();
         return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
+    }
+
+    @Override
+    public CheckAgreementResDto checkAgreement(CheckAgreementReqDto checkAgreementReqDto) {
+        ContractInfo contractInfo =
+                contractForWorkerPort.findContractInfoByContractId(
+                        checkAgreementReqDto.getContractId());
+        contractInfo.changeContractAgreementState(checkAgreementReqDto);
+        contractForWorkerPort.checkContractAgreement(contractInfo);
+        return CheckAgreementResDto.builder()
+                .message(checkAgreementReqDto.isAgreementCheck() ? "동의하였습니다." : "비동의하였습니다.")
+                .build();
     }
 }
