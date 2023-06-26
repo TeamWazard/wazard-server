@@ -42,7 +42,7 @@ class WorkerServiceImplTest {
                 ContractInfo.builder().contractId(1L).contractInfoAgreement(false).build();
 
         // when
-        Mockito.when(contractForWorkerPort.findContractInfoByContractId(anyLong()))
+        Mockito.when(contractForWorkerPort.findContractJpaByContractId(anyLong()))
                 .thenReturn(contractInfo);
         CheckAgreementResDto result = workerService.checkAgreement(checkAgreementReqDto);
 
