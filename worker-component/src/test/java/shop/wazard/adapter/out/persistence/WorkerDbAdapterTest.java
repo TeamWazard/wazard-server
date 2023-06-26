@@ -82,7 +82,7 @@ class WorkerDbAdapterTest {
 
         // then
         Assertions.assertEquals(
-                savedContractJpa.isContractInfoAgreement(), contractInfo.isContractInfoAgreement());
+                contractInfo.isContractInfoAgreement(), savedContractJpa.isContractInfoAgreement());
     }
 
     @Test
