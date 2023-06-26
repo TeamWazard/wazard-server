@@ -21,9 +21,9 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
+import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 @ExtendWith(SpringExtension.class)
