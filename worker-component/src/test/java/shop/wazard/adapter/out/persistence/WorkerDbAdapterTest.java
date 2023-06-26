@@ -105,14 +105,13 @@ class WorkerDbAdapterTest {
     void modifyWaitingListState() throws Exception {
         // given
         List<ContractInfo> contractInfoList = setDefaultContractInfoList();
-        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        List<AccountJpa> accountJpaList = setDefaultEmployeeAccountJpaList();
         CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
-        AccountJpa savedAccountJpa = accountJpaForWorkerRepository.save(accountJpa);
         CompanyJpa savedCompanyJpa = companyJpaForWorkerRepository.save(companyJpa);
         List<WaitingListJpa> waitingListJpaList =
-                setDefaultListOfWaitingList(savedAccountJpa, savedCompanyJpa);
+                setDefaultListOfWaitingList(accountJpaList, savedCompanyJpa);
         waitingListForWorkerMapper.modifyWaitingListState(
                 waitingListJpaList.get(0), contractInfoList.get(0));
         waitingListForWorkerMapper.modifyWaitingListState(
@@ -396,18 +395,18 @@ class WorkerDbAdapterTest {
     }
 
     private List<WaitingListJpa> setDefaultListOfWaitingList(
-            AccountJpa accountJpa, CompanyJpa companyJpa) {
+            List<AccountJpa> accountJpaList, CompanyJpa companyJpa) {
         List<WaitingListJpa> waitingListJpaList = new ArrayList<>();
         WaitingListJpa waitingListJpa1 =
                 WaitingListJpa.builder()
-                        .accountJpa(accountJpa)
+                        .accountJpa(accountJpaList.get(0))
                         .companyJpa(companyJpa)
                         .waitingStatusJpa(WaitingStatusJpa.INVITED)
                         .build();
         WaitingListJpa savedWaitingJpa1 = waitingListJpaForWorkerRepository.save(waitingListJpa1);
         WaitingListJpa waitingListJpa2 =
                 WaitingListJpa.builder()
-                        .accountJpa(accountJpa)
+                        .accountJpa(accountJpaList.get(0))
                         .companyJpa(companyJpa)
                         .waitingStatusJpa(WaitingStatusJpa.INVITED)
                         .build();
@@ -415,5 +414,36 @@ class WorkerDbAdapterTest {
         waitingListJpaList.add(savedWaitingJpa1);
         waitingListJpaList.add(savedWaitingJpa2);
         return waitingListJpaList;
+    }
+
+    private List<AccountJpa> setDefaultEmployeeAccountJpaList() {
+        List<AccountJpa> accountJpaList = new ArrayList<>();
+        AccountJpa accountJpa1 =
+                AccountJpa.builder()
+                        .email("testEmployee@email.com")
+                        .password("testPwd")
+                        .userName("testName1")
+                        .phoneNumber("010-1111-1111")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 1, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        AccountJpa accountJpa2 =
+                AccountJpa.builder()
+                        .email("testEmployee2@email.com")
+                        .password("testPwd2")
+                        .userName("testName2")
+                        .phoneNumber("010-2222-2222")
+                        .gender(GenderTypeJpa.MALE.getGender())
+                        .birth(LocalDate.of(2023, 2, 1))
+                        .baseStatusJpa(BaseEntity.BaseStatusJpa.ACTIVE)
+                        .roles("EMPLOYEE")
+                        .build();
+        AccountJpa savedAccountJpa1 = accountJpaForWorkerRepository.save(accountJpa1);
+        AccountJpa savedAccountJpa2 = accountJpaForWorkerRepository.save(accountJpa2);
+        accountJpaList.add(savedAccountJpa1);
+        accountJpaList.add(savedAccountJpa2);
+        return accountJpaList;
     }
 }
