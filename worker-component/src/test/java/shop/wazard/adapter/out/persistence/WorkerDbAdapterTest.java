@@ -76,7 +76,7 @@ class WorkerDbAdapterTest {
 
         // when
         ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
-        contractInfoForWorkerMapper.changeContractAgreement(savedContractJpa, contractInfo);
+        contractInfoForWorkerMapper.modifyContractAgreement(savedContractJpa, contractInfo);
 
         // then
         Assertions.assertEquals(

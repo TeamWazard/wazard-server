@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CheckAgreementReqDto {
+public class PatchContractAgreementReqDto {
 
     @Positive private Long contractId;
 

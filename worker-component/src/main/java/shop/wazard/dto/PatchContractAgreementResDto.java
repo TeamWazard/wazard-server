@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CheckAgreementResDto {
+public class PatchContractAgreementResDto {
 
     private String message;
 }

@@ -14,7 +14,7 @@ class ContractInfoForWorkerMapper {
                 .build();
     }
 
-    public void changeContractAgreement(ContractJpa contractJpa, ContractInfo contractInfo) {
-        contractJpa.changeContractAgreement(contractInfo.isContractInfoAgreement());
+    public void modifyContractAgreement(ContractJpa contractJpa, ContractInfo contractInfo) {
+        contractJpa.modifyContractAgreement(contractInfo.isContractInfoAgreement());
     }
 }

@@ -93,7 +93,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
     }
 
     @Override
-    public void checkContractAgreement(ContractInfo contractInfo) {
+    public void modifyContractAgreement(ContractInfo contractInfo) {
         ContractJpa contractJpa =
                 contractJpaForWorkerRepository
                         .findById(contractInfo.getContractId())
@@ -101,6 +101,6 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
                                 () ->
                                         new ContractNotFoundException(
                                                 StatusEnum.CONTRACT_NOT_FOUND.getMessage()));
-        contractInfoForWorkerMapper.changeContractAgreement(contractJpa, contractInfo);
+        contractInfoForWorkerMapper.modifyContractAgreement(contractJpa, contractInfo);
     }
 }
