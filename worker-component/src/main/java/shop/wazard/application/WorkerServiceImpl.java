@@ -42,6 +42,16 @@ class WorkerServiceImpl implements WorkerService {
         return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        AccountForWorker accountForWorker =
+                accountForWorkerPort.findAccountByEmail(getEarlyContractInfoReqDto.getEmail());
+        accountForWorker.checkIsEmployee();
+        return contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto);
+    }
+
     @Override
     public PatchContractAgreementResDto modifyContractAgreement(
             PatchContractAgreementReqDto patchContractAgreementReqDto) {
