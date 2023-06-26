@@ -1,14 +1,13 @@
 package shop.wazard.adapter.in.rest;
 
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,9 +39,11 @@ class WorkerController {
 
     @Certification
     @GetMapping("/contractInfo/{accountId}")
-    public ResponseEntity<GetEarlyContractInfoResDto> getEarlyContractInfo(@PathVariable Long accountId, @Valid @RequestBody GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
-        GetEarlyContractInfoResDto getEarlyContractInfoResDto = workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
+    public ResponseEntity<GetEarlyContractInfoResDto> getEarlyContractInfo(
+            @PathVariable Long accountId,
+            @Valid @RequestBody GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        GetEarlyContractInfoResDto getEarlyContractInfoResDto =
+                workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
         return ResponseEntity.ok(getEarlyContractInfoResDto);
     }
-
 }
