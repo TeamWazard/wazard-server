@@ -14,10 +14,8 @@ import shop.wazard.dto.*;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
-import shop.wazard.entity.company.CompanyJpa;
-import shop.wazard.entity.company.RosterJpa;
-import shop.wazard.entity.company.RosterTypeJpa;
-import shop.wazard.entity.company.WaitingListJpa;
+import shop.wazard.entity.company.*;
+import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
@@ -33,7 +31,8 @@ class WorkerManagementDbAdapter
                 WaitingListForWorkerManagementPort,
                 CommuteRecordForWorkerManagementPort,
                 ReplaceForWorkerManagementPort,
-                WorkRecordForWorkerManagementPort {
+                WorkRecordForWorkerManagementPort,
+                ContractForWorkerManagementPort {
 
     private final WorkerManagementMapper workerForManagementMapper;
     private final AccountForWorkerManagementMapper accountForWorkerManagementMapper;
@@ -49,6 +48,7 @@ class WorkerManagementDbAdapter
     private final ExitRecordJpaForWorkerManagementRepository
             exitRecordJpaForWorkerManagementRepository;
     private final ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
+    private final ContractForWorkerManagementRepository contractForWorkerManagementRepository;
 
     @Override
     public void joinWorker(RosterForWorkerManagement rosterForWorkerManagement) {
@@ -154,6 +154,31 @@ class WorkerManagementDbAdapter
     }
 
     @Override
+    public void addWaitingInfo(Long accountId, Long companyId) {
+        AccountJpa accountJpa =
+                accountJpaForWorkerManagementRepository
+                        .findById(accountId)
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaForWorkerManagementRepository
+                        .findById(companyId)
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        WaitingListJpa waitingListJpa =
+                WaitingListJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .waitingStatusJpa(WaitingStatusJpa.INVITED)
+                        .build();
+        waitingListJpaForWorkerManagementRepository.save(waitingListJpa);
+    }
+
+    @Override
     public GetWorkerAttendanceRecordResDto getWorkerAttendanceRecord(
             GetWorkerAttendanceRecordReqDto getWorkerAttendanceRecordReqDto,
             LocalDate startDate,
@@ -204,6 +229,36 @@ class WorkerManagementDbAdapter
         return pastCompanies.stream()
                 .map(company -> getWorkerPastWorkRecord(accountId, company.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void registerContractInfo(RegisterContractInfoReqDto registerContractInfoReqDto) {
+        AccountJpa accountJpa =
+                accountJpaForWorkerManagementRepository
+                        .findById(registerContractInfoReqDto.getAccountId())
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        CompanyJpa companyJpa =
+                companyJpaForWorkerManagementRepository
+                        .findById(registerContractInfoReqDto.getCompanyId())
+                        .orElseThrow(
+                                () ->
+                                        new CompanyNotFoundException(
+                                                StatusEnum.COMPANY_NOT_FOUND.getMessage()));
+        contractForWorkerManagementRepository.save(
+                ContractJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .inviteCode(registerContractInfoReqDto.getInvitationCode())
+                        .startPeriod(registerContractInfoReqDto.getStartDate())
+                        .endPeriod(registerContractInfoReqDto.getEndDate())
+                        .workPlaceAddress(registerContractInfoReqDto.getAddress())
+                        .workTime(registerContractInfoReqDto.getWorkingTime())
+                        .wage(registerContractInfoReqDto.getWage())
+                        .contractInfoAgreement(registerContractInfoReqDto.isContractInfoAgreement())
+                        .build());
     }
 
     private WorkRecordForWorkerManagement getWorkerPastWorkRecord(Long accountId, Long companyId) {

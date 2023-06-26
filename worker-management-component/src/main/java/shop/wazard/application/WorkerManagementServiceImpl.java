@@ -28,6 +28,7 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
     private final ReplaceForWorkerManagementPort replaceForWorkerManagementPort;
     private final CommuteRecordForWorkerManagementPort commuteRecordForWorkerManagementPort;
     private final WorkRecordForWorkerManagementPort workRecordForWorkerManagementPort;
+    private final ContractForWorkerManagementPort contractForWorkerManagementPort;
 
     @Override
     public PermitWorkerToJoinResDto permitWorkerToJoin(
@@ -125,6 +126,16 @@ class WorkerManagementServiceImpl implements WorkerManagementService {
         return GetWorkerAttitudeScoreResDto.builder()
                 .workerAttitudeScore(workerAttitudeScore)
                 .build();
+    }
+
+    @Override
+    public RegisterContractInfoResDto registerContractInfo(
+            RegisterContractInfoReqDto registerContractInfoReqDto) {
+        contractForWorkerManagementPort.registerContractInfo(registerContractInfoReqDto);
+        waitingListForWorkerManagementPort.addWaitingInfo(
+                registerContractInfoReqDto.getAccountId(),
+                registerContractInfoReqDto.getCompanyId());
+        return RegisterContractInfoResDto.builder().message("초기 계약 정보가 저장되었습니다.").build();
     }
 
     private List<Double> getCalculatedAttitudeScore(
