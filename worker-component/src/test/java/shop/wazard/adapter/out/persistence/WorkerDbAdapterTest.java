@@ -69,7 +69,7 @@ class WorkerDbAdapterTest {
 
     @Test
     @DisplayName("근무자 - 초기 계약정보 동의/비동의에서 동의 여부 변경 및 입력 - ContractJpa 수정")
-    void checkContractAgreement() throws Exception {
+    void modifyContractAgreement() throws Exception {
         // given
         ContractInfo contractInfo = ContractInfo.builder().contractInfoAgreement(true).build();
         ContractJpa contractJpa = ContractJpa.builder().contractInfoAgreement(false).build();
