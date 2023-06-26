@@ -1,5 +1,6 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorker;
@@ -17,8 +18,6 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -83,5 +82,4 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
         return null;
     }
-
 }
