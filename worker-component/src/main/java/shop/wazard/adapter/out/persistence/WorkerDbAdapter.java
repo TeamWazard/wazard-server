@@ -81,7 +81,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
     }
 
     @Override
-    public ContractInfo findContractInfoByContractId(Long contractId) {
+    public ContractInfo findContractJpaByContractId(Long contractId) {
         ContractJpa contractJpa =
                 contractJpaForWorkerRepository
                         .findById(contractId)
