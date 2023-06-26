@@ -1,5 +1,10 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +23,6 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @EnableJpaRepositories(basePackages = {"shop.wazard.*"})
@@ -36,7 +35,8 @@ import java.util.List;
             AccountForWorkerMapper.class,
             AccountJpaForWorkerRepository.class,
             CompanyJpaForWorkerRepository.class,
-            ReplaceJpaForWorkerRepository.class, ContractJpaForWorkerRepository.class
+            ReplaceJpaForWorkerRepository.class,
+            ContractJpaForWorkerRepository.class
         })
 class WorkerDbAdapterTest {
 
@@ -200,19 +200,31 @@ class WorkerDbAdapterTest {
         ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
         em.flush();
         em.clear();
-        ContractJpa result = contractJpaForWorkerRepository.findContractInfo(savedContractJpa.getInviteCode(), savedAccountJpa.getId());
+        ContractJpa result =
+                contractJpaForWorkerRepository.findContractInfo(
+                        savedContractJpa.getInviteCode(), savedAccountJpa.getId());
 
         // then
         Assertions.assertAll(
-                () -> Assertions.assertEquals(contractJpa.getAccountJpa().getId(), result.getAccountJpa().getId()),
-                () -> Assertions.assertEquals(contractJpa.getCompanyJpa().getId(), result.getCompanyJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getAccountJpa().getId(),
+                                result.getAccountJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getCompanyJpa().getId(),
+                                result.getCompanyJpa().getId()),
                 () -> Assertions.assertEquals(contractJpa.getInviteCode(), result.getInviteCode()),
-                () -> Assertions.assertEquals(contractJpa.getStartPeriod(), result.getStartPeriod()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getStartPeriod(), result.getStartPeriod()),
                 () -> Assertions.assertEquals(contractJpa.getEndPeriod(), result.getEndPeriod()),
                 () -> Assertions.assertEquals(contractJpa.getWorkTime(), result.getWorkTime()),
                 () -> Assertions.assertEquals(contractJpa.getWage(), result.getWage()),
-                () -> Assertions.assertEquals(contractJpa.isContractInfoAgreement(), result.isContractInfoAgreement())
-        );
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.isContractInfoAgreement(),
+                                result.isContractInfoAgreement()));
     }
 
     private AccountJpa setDefaultEmployeeAccountJpa() {
@@ -277,7 +289,8 @@ class WorkerDbAdapterTest {
         return replaceWorkerJpaList;
     }
 
-    private ContractJpa setDefaultContractJpa(AccountJpa savedAccountJpa, CompanyJpa savedCompanyJpa) {
+    private ContractJpa setDefaultContractJpa(
+            AccountJpa savedAccountJpa, CompanyJpa savedCompanyJpa) {
         return ContractJpa.builder()
                 .accountJpa(savedAccountJpa)
                 .companyJpa(savedCompanyJpa)
@@ -290,5 +303,4 @@ class WorkerDbAdapterTest {
                 .contractInfoAgreement(false)
                 .build();
     }
-
 }

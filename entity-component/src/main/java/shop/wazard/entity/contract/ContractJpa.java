@@ -1,5 +1,7 @@
 package shop.wazard.entity.contract;
 
+import java.time.LocalDate;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,9 +9,6 @@ import lombok.NoArgsConstructor;
 import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
-
-import javax.persistence.*;
-import java.time.LocalDate;
 
 @Getter
 @Entity

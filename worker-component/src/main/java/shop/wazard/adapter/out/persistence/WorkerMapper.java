@@ -1,5 +1,7 @@
 package shop.wazard.adapter.out.persistence;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.dto.GetEarlyContractInfoResDto;
@@ -8,9 +10,6 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 class WorkerMapper {
@@ -53,5 +52,4 @@ class WorkerMapper {
                 .wage(contractJpa.getWage())
                 .build();
     }
-
 }
