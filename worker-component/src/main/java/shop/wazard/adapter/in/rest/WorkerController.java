@@ -1,14 +1,13 @@
 package shop.wazard.adapter.in.rest;
 
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.dto.*;
 import shop.wazard.util.aop.Certification;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,8 +38,10 @@ class WorkerController {
     }
 
     @PatchMapping("/contract-agreement")
-    public ResponseEntity<CheckAgreementResDto> modifyContractAgreement(@Valid @RequestBody CheckAgreementReqDto checkAgreementReqDto) {
-        CheckAgreementResDto checkAgreementResDto = workerService.checkAgreement(checkAgreementReqDto);
+    public ResponseEntity<CheckAgreementResDto> modifyContractAgreement(
+            @Valid @RequestBody CheckAgreementReqDto checkAgreementReqDto) {
+        CheckAgreementResDto checkAgreementResDto =
+                workerService.checkAgreement(checkAgreementReqDto);
         return ResponseEntity.ok(checkAgreementResDto);
     }
 }
