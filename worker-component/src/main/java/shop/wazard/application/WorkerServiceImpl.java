@@ -55,16 +55,17 @@ class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public PatchContractAgreementResDto modifyContractAgreement(
-            PatchContractAgreementReqDto patchContractAgreementReqDto) {
+    public ModifyContractAgreementResDto modifyContractAgreement(
+            ModifyContractAgreementReqDto modifyContractAgreementReqDto) {
         ContractInfo contractInfo =
                 contractForWorkerPort.findContractJpaByContractId(
-                        patchContractAgreementReqDto.getContractId());
-        contractInfo.modifyContractAgreement(patchContractAgreementReqDto);
+                        modifyContractAgreementReqDto.getContractId());
+        contractInfo.modifyContractAgreement(modifyContractAgreementReqDto);
         contractForWorkerPort.modifyContractAgreement(contractInfo);
         waitingListForWorkerPort.modifyWaitingListState(contractInfo);
-        return PatchContractAgreementResDto.builder()
-                .message(patchContractAgreementReqDto.isAgreementCheck() ? "동의하였습니다." : "비동의하였습니다.")
+        return ModifyContractAgreementResDto.builder()
+                .message(
+                        modifyContractAgreementReqDto.isAgreementCheck() ? "동의하였습니다." : "비동의하였습니다.")
                 .build();
     }
 }

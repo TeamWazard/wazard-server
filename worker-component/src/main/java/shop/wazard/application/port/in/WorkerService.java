@@ -13,6 +13,6 @@ public interface WorkerService {
     GetEarlyContractInfoResDto getEarlyContractInfo(
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
 
-    PatchContractAgreementResDto modifyContractAgreement(
-            PatchContractAgreementReqDto patchContractAgreementReqDto);
+    ModifyContractAgreementResDto modifyContractAgreement(
+            ModifyContractAgreementReqDto modifyContractAgreementReqDto);
 }
