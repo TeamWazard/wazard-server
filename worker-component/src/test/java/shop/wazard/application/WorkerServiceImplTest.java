@@ -31,7 +31,6 @@ class WorkerServiceImplTest {
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
     @MockBean private ContractForWorkerPort contractForWorkerPort;
-    @MockBean private ContractForWorkerPort contractForWorkerPort;
 
     @Test
     @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
