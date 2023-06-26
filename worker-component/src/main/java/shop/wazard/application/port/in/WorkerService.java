@@ -1,10 +1,8 @@
 package shop.wazard.application.port.in;
 
+import shop.wazard.dto.*;
+
 import java.util.List;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.RegisterReplaceReqDto;
-import shop.wazard.dto.RegisterReplaceResDto;
 
 public interface WorkerService {
 
@@ -12,4 +10,6 @@ public interface WorkerService {
 
     List<GetMyReplaceRecordResDto> getMyReplaceRecord(
             GetMyReplaceRecordReqDto getMyReplaceRecordReqDto, Long companyId);
+
+    GetEarlyContractInfoResDto getEarlyContractInfo(GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
 }

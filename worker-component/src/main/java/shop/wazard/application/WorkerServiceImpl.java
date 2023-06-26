@@ -1,6 +1,5 @@
 package shop.wazard.application;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,11 +7,11 @@ import shop.wazard.application.domain.AccountForWorker;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
+import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.RegisterReplaceReqDto;
-import shop.wazard.dto.RegisterReplaceResDto;
+import shop.wazard.dto.*;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,6 +20,7 @@ class WorkerServiceImpl implements WorkerService {
 
     private final WorkerPort workerPort;
     private final AccountForWorkerPort accountForWorkerPort;
+    private final ContractForWorkerPort contractForWorkerPort;
 
     @Override
     public RegisterReplaceResDto registerReplace(RegisterReplaceReqDto registerReplaceReqDto) {
@@ -41,4 +41,13 @@ class WorkerServiceImpl implements WorkerService {
         accountForWorker.checkIsEmployee();
         return workerPort.getMyReplaceRecord(getMyReplaceRecordReqDto, companyId);
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public GetEarlyContractInfoResDto getEarlyContractInfo(GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        AccountForWorker accountForWorker = accountForWorkerPort.findAccountByEmail(getEarlyContractInfoReqDto.getEmail());
+        accountForWorker.checkIsEmployee();
+        return contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto);
+    }
+
 }
