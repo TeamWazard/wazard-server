@@ -38,7 +38,7 @@ class WorkerController {
     }
 
     @Certification
-    @GetMapping("/contractInfo/{accountId}")
+    @GetMapping("/contract/{accountId}")
     public ResponseEntity<GetEarlyContractInfoResDto> getEarlyContractInfo(
             @PathVariable Long accountId,
             @Valid @RequestBody GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
