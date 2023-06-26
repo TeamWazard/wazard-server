@@ -12,4 +12,6 @@ public interface WorkerService {
 
     GetEarlyContractInfoResDto getEarlyContractInfo(
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
+
+    CheckAgreementResDto checkAgreement(CheckAgreementReqDto checkAgreementReqDto);
 }

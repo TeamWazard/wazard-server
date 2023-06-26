@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import shop.wazard.application.domain.AccountForWorker;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
@@ -30,6 +31,29 @@ class WorkerServiceImplTest {
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
     @MockBean private ContractForWorkerPort contractForWorkerPort;
+
+    @Test
+    @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
+    void checkAgreementSuccess() throws Exception {
+        // given
+        CheckAgreementReqDto checkAgreementReqDto =
+                CheckAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
+        ContractInfo contractInfo =
+                ContractInfo.builder().contractId(1L).contractInfoAgreement(false).build();
+
+        // when
+        Mockito.when(contractForWorkerPort.findContractInfoByContractId(anyLong()))
+                .thenReturn(contractInfo);
+        CheckAgreementResDto result = workerService.checkAgreement(checkAgreementReqDto);
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                checkAgreementReqDto.isAgreementCheck(),
+                                contractInfo.isContractInfoAgreement()),
+                () -> Assertions.assertEquals("동의하였습니다.", result.getMessage()));
+    }
 
     @Test
     @DisplayName("근무자 - 대타 등록 - 성공")

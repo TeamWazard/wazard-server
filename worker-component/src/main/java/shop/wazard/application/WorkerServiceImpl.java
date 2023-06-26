@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.wazard.application.domain.AccountForWorker;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
@@ -49,5 +50,17 @@ class WorkerServiceImpl implements WorkerService {
                 accountForWorkerPort.findAccountByEmail(getEarlyContractInfoReqDto.getEmail());
         accountForWorker.checkIsEmployee();
         return contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto);
+    }
+
+    @Override
+    public CheckAgreementResDto checkAgreement(CheckAgreementReqDto checkAgreementReqDto) {
+        ContractInfo contractInfo =
+                contractForWorkerPort.findContractInfoByContractId(
+                        checkAgreementReqDto.getContractId());
+        contractInfo.changeContractAgreementState(checkAgreementReqDto);
+        contractForWorkerPort.checkContractAgreement(contractInfo);
+        return CheckAgreementResDto.builder()
+                .message(checkAgreementReqDto.isAgreementCheck() ? "동의하였습니다." : "비동의하였습니다.")
+                .build();
     }
 }

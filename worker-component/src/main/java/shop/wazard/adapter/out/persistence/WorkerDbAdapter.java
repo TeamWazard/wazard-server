@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorker;
+import shop.wazard.application.domain.ContractInfo;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
@@ -94,4 +95,12 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
                         getEarlyContractInfoReqDto.getInvitationCode(), accountJpa.getId());
         return workerMapper.toContractInfo(contractJpa);
     }
+
+    @Override
+    public ContractInfo findContractInfoByContractId(Long contractId) {
+        return null;
+    }
+
+    @Override
+    public void checkContractAgreement(ContractInfo contractInfo) {}
 }
