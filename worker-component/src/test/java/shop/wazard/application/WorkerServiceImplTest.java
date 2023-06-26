@@ -1,5 +1,11 @@
 package shop.wazard.application;
 
+import static org.mockito.ArgumentMatchers.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,13 +22,6 @@ import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
 import shop.wazard.dto.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerServiceImpl.class})
@@ -45,7 +44,6 @@ class WorkerServiceImplTest {
         // when
         Mockito.when(contractForWorkerPort.findContractInfoByContractId(anyLong()))
                 .thenReturn(contractInfo);
-        contractInfo.changeContractAgreementState(checkAgreementReqDto);
         CheckAgreementResDto result = workerService.checkAgreement(checkAgreementReqDto);
 
         // then
@@ -54,10 +52,7 @@ class WorkerServiceImplTest {
                         Assertions.assertEquals(
                                 checkAgreementReqDto.isAgreementCheck(),
                                 contractInfo.isContractInfoAgreement()),
-                () ->
-                        Assertions.assertEquals(
-                                "동의하였습니다.",
-                                result.getMessage()));
+                () -> Assertions.assertEquals("동의하였습니다.", result.getMessage()));
     }
 
     @Test
