@@ -38,8 +38,8 @@ class WorkerServiceImplTest {
     @DisplayName("근무자 - 계약정보 동의/비동의 체크 - 성공")
     void checkAgreementSuccess() throws Exception {
         // given
-        PatchContractAgreementReqDto patchContractAgreementReqDto =
-                PatchContractAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
+        ModifyContractAgreementReqDto modifyContractAgreementReqDto =
+                ModifyContractAgreementReqDto.builder().contractId(1L).agreementCheck(true).build();
         ContractInfo contractInfo =
                 ContractInfo.builder().contractId(1L).contractInfoAgreement(false).build();
 
@@ -47,14 +47,14 @@ class WorkerServiceImplTest {
         Mockito.when(contractForWorkerPort.findContractJpaByContractId(anyLong()))
                 .thenReturn(contractInfo);
         Mockito.doNothing().when(waitingListForWorkerPort).modifyWaitingListState(contractInfo);
-        PatchContractAgreementResDto result =
-                workerService.modifyContractAgreement(patchContractAgreementReqDto);
+        ModifyContractAgreementResDto result =
+                workerService.modifyContractAgreement(modifyContractAgreementReqDto);
 
         // then
         Assertions.assertAll(
                 () ->
                         Assertions.assertEquals(
-                                patchContractAgreementReqDto.isAgreementCheck(),
+                                modifyContractAgreementReqDto.isAgreementCheck(),
                                 contractInfo.isContractInfoAgreement()),
                 () -> Assertions.assertEquals("동의하였습니다.", result.getMessage()));
     }

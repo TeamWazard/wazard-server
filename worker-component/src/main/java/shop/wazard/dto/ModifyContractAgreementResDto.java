@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PatchContractAgreementResDto {
+public class ModifyContractAgreementResDto {
 
     private String message;
 }

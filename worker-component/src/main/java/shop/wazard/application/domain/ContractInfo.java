@@ -2,7 +2,7 @@ package shop.wazard.application.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import shop.wazard.dto.PatchContractAgreementReqDto;
+import shop.wazard.dto.ModifyContractAgreementReqDto;
 
 @Getter
 @Builder
@@ -13,7 +13,8 @@ public class ContractInfo {
     private Long companyId;
     private boolean contractInfoAgreement;
 
-    public void modifyContractAgreement(PatchContractAgreementReqDto patchContractAgreementReqDto) {
-        this.contractInfoAgreement = patchContractAgreementReqDto.isAgreementCheck();
+    public void modifyContractAgreement(
+            ModifyContractAgreementReqDto modifyContractAgreementReqDto) {
+        this.contractInfoAgreement = modifyContractAgreementReqDto.isAgreementCheck();
     }
 }

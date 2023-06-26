@@ -48,10 +48,10 @@ class WorkerController {
     }
 
     @PatchMapping("/contract")
-    public ResponseEntity<PatchContractAgreementResDto> modifyContractAgreement(
-            @Valid @RequestBody PatchContractAgreementReqDto patchContractAgreementReqDto) {
-        PatchContractAgreementResDto patchContractAgreementResDto =
-                workerService.modifyContractAgreement(patchContractAgreementReqDto);
-        return ResponseEntity.ok(patchContractAgreementResDto);
+    public ResponseEntity<ModifyContractAgreementResDto> modifyContractAgreement(
+            @Valid @RequestBody ModifyContractAgreementReqDto modifyContractAgreementReqDto) {
+        ModifyContractAgreementResDto modifyContractAgreementResDto =
+                workerService.modifyContractAgreement(modifyContractAgreementReqDto);
+        return ResponseEntity.ok(modifyContractAgreementResDto);
     }
 }
