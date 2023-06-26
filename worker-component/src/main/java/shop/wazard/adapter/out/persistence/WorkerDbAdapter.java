@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorker;
 import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
+import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
+import shop.wazard.dto.GetEarlyContractInfoReqDto;
+import shop.wazard.dto.GetEarlyContractInfoResDto;
 import shop.wazard.dto.GetMyReplaceRecordReqDto;
 import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
@@ -18,7 +21,7 @@ import shop.wazard.util.exception.StatusEnum;
 
 @Repository
 @RequiredArgsConstructor
-class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
+class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWorkerPort {
 
     private final WorkerMapper workerMapper;
     private final AccountForWorkerMapper accountForWorkerMapper;
@@ -72,5 +75,11 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort {
         List<ReplaceWorkerJpa> replaceWorkerJpaList =
                 replaceJpaForWorkerRepository.findMyReplaceRecord(companyId, accountJpa.getId());
         return workerMapper.toMyReplaceRecord(replaceWorkerJpaList);
+    }
+
+    @Override
+    public GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        return null;
     }
 }
