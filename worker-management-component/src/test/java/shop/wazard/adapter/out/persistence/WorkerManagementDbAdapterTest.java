@@ -26,6 +26,7 @@ import shop.wazard.entity.commuteRecord.AbsentJpa;
 import shop.wazard.entity.commuteRecord.EnterRecordJpa;
 import shop.wazard.entity.commuteRecord.ExitRecordJpa;
 import shop.wazard.entity.company.*;
+import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 @ExtendWith(SpringExtension.class)
@@ -45,7 +46,8 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
             AbsentRecordJpaForWorkerManagementRepository.class,
             EnterRecordJpaForWorkerManagementRepository.class,
             CompanyJpaForWorkerManagementRepository.class,
-            ReplaceJpaForWorkerManagementRepository.class
+            ReplaceJpaForWorkerManagementRepository.class,
+            ContractForWorkerManagementRepository.class
         })
 class WorkerManagementDbAdapterTest {
 
@@ -77,6 +79,8 @@ class WorkerManagementDbAdapterTest {
 
     @Autowired
     private ReplaceJpaForWorkerManagementRepository replaceJpaForWorkerManagementRepository;
+
+    @Autowired private ContractForWorkerManagementRepository contractForWorkerManagementRepository;
 
     @Autowired private EntityManager em;
 
@@ -603,6 +607,100 @@ class WorkerManagementDbAdapterTest {
                         Assertions.assertEquals(
                                 replaceWorkerJpaList.get(1).getExitTime(),
                                 result.get(1).getExitTime()));
+    }
+
+    @Test
+    @DisplayName("고용주 - 초기 계약 정보 저장 - ContractJpa 저장")
+    void registerContractInfoSuccess() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        ContractJpa contractJpa = setContractJpa(accountJpa, companyJpa);
+        ContractJpa result = contractForWorkerManagementRepository.save(contractJpa);
+        em.flush();
+        em.clear();
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getAccountJpa().getId(),
+                                result.getAccountJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getCompanyJpa().getId(),
+                                result.getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(contractJpa.getInviteCode(), result.getInviteCode()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getStartPeriod(), result.getStartPeriod()),
+                () -> Assertions.assertEquals(contractJpa.getEndPeriod(), result.getEndPeriod()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getWorkPlaceAddress(), result.getWorkPlaceAddress()),
+                () -> Assertions.assertEquals(contractJpa.getWorkTime(), result.getWorkTime()),
+                () -> Assertions.assertEquals(contractJpa.getWage(), result.getWage()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.isContractInfoAgreement(),
+                                result.isContractInfoAgreement()));
+    }
+
+    @Test
+    @DisplayName("고용주 - 초기 계약 정보 저장시 초대 대기자 목록에 추가 - WaitingListJpa 저장")
+    void addWaitingInfoSuccess() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerManagementRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerManagementRepository.save(companyJpa);
+        WaitingListJpa waitingListJpa = setWaitingListJpa(accountJpa, companyJpa);
+        WaitingListJpa result = waitingListJpaForWorkerManagementRepository.save(waitingListJpa);
+        em.flush();
+        em.clear();
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                waitingListJpa.getAccountJpa().getId(),
+                                result.getAccountJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                waitingListJpa.getCompanyJpa().getId(),
+                                result.getCompanyJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                waitingListJpa.getWaitingStatusJpa().getStatus(),
+                                result.getWaitingStatusJpa().getStatus()));
+    }
+
+    private WaitingListJpa setWaitingListJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        return WaitingListJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .waitingStatusJpa(WaitingStatusJpa.INVITED)
+                .build();
+    }
+
+    private ContractJpa setContractJpa(AccountJpa accountJpa, CompanyJpa companyJpa) {
+        return ContractJpa.builder()
+                .accountJpa(accountJpa)
+                .companyJpa(companyJpa)
+                .inviteCode("invitationCode")
+                .startPeriod(LocalDate.of(2023, 1, 1))
+                .endPeriod(LocalDate.of(2023, 2, 1))
+                .workPlaceAddress("companyAddress")
+                .workTime("9:00 - 12:00")
+                .wage(10000)
+                .contractInfoAgreement(false)
+                .build();
     }
 
     private List<LocalDate> setDefaultAbsentDate() {

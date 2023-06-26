@@ -21,10 +21,7 @@ import shop.wazard.application.port.in.WorkerService;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
-import shop.wazard.dto.CheckAgreementReqDto;
-import shop.wazard.dto.GetMyReplaceRecordReqDto;
-import shop.wazard.dto.GetMyReplaceRecordResDto;
-import shop.wazard.dto.RegisterReplaceReqDto;
+import shop.wazard.dto.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {WorkerServiceImpl.class})
@@ -33,6 +30,7 @@ class WorkerServiceImplTest {
     @Autowired private WorkerService workerService;
     @MockBean private WorkerPort workerPort;
     @MockBean private AccountForWorkerPort accountForWorkerPort;
+    @MockBean private ContractForWorkerPort contractForWorkerPort;
     @MockBean private ContractForWorkerPort contractForWorkerPort;
 
     @Test
@@ -170,6 +168,53 @@ class WorkerServiceImplTest {
                 () -> Assertions.assertNotEquals("test1", result.get(2).getUserName()));
     }
 
+    @Test
+    @DisplayName("근무자 - 초기 계약정보 조회- 성공")
+    public void getEarlyContractInfoSuccess() throws Exception {
+        // given
+        GetEarlyContractInfoReqDto getEarlyContractInfoReqDto =
+                GetEarlyContractInfoReqDto.builder()
+                        .email("test@email.com")
+                        .invitationCode("abc")
+                        .build();
+        AccountForWorker accountForWorker = setDefaultEmployeeAccountForWorker();
+        GetEarlyContractInfoResDto getEarlyContractInfoResDto = setDefaultEarlyContractInfo();
+
+        // when
+        Mockito.when(accountForWorkerPort.findAccountByEmail(anyString()))
+                .thenReturn(accountForWorker);
+        Mockito.when(contractForWorkerPort.getEarlyContractInfo(getEarlyContractInfoReqDto))
+                .thenReturn(getEarlyContractInfoResDto);
+        GetEarlyContractInfoResDto result =
+                workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getUserName(), result.getUserName()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getCompanyName(),
+                                result.getCompanyName()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getAddress(), result.getAddress()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getStartDate(), result.getStartDate()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getEndDate(), result.getEndDate()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getWorkingTime(),
+                                result.getWorkingTime()),
+                () ->
+                        Assertions.assertEquals(
+                                getEarlyContractInfoResDto.getWage(), result.getWage()));
+    }
+
     private AccountForWorker setDefaultEmployeeAccountForWorker() {
         return AccountForWorker.builder()
                 .id(1L)
@@ -209,5 +254,17 @@ class WorkerServiceImplTest {
         getMyReplaceRecordResDtoList.add(getMyReplaceRecordResDto2);
         getMyReplaceRecordResDtoList.add(getMyReplaceRecordResDto3);
         return getMyReplaceRecordResDtoList;
+    }
+
+    private GetEarlyContractInfoResDto setDefaultEarlyContractInfo() {
+        return GetEarlyContractInfoResDto.builder()
+                .userName("test")
+                .companyName("testCompany")
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
+                .address("testAddress")
+                .workingTime("09:00 - 18:00")
+                .wage(10000)
+                .build();
     }
 }
