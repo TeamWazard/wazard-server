@@ -19,6 +19,7 @@ import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.AccountNotFoundException;
 import shop.wazard.exception.CompanyNotFoundException;
+import shop.wazard.exception.ContractNotFoundException;
 import shop.wazard.util.exception.StatusEnum;
 
 @Repository
@@ -27,6 +28,7 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
 
     private final WorkerMapper workerMapper;
     private final AccountForWorkerMapper accountForWorkerMapper;
+    private final ContractInfoForWorkerMapper contractInfoForWorkerMapper;
     private final ReplaceJpaForWorkerRepository replaceJpaForWorkerRepository;
     private final AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     private final CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
@@ -97,10 +99,26 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
     }
 
     @Override
-    public ContractInfo findContractInfoByContractId(Long contractId) {
-        return null;
+    public ContractInfo findContractJpaByContractId(Long contractId) {
+        ContractJpa contractJpa =
+                contractJpaForWorkerRepository
+                        .findById(contractId)
+                        .orElseThrow(
+                                () ->
+                                        new ContractNotFoundException(
+                                                StatusEnum.CONTRACT_NOT_FOUND.getMessage()));
+        return contractInfoForWorkerMapper.contractJpaToContractInfo(contractJpa);
     }
 
     @Override
-    public void checkContractAgreement(ContractInfo contractInfo) {}
+    public void checkContractAgreement(ContractInfo contractInfo) {
+        ContractJpa contractJpa =
+                contractJpaForWorkerRepository
+                        .findById(contractInfo.getContractId())
+                        .orElseThrow(
+                                () ->
+                                        new ContractNotFoundException(
+                                                StatusEnum.CONTRACT_NOT_FOUND.getMessage()));
+        contractInfoForWorkerMapper.changeContractAgreement(contractJpa, contractInfo);
+    }
 }

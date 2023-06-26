@@ -38,4 +38,14 @@ public class WorkerExceptionHandler {
                                 .errorMessage(e.getMessage())
                                 .build());
     }
+
+    @ExceptionHandler(ContractNotFoundException.class)
+    public ResponseEntity<ErrorMessage> contractNotFoundException(ContractNotFoundException e) {
+        return ResponseEntity.badRequest()
+                .body(
+                        ErrorMessage.builder()
+                                .errorCode(StatusEnum.CONTRACT_NOT_FOUND.getStatusCode())
+                                .errorMessage(e.getMessage())
+                                .build());
+    }
 }

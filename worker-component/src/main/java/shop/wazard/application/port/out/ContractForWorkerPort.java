@@ -9,7 +9,7 @@ public interface ContractForWorkerPort {
     GetEarlyContractInfoResDto getEarlyContractInfo(
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto);
 
-    ContractInfo findContractInfoByContractId(Long contractId);
+    ContractInfo findContractJpaByContractId(Long contractId);
 
     void checkContractAgreement(ContractInfo contractInfo);
 }
