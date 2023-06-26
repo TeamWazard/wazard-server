@@ -46,4 +46,12 @@ class WorkerController {
                 workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
         return ResponseEntity.ok(getEarlyContractInfoResDto);
     }
+
+    @PatchMapping("/contract")
+    public ResponseEntity<CheckAgreementResDto> modifyContractAgreement(
+            @Valid @RequestBody CheckAgreementReqDto checkAgreementReqDto) {
+        CheckAgreementResDto checkAgreementResDto =
+                workerService.checkAgreement(checkAgreementReqDto);
+        return ResponseEntity.ok(checkAgreementResDto);
+    }
 }
