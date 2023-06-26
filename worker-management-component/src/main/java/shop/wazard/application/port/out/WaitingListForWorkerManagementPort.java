@@ -11,4 +11,6 @@ public interface WaitingListForWorkerManagementPort {
     void updateWaitingStatus(WaitingInfo waitingInfo);
 
     List<WaitingWorkerResDto> getWaitingWorker(Long companyId);
+
+    void addWaitingInfo(Long accountId, Long companyId);
 }

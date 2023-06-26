@@ -37,6 +37,16 @@ class WorkerController {
         return ResponseEntity.ok(getMyReplaceRecordResDtoList);
     }
 
+    @Certification
+    @GetMapping("/contract/{accountId}")
+    public ResponseEntity<GetEarlyContractInfoResDto> getEarlyContractInfo(
+            @PathVariable Long accountId,
+            @Valid @RequestBody GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        GetEarlyContractInfoResDto getEarlyContractInfoResDto =
+                workerService.getEarlyContractInfo(getEarlyContractInfoReqDto);
+        return ResponseEntity.ok(getEarlyContractInfoResDto);
+    }
+
     @PatchMapping("/contract-agreement")
     public ResponseEntity<CheckAgreementResDto> modifyContractAgreement(
             @Valid @RequestBody CheckAgreementReqDto checkAgreementReqDto) {
