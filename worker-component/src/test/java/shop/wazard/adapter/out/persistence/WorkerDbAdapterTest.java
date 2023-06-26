@@ -21,6 +21,8 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.entity.company.WaitingListJpa;
+import shop.wazard.entity.company.WaitingStatusJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
@@ -35,29 +37,42 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
             WorkerMapper.class,
             AccountForWorkerMapper.class,
             ContractInfoForWorkerMapper.class,
+            WaitingListForWorkerMapper.class,
             AccountJpaForWorkerRepository.class,
             CompanyJpaForWorkerRepository.class,
             ReplaceJpaForWorkerRepository.class,
-            ContractJpaForWorkerRepository.class
+            ContractJpaForWorkerRepository.class,
+            WaitingListJpaForWorkerRepository.class
         })
 class WorkerDbAdapterTest {
 
     @Autowired private WorkerMapper workerMapper;
     @Autowired private AccountForWorkerMapper accountForWorkerMapper;
     @Autowired private ContractInfoForWorkerMapper contractInfoForWorkerMapper;
+    @Autowired private WaitingListForWorkerMapper waitingListForWorkerMapper;
     @Autowired private AccountJpaForWorkerRepository accountJpaForWorkerRepository;
     @Autowired private CompanyJpaForWorkerRepository companyJpaForWorkerRepository;
     @Autowired private ReplaceJpaForWorkerRepository replaceJpaForWorkerRepository;
     @Autowired private ContractJpaForWorkerRepository contractJpaForWorkerRepository;
+    @Autowired private WaitingListJpaForWorkerRepository waitingListJpaForWorkerRepository;
     @Autowired private EntityManager em;
 
     @Test
     @DisplayName("근무자 - 초기 계약정보 동의/비동의에서 계약정보 조회 - ContractJpa 조회")
     void findContractInfoByContractId() throws Exception {
         // given
-        ContractJpa contractJpa = ContractJpa.builder().contractInfoAgreement(false).build();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
 
         // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerRepository.save(companyJpa);
+        ContractJpa contractJpa =
+                ContractJpa.builder()
+                        .accountJpa(savedAccountJpa)
+                        .companyJpa(savedCompanyJpa)
+                        .contractInfoAgreement(false)
+                        .build();
         ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
         ContractInfo contractInfo =
                 contractInfoForWorkerMapper.contractJpaToContractInfo(savedContractJpa);
@@ -81,6 +96,36 @@ class WorkerDbAdapterTest {
         // then
         Assertions.assertEquals(
                 contractInfo.isContractInfoAgreement(), savedContractJpa.isContractInfoAgreement());
+    }
+
+    @Test
+    @DisplayName("근무자 - 초기 계약정보 동의/비동의에서 대기자 목록 변경 - WaitingListJpa 수정")
+    void modifyWaitingListState() throws Exception {
+        // given
+        List<ContractInfo> contractInfoList = setDefaultContractInfoList();
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerRepository.save(companyJpa);
+        List<WaitingListJpa> waitingListJpaList =
+                setDefaultListOfWaitingList(savedAccountJpa, savedCompanyJpa);
+        waitingListForWorkerMapper.modifyWaitingListState(
+                waitingListJpaList.get(0), contractInfoList.get(0));
+        waitingListForWorkerMapper.modifyWaitingListState(
+                waitingListJpaList.get(1), contractInfoList.get(1));
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                WaitingStatusJpa.AGREED,
+                                waitingListJpaList.get(0).getWaitingStatusJpa()),
+                () ->
+                        Assertions.assertEquals(
+                                WaitingStatusJpa.DISAGREED,
+                                waitingListJpaList.get(1).getWaitingStatusJpa()));
     }
 
     @Test
@@ -281,5 +326,36 @@ class WorkerDbAdapterTest {
         replaceWorkerJpaList.add(replaceJpaForWorkerRepository.save(replaceWorkerJpa2));
         replaceWorkerJpaList.add(replaceJpaForWorkerRepository.save(replaceWorkerJpa3));
         return replaceWorkerJpaList;
+    }
+
+    private List<ContractInfo> setDefaultContractInfoList() {
+        List<ContractInfo> contractInfoList = new ArrayList<>();
+        ContractInfo contractInfo1 = ContractInfo.builder().contractInfoAgreement(true).build();
+        ContractInfo contractInfo2 = ContractInfo.builder().contractInfoAgreement(false).build();
+        contractInfoList.add(contractInfo1);
+        contractInfoList.add(contractInfo2);
+        return contractInfoList;
+    }
+
+    private List<WaitingListJpa> setDefaultListOfWaitingList(
+            AccountJpa accountJpa, CompanyJpa companyJpa) {
+        List<WaitingListJpa> waitingListJpaList = new ArrayList<>();
+        WaitingListJpa waitingListJpa1 =
+                WaitingListJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .waitingStatusJpa(WaitingStatusJpa.INVITED)
+                        .build();
+        WaitingListJpa savedWaitingJpa1 = waitingListJpaForWorkerRepository.save(waitingListJpa1);
+        WaitingListJpa waitingListJpa2 =
+                WaitingListJpa.builder()
+                        .accountJpa(accountJpa)
+                        .companyJpa(companyJpa)
+                        .waitingStatusJpa(WaitingStatusJpa.INVITED)
+                        .build();
+        WaitingListJpa savedWaitingJpa2 = waitingListJpaForWorkerRepository.save(waitingListJpa2);
+        waitingListJpaList.add(savedWaitingJpa1);
+        waitingListJpaList.add(savedWaitingJpa2);
+        return waitingListJpaList;
     }
 }
