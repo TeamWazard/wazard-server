@@ -94,5 +94,4 @@ class WorkerDbAdapter implements WorkerPort, AccountForWorkerPort, ContractForWo
                         getEarlyContractInfoReqDto.getInvitationCode(), accountJpa.getId());
         return workerMapper.toContractInfo(contractJpa);
     }
-  
 }
