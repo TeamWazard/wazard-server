@@ -9,7 +9,10 @@ import shop.wazard.application.domain.ReplaceInfo;
 import shop.wazard.application.port.out.AccountForWorkerPort;
 import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WaitingListForWorkerPort;
+import shop.wazard.application.port.out.ContractForWorkerPort;
 import shop.wazard.application.port.out.WorkerPort;
+import shop.wazard.dto.GetEarlyContractInfoReqDto;
+import shop.wazard.dto.GetEarlyContractInfoResDto;
 import shop.wazard.dto.GetMyReplaceRecordReqDto;
 import shop.wazard.dto.GetMyReplaceRecordResDto;
 import shop.wazard.entity.account.AccountJpa;
@@ -87,6 +90,22 @@ class WorkerDbAdapter
         List<ReplaceWorkerJpa> replaceWorkerJpaList =
                 replaceJpaForWorkerRepository.findMyReplaceRecord(companyId, accountJpa.getId());
         return workerMapper.toMyReplaceRecord(replaceWorkerJpaList);
+    }
+
+    @Override
+    public GetEarlyContractInfoResDto getEarlyContractInfo(
+            GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
+        AccountJpa accountJpa =
+                accountJpaForWorkerRepository
+                        .findByEmail(getEarlyContractInfoReqDto.getEmail())
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
+        ContractJpa contractJpa =
+                contractJpaForWorkerRepository.findContractInfo(
+                        getEarlyContractInfoReqDto.getInvitationCode(), accountJpa.getId());
+        return workerMapper.toContractInfo(contractJpa);
     }
 
     @Override

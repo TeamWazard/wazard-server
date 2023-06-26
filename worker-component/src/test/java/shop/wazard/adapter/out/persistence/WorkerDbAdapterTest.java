@@ -21,9 +21,9 @@ import shop.wazard.entity.account.AccountJpa;
 import shop.wazard.entity.account.GenderTypeJpa;
 import shop.wazard.entity.common.BaseEntity;
 import shop.wazard.entity.company.CompanyJpa;
+import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
-import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 
 @ExtendWith(SpringExtension.class)
@@ -36,8 +36,8 @@ import shop.wazard.entity.worker.ReplaceWorkerJpa;
             WorkerDbAdapter.class,
             WorkerMapper.class,
             AccountForWorkerMapper.class,
-            ContractInfoForWorkerMapper.class,
             WaitingListForWorkerMapper.class,
+            ContractInfoForWorkerMapper.class,
             AccountJpaForWorkerRepository.class,
             CompanyJpaForWorkerRepository.class,
             ReplaceJpaForWorkerRepository.class,
@@ -74,12 +74,14 @@ class WorkerDbAdapterTest {
                         .contractInfoAgreement(false)
                         .build();
         ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
+        ContractJpa findContractJpa =
+                contractJpaForWorkerRepository.findById(savedContractJpa.getId()).get();
         ContractInfo contractInfo =
                 contractInfoForWorkerMapper.contractJpaToContractInfo(savedContractJpa);
 
         // then
         Assertions.assertEquals(
-                savedContractJpa.isContractInfoAgreement(), contractInfo.isContractInfoAgreement());
+                contractInfo.isContractInfoAgreement(), findContractJpa.isContractInfoAgreement());
     }
 
     @Test
@@ -266,6 +268,47 @@ class WorkerDbAdapterTest {
                                 result.get(2).getExitTime()));
     }
 
+    @Test
+    @DisplayName("근무자 - 초기 계약정보 조회 - ContractJpa조회")
+    public void getEarlyContractInfoSuccess() throws Exception {
+        // given
+        AccountJpa accountJpa = setDefaultEmployeeAccountJpa();
+        CompanyJpa companyJpa = setDefaultCompanyJpa();
+
+        // when
+        AccountJpa savedAccountJpa = accountJpaForWorkerRepository.save(accountJpa);
+        CompanyJpa savedCompanyJpa = companyJpaForWorkerRepository.save(companyJpa);
+        ContractJpa contractJpa = setDefaultContractJpa(savedAccountJpa, savedCompanyJpa);
+        ContractJpa savedContractJpa = contractJpaForWorkerRepository.save(contractJpa);
+        em.flush();
+        em.clear();
+        ContractJpa result =
+                contractJpaForWorkerRepository.findContractInfo(
+                        savedContractJpa.getInviteCode(), savedAccountJpa.getId());
+
+        // then
+        Assertions.assertAll(
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getAccountJpa().getId(),
+                                result.getAccountJpa().getId()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getCompanyJpa().getId(),
+                                result.getCompanyJpa().getId()),
+                () -> Assertions.assertEquals(contractJpa.getInviteCode(), result.getInviteCode()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.getStartPeriod(), result.getStartPeriod()),
+                () -> Assertions.assertEquals(contractJpa.getEndPeriod(), result.getEndPeriod()),
+                () -> Assertions.assertEquals(contractJpa.getWorkTime(), result.getWorkTime()),
+                () -> Assertions.assertEquals(contractJpa.getWage(), result.getWage()),
+                () ->
+                        Assertions.assertEquals(
+                                contractJpa.isContractInfoAgreement(),
+                                result.isContractInfoAgreement()));
+    }
+
     private AccountJpa setDefaultEmployeeAccountJpa() {
         return AccountJpa.builder()
                 .email("testEmployee@email.com")
@@ -326,6 +369,21 @@ class WorkerDbAdapterTest {
         replaceWorkerJpaList.add(replaceJpaForWorkerRepository.save(replaceWorkerJpa2));
         replaceWorkerJpaList.add(replaceJpaForWorkerRepository.save(replaceWorkerJpa3));
         return replaceWorkerJpaList;
+    }
+
+    private ContractJpa setDefaultContractJpa(
+            AccountJpa savedAccountJpa, CompanyJpa savedCompanyJpa) {
+        return ContractJpa.builder()
+                .accountJpa(savedAccountJpa)
+                .companyJpa(savedCompanyJpa)
+                .workPlaceAddress("testAddress")
+                .inviteCode("testCode")
+                .startPeriod(LocalDate.now())
+                .endPeriod(LocalDate.now())
+                .workTime("09:00 - 18:00")
+                .wage(10000)
+                .contractInfoAgreement(false)
+                .build();
     }
 
     private List<ContractInfo> setDefaultContractInfoList() {
