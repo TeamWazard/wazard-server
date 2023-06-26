@@ -1,9 +1,8 @@
 package shop.wazard.dto;
 
-import lombok.*;
-
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.Positive;
+import lombok.*;
 
 @Getter
 @Builder
