@@ -1,10 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +20,12 @@ import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.company.WaitingStatusJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -282,8 +283,7 @@ class WorkerDbAdapterTest {
         em.flush();
         em.clear();
         ContractJpa result =
-                contractJpaForWorkerRepository.findContractInfo(
-                        savedContractJpa.getInviteCode(), savedAccountJpa.getId());
+                contractJpaForWorkerRepository.findByIdAndInviteCode(savedAccountJpa.getId(), savedContractJpa.getInviteCode()).get();
 
         // then
         Assertions.assertAll(

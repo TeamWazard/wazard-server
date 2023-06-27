@@ -25,6 +25,7 @@ public enum StatusEnum {
     UNSUPPORTED_DATE_RANGE(415, "지원되지 않는 날짜입니다."),
     CONTRACT_NOT_FOUND(416, "존재하지 않는 계약정보입니다."),
     WAITING_LIST_NOT_FOUND(417, "존재하지 않는 대기자입니다."),
+    INVITECODE_NOT_FOUND(418,"존재하지 않는 초대코드입니다."),
     ;
 
     private int statusCode;
