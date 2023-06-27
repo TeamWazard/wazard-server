@@ -32,5 +32,4 @@ class ContractInfoForWorkerMapper {
                 .wage(contractJpa.getWage())
                 .build();
     }
-
 }
