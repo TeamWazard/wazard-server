@@ -1,6 +1,5 @@
 package shop.wazard.adapter.out.persistence;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.wazard.application.domain.AccountForWorker;
@@ -21,6 +20,8 @@ import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
 import shop.wazard.exception.*;
 import shop.wazard.util.exception.StatusEnum;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -91,17 +92,10 @@ class WorkerDbAdapter
     @Override
     public GetEarlyContractInfoResDto getEarlyContractInfo(
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
-        AccountJpa accountJpa =
-                accountJpaForWorkerRepository
-                        .findByEmail(getEarlyContractInfoReqDto.getEmail())
-                        .orElseThrow(
-                                () ->
-                                        new AccountNotFoundException(
-                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
         ContractJpa contractJpa =
                 contractJpaForWorkerRepository
-                        .findByIdAndInviteCode(
-                                accountJpa.getId(), getEarlyContractInfoReqDto.getInvitationCode())
+                        .findByInviteCode(
+                                getEarlyContractInfoReqDto.getInvitationCode())
                         .orElseThrow(
                                 () ->
                                         new InviteCodeNotFoundException(
