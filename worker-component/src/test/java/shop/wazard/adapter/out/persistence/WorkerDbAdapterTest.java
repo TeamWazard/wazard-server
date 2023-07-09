@@ -282,8 +282,9 @@ class WorkerDbAdapterTest {
         em.flush();
         em.clear();
         ContractJpa result =
-                contractJpaForWorkerRepository.findContractInfo(
-                        savedContractJpa.getInviteCode(), savedAccountJpa.getId());
+                contractJpaForWorkerRepository
+                        .findByInviteCode(savedContractJpa.getInviteCode())
+                        .get();
 
         // then
         Assertions.assertAll(

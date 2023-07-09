@@ -19,10 +19,7 @@ import shop.wazard.entity.company.CompanyJpa;
 import shop.wazard.entity.company.WaitingListJpa;
 import shop.wazard.entity.contract.ContractJpa;
 import shop.wazard.entity.worker.ReplaceWorkerJpa;
-import shop.wazard.exception.AccountNotFoundException;
-import shop.wazard.exception.CompanyNotFoundException;
-import shop.wazard.exception.ContractNotFoundException;
-import shop.wazard.exception.WaitingListNotFoundException;
+import shop.wazard.exception.*;
 import shop.wazard.util.exception.StatusEnum;
 
 @Repository
@@ -94,17 +91,14 @@ class WorkerDbAdapter
     @Override
     public GetEarlyContractInfoResDto getEarlyContractInfo(
             GetEarlyContractInfoReqDto getEarlyContractInfoReqDto) {
-        AccountJpa accountJpa =
-                accountJpaForWorkerRepository
-                        .findByEmail(getEarlyContractInfoReqDto.getEmail())
+        ContractJpa contractJpa =
+                contractJpaForWorkerRepository
+                        .findByInviteCode(getEarlyContractInfoReqDto.getInvitationCode())
                         .orElseThrow(
                                 () ->
-                                        new AccountNotFoundException(
-                                                StatusEnum.ACCOUNT_NOT_FOUND.getMessage()));
-        ContractJpa contractJpa =
-                contractJpaForWorkerRepository.findContractInfo(
-                        getEarlyContractInfoReqDto.getInvitationCode(), accountJpa.getId());
-        return workerMapper.toContractInfo(contractJpa);
+                                        new InviteCodeNotFoundException(
+                                                StatusEnum.INVITECODE_NOT_FOUND.getMessage()));
+        return contractInfoForWorkerMapper.toContractInfo(contractJpa);
     }
 
     @Override
